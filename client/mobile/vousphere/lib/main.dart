@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:vousphere/shared/navigation/CustomNavigationBar.dart';
+import 'package:provider/provider.dart';
+import 'package:vousphere/data/api/ApiService.dart';
+import 'package:vousphere/features/auth/presentation/LoginPage.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
+import 'package:vousphere/shared/widgets/CustomNavigationBar.dart';
 
-void main() {
+void main() async {
+  ApiService apiService = ApiService();
+  // make sure to load the token from security storage
+  await apiService.init();
+
   runApp(
-    const MyApp(),
+    ChangeNotifierProvider(
+        create: (context) => UserProvider(apiService),
+        child: const MyApp(),
+    )
   );
 }
 
@@ -13,13 +24,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return MaterialApp(
       title: 'vousphere',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyMainPage(),
+      home: userProvider.isAuthenticated ? const MyMainPage() : LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
