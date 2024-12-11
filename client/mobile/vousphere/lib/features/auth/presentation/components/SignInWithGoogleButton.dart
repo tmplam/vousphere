@@ -1,13 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInWithGoogleButton extends StatelessWidget {
-  const SignInWithGoogleButton({super.key});
+  SignInWithGoogleButton({super.key});
+
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email',],
+    clientId: 'client id'
+  );
+
+  Future<void> getGoogleAuthToken() async {
+    try {
+      print('>>> hahahaha');
+      final GoogleSignInAccount? account = await _googleSignIn.signIn();
+      print('>>> account ${account}');
+      if (account != null) {
+        final GoogleSignInAuthentication auth = await account.authentication;
+        print('>>> idToken ${auth.idToken}');
+        print('>>> accessToken ${auth.idToken}');
+      }
+    } catch (error) {
+      print('Google Sign-In failed: $error');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        await getGoogleAuthToken();
+      },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(5),
       ),

@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 15),
                         const AppLogo(),
                         const SizedBox(height: 15),
-                        const SignInWithGoogleButton(),
+                        SignInWithGoogleButton(),
                         const HorizontalLine(),
                         SwitchLoginButton(
                             isLoginMode: currentState == 'Login' ? true : false,
