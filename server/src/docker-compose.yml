@@ -1,0 +1,56 @@
+services:
+  # Databases
+  userdb:
+    image: mcr.microsoft.com/mssql/server
+
+
+  # Api gateway
+  yarpapigateway:
+    image: ${DOCKER_REGISTRY-}yarpapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+
+
+  # Services
+  eventservice.api:
+    image: ${DOCKER_REGISTRY-}eventserviceapi
+    build:
+      context: .
+      dockerfile: Services/EventService/EventService.API/Dockerfile
+
+
+  gameservice.api:
+    image: ${DOCKER_REGISTRY-}gameserviceapi
+    build:
+      context: .
+      dockerfile: Services/GameService/GameService.API/Dockerfile
+
+
+  mediaservice.api:
+    image: ${DOCKER_REGISTRY-}mediaserviceapi
+    build:
+      context: .
+      dockerfile: Services/MediaService/MediaService.API/Dockerfile
+
+
+  notificationservice.api:
+    image: ${DOCKER_REGISTRY-}notificationserviceapi
+    build:
+      context: .
+      dockerfile: Services/NotificationService/NotificationService.API/Dockerfile
+
+
+  paymentservice.api:
+    image: ${DOCKER_REGISTRY-}paymentserviceapi
+    build:
+      context: .
+      dockerfile: Services/PaymentService/PaymentService.API/Dockerfile
+
+
+  userservice.api:
+    image: ${DOCKER_REGISTRY-}userserviceapi
+    build:
+      context: .
+      dockerfile: Services/UserService/UserService.API/Dockerfile
+

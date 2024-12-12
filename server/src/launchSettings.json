@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "yarpapigateway": "StartDebugging",
+        "eventservice.api": "StartDebugging",
+        "gameservice.api": "StartDebugging",
+        "mediaservice.api": "StartDebugging",
+        "notificationservice.api": "StartDebugging",
+        "paymentservice.api": "StartDebugging",
+        "userservice.api": "StartDebugging"
+      }
+    }
+  }
+}
