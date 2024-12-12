@@ -35,13 +35,20 @@ export function RegisterForm() {
         setLoading(true);
         try {
             const result = await callRegisterRequest(values);
-            if (result) {
+            if (result.statusCode == 200) {
                 toast({
                     description: "Register successfully",
                     duration: 2000,
                     className: "bg-green-500 text-white",
                 });
                 router.push("/login");
+            } else {
+                toast({
+                    description: result.message,
+                    variant: "destructive",
+                    duration: 2000,
+                    className: "bg-red-500 text-white",
+                });
             }
         } catch (error: any) {
             handleErrorApi({

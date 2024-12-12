@@ -21,9 +21,15 @@ export const getUserById = async (): Promise<UserType | null> => {
     }
 };
 
-export const callRegisterRequest = async (payload: RegisterRequestDTO): Promise<RegisterResponseDTO> => {
+export const callRegisterRequest = async (payload: RegisterRequestDTO): Promise<SuccessResponse<any>> => {
     try {
-        return (await axios.post(`${BASE_API}/auth/register`, payload)) as RegisterResponseDTO;
+        // return (await axios.post(`${BASE_API}/auth/register`, payload));
+        return {
+            statusCode: 200,
+            message: "Success",
+            data: null,
+            others: null,
+        };
     } catch (error: any) {
         throw error;
     }
@@ -39,7 +45,7 @@ export const callLoginRequest = async (values: LoginRequestDTO): Promise<LoginRe
                 accessToken: "accessToken",
                 refreshToken: "refreshToken",
                 user: {
-                    id: 1,
+                    id: "AEESX-UUID", // UUID
                     name: "name",
                     username: "adminAccount",
                     phone: "phone",

@@ -22,15 +22,15 @@ export const ROLE_COUNTERPART = "counterpart";
 
 export const AuthenticatedRoute = (Component: any, role: string) => {
     return function AuthRoute(props: any) {
-        const authenticatedUser = useAppSelector((state) => state.userState) as { isLoggedIn: boolean; user: UserType };
+        const authenticatedUser = useAppSelector((state) => state.userState) as UserType;
         const router = useRouter();
         useLayoutEffect(() => {
-            if (!authenticatedUser.isLoggedIn) {
+            if (!authenticatedUser) {
                 router.push("/login");
             }
         }, [router, authenticatedUser]);
-        if (!includeRole(authenticatedUser?.user?.roles, role)) return <PageNotFound />;
-        if (!authenticatedUser.isLoggedIn) return null;
+        if (!authenticatedUser) return null;
+        if (!includeRole(authenticatedUser.roles, role)) return <PageNotFound />;
         return <Component {...props} />;
     };
 };
