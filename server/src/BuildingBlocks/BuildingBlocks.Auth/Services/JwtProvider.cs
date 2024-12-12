@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Auth.Abstractions.Oprions;
+﻿using BuildingBlocks.Auth.Abstractions;
+using BuildingBlocks.Auth.Abstractions.Oprions;
 using BuildingBlocks.Auth.Abstractions.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,13 +18,13 @@ public sealed class JwtProvider : IJwtProvider
         _options = options.Value;
     }
 
-    public string GenerateToken(User user)
+    public string GenerateToken(AuthUser user)
     {
         var claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Name, user.Name)
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.MobilePhone, user.Phone),
+            new(ClaimTypes.Role, user.Role.ToString())
         };
 
         var signingCredentials = new SigningCredentials(
