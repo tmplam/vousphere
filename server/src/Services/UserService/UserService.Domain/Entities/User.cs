@@ -1,17 +1,11 @@
-﻿using UserService.Domain.Primitives;
-using UserService.Domain.Enums;
+﻿using UserService.Domain.Enums;
+using BuildingBlocks.Auth.Abstractions;
 
 namespace UserService.Domain.Entities;
 
-public class User : Entity
+public class User : AuthUser
 {
-    public string? Name { get; set; } = string.Empty;
-    public string? UserName { get; set; } = string.Empty;
-    public string? Email { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
     public UserStatus Status { get; set; } = UserStatus.Active;
-    public UserRole Role { get; set; } = UserRole.Player;
 
     public Player? Player { get; set; }
     public Brand? Brand { get; set; }
