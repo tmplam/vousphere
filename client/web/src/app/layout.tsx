@@ -1,16 +1,13 @@
 "use client";
-// import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/utility/theme-provider";
-import { roboto } from "@/app/fonts/fonts";
+import { roboto } from "@/assets/fonts/fonts";
 import { Toaster } from "@/components/ui/toaster";
-// import ReduxStoreProvider from "@/app/StoreProvider"; // I won't use this component in this project
-// import ReactQueryProvider from "@/app/ReactQueryProvider";
 import { Suspense } from "react";
-// import { Provider } from "react-redux";
-// import { persistor } from "@/lib/redux/store";
-// import { PersistGate } from "redux-persist/integration/react";
-// import ReduxStoreProvider from "@/app/ReduxStoreProvider";
+import { persistor } from "@/lib/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+import ReactQueryProvider from "@/lib/react-query/ReactQueryProvider";
+import ReduxStoreProvider from "@/lib/redux/ReduxStoreProvider";
 export const dynamic = "force-dynamic";
 export default function RootLayout({
     children,
@@ -22,14 +19,14 @@ export default function RootLayout({
             <head />
             <body className={`${roboto.className} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                    {/* <ReduxStoreProvider>
+                    <ReduxStoreProvider>
                         <PersistGate loading={null} persistor={persistor}>
-                            <ReactQueryProvider> */}
-                    <Suspense>{children}</Suspense>
-                    <Toaster />
-                    {/* </ReactQueryProvider>
+                            <ReactQueryProvider>
+                                <Suspense>{children}</Suspense>
+                                <Toaster />
+                            </ReactQueryProvider>
                         </PersistGate>
-                    </ReduxStoreProvider> */}
+                    </ReduxStoreProvider>
                 </ThemeProvider>
             </body>
         </html>
