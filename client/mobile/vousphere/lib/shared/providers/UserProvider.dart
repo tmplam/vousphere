@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/data/models/User.dart';
 
@@ -14,7 +15,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   bool isAuthenticated = false;
-  late User user;
+  late User? user;
 
 
   void setIsAuthenticated(bool value) {
@@ -48,5 +49,13 @@ class UserProvider extends ChangeNotifier {
         }
       }
     }
+  }
+
+  Future<void> logout() async {
+    const storage = FlutterSecureStorage();
+    await storage.deleteAll();
+    user = null;
+    isAuthenticated = false;
+    notifyListeners();
   }
 }

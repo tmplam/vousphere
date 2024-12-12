@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/LoginPage.dart';
+import 'package:vousphere/features/profile/presentation/ProfilePage.dart';
+import 'package:vousphere/features/voucher/presentation/VoucherPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 import 'package:vousphere/shared/widgets/CustomNavigationBar.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   ApiService apiService = ApiService();
   // make sure to load the token from security storage
   await apiService.init();
@@ -47,12 +50,25 @@ class MyMainPage extends StatefulWidget {
 class _MyMainPageState extends State<MyMainPage> {
   static const List<Widget> pageOptions = <Widget>[
     Center(child: Text('Home')),
-    Center(child: Text('Voucher')),
+    VoucherPage(),
     Center(child: Text('Location')),
-    Center(child: Text('Profile')),
+    ProfilePage(),
   ];
 
   int selectedIndex = 0;
+  
+  String _getTitle(int selectedIndex) {
+    if(selectedIndex == 0) {
+      return "Voushere";
+    }
+    else if(selectedIndex == 1) {
+      return "My Vouchers";
+    }
+    else if(selectedIndex == 2) {
+      return "Location";
+    }
+    return "Profile";
+  }
 
   void onItemTapped(int index) {
     setState(() {
@@ -64,34 +80,7 @@ class _MyMainPageState extends State<MyMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Row(children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(0, 12, 0, 4),
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  focusColor: Colors.white,
-                  hintText: 'Search...',
-                  hintStyle: const TextStyle(color: Colors.blueGrey),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Colors.blueGrey,
-                  ),
-                  suffixIcon: IconButton(icon: Icon(Icons.clear), onPressed: () {},),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16), // Đặt độ bo góc
-                    borderSide: BorderSide.none, // Không có viền khi không focus
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.blue.shade700, width: 0.7)
-                  ),
-                ),
-              ),
-            ),
-          ]),
+          title: Text(_getTitle(selectedIndex), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),),
           actions: [
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
