@@ -24,8 +24,9 @@ export function NavUser() {
     const { isMobile } = useSidebar();
     const { toast } = useToast();
     const router = useRouter();
-    const userAuth = useAppSelector((state) => state.userState) as UserType;
+    const userAuth = useAppSelector((state) => state.userState).user as UserType;
     useLayoutEffect(() => {
+        console.log(userAuth);
         if (!userAuth) router.push("/login");
     }, [userAuth]);
     const handleLogout = () => {
@@ -37,6 +38,9 @@ export function NavUser() {
         });
         localStorage.removeItem("persist:userState");
         localStorage.removeItem("persist:root");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userId");
         router.push("/login");
     };
     if (!userAuth) {
@@ -75,19 +79,12 @@ export function NavUser() {
                                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">{userAuth.name}</span>
-                                    <span className="truncate text-xs">{userAuth.email}</span>
+                                    <span className="truncate font-semibold">{userAuth.name || "Unknown"}</span>
+                                    <span className="truncate text-xs">{userAuth.email || "Unknown"}</span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {/* <DropdownMenuGroup>
-                            <DropdownMenuItem className="cursor-pointer">
-                                <Sparkles />
-                                Upgrade to Pro
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator /> */}
                         <DropdownMenuGroup>
                             <DropdownMenuItem className="cursor-pointer">
                                 <BadgeCheck />

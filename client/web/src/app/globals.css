@@ -85,6 +85,15 @@ body {
     body {
         @apply bg-background text-foreground;
     }
+
+    .current-page,
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+    .disabled {
+        opacity: 0.6;
+    }
 }
 
 /* HTML: <div class="loader"></div> */

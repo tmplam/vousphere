@@ -95,4 +95,6 @@ export const LoginResponseSchema = RegisterResponseSchema;
 
 export type LoginResponseDTO = z.infer<typeof LoginResponseSchema>;
 
-export type UserType = LoginResponseDTO["data"]["user"];
+export type UserType = LoginResponseDTO["data"]["user"] & {
+    image: string;
+};

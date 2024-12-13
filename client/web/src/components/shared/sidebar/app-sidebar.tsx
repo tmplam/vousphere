@@ -2,7 +2,7 @@
 import { adminNavMain } from "@/app/(subsystem)/admin/nav-links";
 import { counterpartNavMain } from "@/app/(subsystem)/counterpart/nav-links";
 import { NavMain } from "@/components/shared/sidebar/admin-dashboard/nav-main";
-import { NavUser } from "@/components/shared/sidebar/admin-dashboard/nav-user";
+import { NavUser } from "@/components/shared/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/shared/sidebar/team-switcher";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
@@ -51,7 +51,8 @@ export function CounterpartSidebar({ ...props }: React.ComponentProps<typeof Sid
     return (
         <Sidebar {...props}>
             <SidebarHeader className="custom-bg-slate">
-                <TeamSwitcher teams={teamWorkspaces} />
+                {/* <TeamSwitcher teams={teamWorkspaces} /> */}
+                <h3 className="text-lg text-center uppercase">counterpart page</h3>
             </SidebarHeader>
             <Separator orientation="horizontal" className="mt-0" />
             <SidebarContent className="custom-bg-white">
