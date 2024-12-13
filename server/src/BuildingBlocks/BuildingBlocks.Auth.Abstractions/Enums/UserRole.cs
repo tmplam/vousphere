@@ -1,4 +1,4 @@
-﻿namespace UserService.Domain.Enums;
+﻿namespace BuildingBlocks.Auth.Abstractions.Enums;
 
 public enum UserRole
 {
