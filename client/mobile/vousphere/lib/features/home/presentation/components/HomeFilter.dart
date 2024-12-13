@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vousphere/data/models/FilterCategory.dart';
 
-class VoucherFilter extends StatefulWidget {
-  const VoucherFilter({super.key});
+class HomeFilter extends StatefulWidget {
+  const HomeFilter({super.key});
 
   @override
-  State<VoucherFilter> createState() => _VoucherFilterState();
+  State<HomeFilter> createState() => _HomeFilterState();
 }
 
-class _VoucherFilterState extends State<VoucherFilter> {
+class _HomeFilterState extends State<HomeFilter> {
   int selectedIndex = 0;
 
   static final categories = [
