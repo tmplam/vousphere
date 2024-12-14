@@ -4,6 +4,7 @@ using UserService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container
 builder.Services
     .AddApiServices()
     .AddApplicationServices()
@@ -11,6 +12,7 @@ builder.Services
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+// Configure the HTTP request pipline
+app.UseApiServices();
 
 app.Run();
