@@ -4,6 +4,7 @@ import { AdminSidebar } from "@/components/shared/sidebar/app-sidebar";
 import { CSSProperties } from "react";
 import { DarkModeToggle } from "@/components/utility/mode-toggle";
 import { AuthenticatedRoute, ROLE_ADMIN } from "@/components/shared/authenticatedRoutes";
+import Footer from "@/components/shared/footer";
 
 /**
  * @description Layout for dashboard, contains sidebar and main content
@@ -25,8 +26,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <SidebarTrigger />
                     <DarkModeToggle />
                 </div>
-                <div className="mx-3 sm:mx-8 ">{children}</div>
-                <div className="my-14 text-center"> Footer </div>
+                <div className="mx-3 sm:mx-8 min-h-screen">{children}</div>
+                <Footer />
             </main>
         </SidebarProvider>
     );
