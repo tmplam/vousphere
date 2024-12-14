@@ -35,8 +35,10 @@ export function LoginForm() {
         setLoading(true);
         try {
             const result = await callLoginRequest(values);
-            console.log(result);
             const user = result.data.user;
+            localStorage.setItem("refreshToken", result.data.refreshToken);
+            localStorage.setItem("accessToken", result.data.accessToken);
+            localStorage.setItem("userId", user.id);
             dispatch(updateUser(user));
             toast({
                 description: "Login successfully",
@@ -81,7 +83,7 @@ export function LoginForm() {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Mật khẩu</FormLabel>
+                            <FormLabel>Password</FormLabel>
                             <FormControl>
                                 <PasswordInput placeholder="Enter your password" {...field} className="!mt-0" />
                             </FormControl>
@@ -92,7 +94,7 @@ export function LoginForm() {
                 />
 
                 <Button type="submit" className="!mt-5 block m-auto">
-                    Đăng nhập
+                    Login
                     {loading && <span className="ml-2 animate-spin">⌛</span>}
                 </Button>
             </form>

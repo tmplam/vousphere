@@ -49,7 +49,7 @@ export const RegisterResponseSchema = z.object({
         accessToken: z.string(),
         refreshToken: z.string(),
         user: z.object({
-            id: z.number(),
+            id: z.string().uuid(),
             name: z.string(),
             username: z.string(),
             phone: z.string(),
@@ -95,4 +95,6 @@ export const LoginResponseSchema = RegisterResponseSchema;
 
 export type LoginResponseDTO = z.infer<typeof LoginResponseSchema>;
 
-export type UserType = LoginResponseDTO["data"]["user"];
+export type UserType = LoginResponseDTO["data"]["user"] & {
+    image: string;
+};

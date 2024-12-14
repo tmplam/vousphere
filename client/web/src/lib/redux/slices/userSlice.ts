@@ -1,22 +1,38 @@
 // todoSlice.js
+import { isClient } from "@/lib/utils";
 import { UserType } from "@/schema/user.schema";
 import { createSlice, Slice } from "@reduxjs/toolkit";
-export type UserState = {
-    id: string | null;
-    user: UserType | null;
+
+const persistedStateName = "persist:root";
+
+export const initialState = (): { user: UserState } => {
+    try {
+        if (isClient()) {
+            const persistedData = localStorage.getItem(persistedStateName);
+            if (persistedData) {
+                const parsedData = JSON.parse(persistedData); // Parse chuỗi JSON
+                return parsedData; // Tách dữ liệu state (nested JSON)
+            }
+        }
+    } catch (error) {
+        console.error("Error parsing persisted state:", error);
+    }
+    return {
+        user: null,
+    };
 };
-const initialState: UserState = {
-    id: null,
-    user: null,
-};
+
+export type UserState = UserType | null;
+
 const userSlice: Slice<any> = createSlice({
     name: "user",
-    initialState,
+    initialState: initialState(),
     reducers: {
         updateUser(state, action) {
-            console.log(action.payload);
-            state.id = action.payload.id;
-            state.user = { ...state.user, ...action.payload.user };
+            localStorage.removeItem(persistedStateName);
+            state.user = state.user ? { ...state.user, ...action.payload } : { ...action.payload };
+            console.log(state);
+            localStorage.setItem(persistedStateName, JSON.stringify(state));
         },
         updateUserId(state, action) {
             console.log(action.payload);

@@ -15,7 +15,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   bool isAuthenticated = false;
-  late User? user;
+  User user = User('id', 'username', 'name', 'phone', 'email', 'status', 'role');
 
 
   void setIsAuthenticated(bool value) {
@@ -54,7 +54,6 @@ class UserProvider extends ChangeNotifier {
   Future<void> logout() async {
     const storage = FlutterSecureStorage();
     await storage.deleteAll();
-    user = null;
     isAuthenticated = false;
     notifyListeners();
   }

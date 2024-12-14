@@ -46,6 +46,7 @@ flutter:
   assets:
     - assets/icons/google-icon.png
     - assets/icons/flutter.png
+    - assets/icons/giftbox.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

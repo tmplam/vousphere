@@ -11,7 +11,9 @@ export default function Login() {
                 <div className="p-2">
                     <p className="text-center">Already have an account?</p>
                     <div className="flex justify-center">
-                        <Link href="/register">Register</Link>
+                        <Link href="/register" className="text-blue-500 hover:underline">
+                            Register
+                        </Link>
                     </div>
                 </div>
             </div>
