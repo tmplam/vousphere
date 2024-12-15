@@ -7,7 +7,9 @@ services:
       - MSSQL_SA_PASSWORD=Phulam2003@
     restart: always
     ports:
-      - "1433:1433"
+      - "1401:1433"
+    volumes:
+      - sqlserver_user:/var/opt/mssql
 
 
   # Api gateway
@@ -103,6 +105,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=userdb;Database=UserDb;User Id=sa;Password=Phulam2003@;Encrypt=False;TrustServerCertificate=True
+      - Jwt__Issuer=VouSphere
+      - Jwt__Audience=VouSphere
+      - Jwt__SecretKey=bkdghy78ww2b-3nj9dfsnb-dfgdj-dfgdfg-dfgbdfgh232-3loqlwqe-3w25e2e4 
     depends_on:
       - userdb
     ports:

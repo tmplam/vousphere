@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Behaviors;
+﻿using BuildingBlocks.Auth.OptionsSetup;
+using BuildingBlocks.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

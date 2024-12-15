@@ -1,17 +1,26 @@
 ﻿using Carter;
+using Mapster;
+using MediatR;
+using UserService.Application.Features.Users.Queries.SignIn;
 
 namespace UserService.API.Endpoints.Users;
 
-public record SignInOrderRequest();
-public record SignInResponse(Guid Id);
+public record SignInRequest(string PhoneNumber, string Password);
+public record SignInResponse(string AccessToken);
 
 public class SignIn : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/sign-in", () =>
+        app.MapPost("/users/sign-in", async (SignInRequest request, ISender sender) =>
         {
-            return "sign-in";
+            var query = request.Adapt<SignInQuery>();
+
+            var result = await sender.Send(query);
+
+            var response = result.Adapt<SignInResponse>();
+
+            return Results.Ok(response);
         });
     }
 }

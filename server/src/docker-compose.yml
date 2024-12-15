@@ -54,3 +54,8 @@ services:
       context: .
       dockerfile: Services/UserService/UserService.API/Dockerfile
 
+
+
+# Volumes
+volumes:
+  sqlserver_user:

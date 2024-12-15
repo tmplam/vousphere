@@ -82,7 +82,7 @@ namespace UserService.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -99,7 +99,7 @@ namespace UserService.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Phone")
+                    b.HasIndex("PhoneNumber")
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
