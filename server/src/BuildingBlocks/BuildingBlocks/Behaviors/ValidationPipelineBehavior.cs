@@ -18,7 +18,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IValida
 
         if (failures.Any())
         {
-            throw new ValidationException(failures);
+            throw new ValidationException("Validation failed", failures);
         }
 
         return await next();

@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using BuildingBlocks.Shared;
+using Carter;
 using Mapster;
 using MediatR;
 using UserService.Application.Features.Users.Commands.SignUp;
@@ -20,7 +21,7 @@ public class SignUp : ICarterModule
 
             var response = result.Adapt<SignUpResponse>();
 
-            return Results.Ok(response);
+            return Results.Ok(ApiResult.Success(response, "Sign up successfully"));
         });
     }
 }

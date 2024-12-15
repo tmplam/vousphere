@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using BuildingBlocks.Shared;
+using Carter;
 using Mapster;
 using MediatR;
 using UserService.Application.Features.Users.Queries.SignIn;
@@ -20,7 +21,7 @@ public class SignIn : ICarterModule
 
             var response = result.Adapt<SignInResponse>();
 
-            return Results.Ok(response);
+            return Results.Ok(ApiResult.Success(response, "Sign in successfully"));
         });
     }
 }

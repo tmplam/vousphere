@@ -18,6 +18,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6006:8080"
 
@@ -28,6 +29,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6000:8080"
 
@@ -37,6 +39,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6001:8080"
 
@@ -46,6 +49,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6002:8080"
 
@@ -55,6 +59,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6003:8080"
 
@@ -64,6 +69,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+    restart: on-failure:3
     ports:
       - "6004:8080"
 
@@ -76,7 +82,8 @@ services:
       - ConnectionStrings__Database=Server=userdb;Database=UserDb;User Id=sa;Password=Phulam2003@;Encrypt=False;TrustServerCertificate=True
       - Jwt__Issuer=VouSphere
       - Jwt__Audience=VouSphere
-      - Jwt__SecretKey=bkdghy78ww2b-3nj9dfsnb-dfgdj-dfgdfg-dfgbdfgh232-3loqlwqe-3w25e2e4 
+      - Jwt__SecretKey=bkdghy78ww2b-3nj9dfsnb-dfgdj-dfgdfg-dfgbdfgh232-3loqlwqe-3w25e2e4
+    restart: on-failure:3
     depends_on:
       - userdb
     ports:

@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Auth.Abstractions.Middlewares;
-using BuildingBlocks.Auth.OptionsSetup;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
 
@@ -19,6 +18,8 @@ public static class DependencyInjection
 
     public static WebApplication UseApiServices(this WebApplication app)
     {
+        app.UseExceptionHandler(options => { });
+
         app.UseRouting();
         
         app.UseMiddleware<UserFromHeaderMiddleware>();
@@ -26,8 +27,6 @@ public static class DependencyInjection
         app.UseAuthorization();
 
         app.MapCarter();
-
-        app.UseExceptionHandler(options => { });
 
         return app;
     }

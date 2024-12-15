@@ -1,7 +1,7 @@
-﻿using FluentValidation;
+﻿using BuildingBlocks.Shared;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Exceptions.Handlers;
@@ -11,9 +11,10 @@ public class GlobalExceptionhandler(ILogger<GlobalExceptionhandler> _logger) : I
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogError("Error Message: {exceptionMessage}, Time of occurrence {time}", exception.Message, DateTime.UtcNow);
+        if (exception is not ValidationException)
+            _logger.LogError("Error Message: {exceptionMessage}, Time of occurrence {time}", exception.Message, DateTime.UtcNow);
 
-        (string Detail, string Title, int StatusCode) details = exception switch
+        (string Message, string Title, int StatusCode) details = exception switch
         {
             InternalServerException =>
             (
@@ -47,19 +48,17 @@ public class GlobalExceptionhandler(ILogger<GlobalExceptionhandler> _logger) : I
             )
         };
 
-        var problemDetails = new ProblemDetails
-        {
-            Title = details.Title,
-            Detail = details.Detail,
-            Status = details.StatusCode,
-            Instance = context.Request.Path
-        };
-
-        problemDetails.Extensions.Add("TraceId", context.TraceIdentifier);
+        var problemDetails = ApiResult.Failure(details.Message, details.StatusCode);
 
         if (exception is ValidationException validationException)
         {
-            problemDetails.Extensions.Add("ValidationErrors", validationException.Errors);
+            problemDetails.ValidationErrors = validationException.Errors
+                .GroupBy(error => error.PropertyName)
+                .Select(group => new ValidationError
+                {
+                    PropertyName = group.Key,
+                    ErrorMessage = group.Select(error => error.ErrorMessage).ElementAt(0)
+                });
         }
 
         await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
