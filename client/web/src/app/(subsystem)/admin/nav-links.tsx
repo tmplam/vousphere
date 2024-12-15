@@ -21,13 +21,9 @@ export const adminNavMain = [
         items: [
             {
                 title: "Collections",
-                url: "/admin/games/collection",
+                url: "/admin/games",
                 icon: Shapes,
-            },
-            {
-                title: "Realtime Quiz",
-                url: "/admin/games/realtime-quiz",
-                icon: MessageCircleQuestion,
+                isActive: true,
             },
         ],
     },
