@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import { useCachedGameQuery } from "@/lib/react-query/gameCache";
 import { getQueryParams } from "@/lib/utils";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,7 @@ import { useState } from "react";
 
 export default function Game() {
     const [update, setUpdate] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [showMore, setShowMore] = useState<boolean>(false);
     const gameId = getQueryParams<string>(useParams(), "id");
     const { data: game, isLoading, isError, isPaused } = useCachedGameQuery(gameId); // Get query status
     if (isError || game === null) return <ErrorPage />;
@@ -75,7 +76,31 @@ export default function Game() {
                                         </div>
                                         <div className="">
                                             <b>Guide: </b>
-                                            <div className="mt-2 border-l-4 border-gray-300 pl-4">{game.guide}</div>
+                                            <div className="mt-2 border-l-4 border-gray-300 pl-4">
+                                                <p className={showMore ? "" : "line-clamp-3"}>
+                                                    {game.guide} Lorem ipsum dolor sit amet consectetur adipisicing
+                                                    elit. Quod, quis. Provident molestiae corporis nisi ea rem
+                                                    perferendis non eveniet dolorum quaerat libero eius, explicabo vel
+                                                    quos magni nobis natus tempora. Lorem ipsum dolor sit amet
+                                                    consectetur adipisicing elit. Repudiandae sunt deleniti saepe sint
+                                                    in quisquam rerum nostrum, minus aspernatur ipsam odit maxime illum
+                                                    velit voluptatibus architecto sed delectus accusantium quia?
+                                                </p>
+                                                <b
+                                                    className="cursor-pointer flex gap-1 items-center"
+                                                    onClick={() => setShowMore(!showMore)}
+                                                >
+                                                    {showMore ? (
+                                                        <>
+                                                            Less <ChevronUp size={16} />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            More <ChevronDown size={16} />
+                                                        </>
+                                                    )}
+                                                </b>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -35,11 +35,11 @@ export const counterpartNavMain = [
                 url: "/counterpart/subscription",
                 icon: SubscriptIcon,
             },
-            {
-                title: "Register subscription",
-                url: "/counterpart/subscription/subscribe",
-                icon: SubscriptIcon,
-            },
+            // {
+            //     title: "Register subscription",
+            //     url: "/counterpart/subscription/subscribe",
+            //     icon: SubscriptIcon,
+            // },
         ],
     },
 ];

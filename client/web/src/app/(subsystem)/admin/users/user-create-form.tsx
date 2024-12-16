@@ -57,11 +57,11 @@ export function CreateUserForm() {
                     <div className="image">
                         <label
                             htmlFor="uploadFile1"
-                            className="bg-white text-gray-500 font-semibold text-base rounded max-w-md h-36 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif]"
+                            className=" text-gray-700 dark:text-gray-300 font-semibold text-base rounded max-w-md h-36 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif]"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="w-11 mb-2 fill-gray-500"
+                                className="w-11 mb-2 fill-gray-700 dark:fill-gray-300"
                                 viewBox="0 0 32 32"
                             >
                                 <path

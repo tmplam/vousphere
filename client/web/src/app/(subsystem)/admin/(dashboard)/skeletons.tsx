@@ -1,7 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { type LucideIcon, LucideProps, UsersRound } from "lucide-react";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
+import { type LucideIcon } from "lucide-react";
 
 // Loading animation
 const shimmer =
@@ -49,6 +48,26 @@ export function RevenueChartSkeleton() {
                     <div className="ml-2 h-4 w-20 rounded-md bg-gray-200" />
                 </div>
             </div>
+        </div>
+    );
+}
+
+export function GameListSkeleton({ total = 3 }: { total?: number }) {
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 py-5 dark:text-white">
+            {[...Array(total)].map((_, index) => (
+                <Card className="w-full max-w-md border shadow-sm shadow-slate-50 rounded-lg" key={index}>
+                    <CardHeader className="relative !p-0">
+                        <Skeleton className="h-48 w-full object-cover rounded-t" />
+                    </CardHeader>
+                    <CardContent className="space-y-1 p-4">
+                        <Skeleton className="h-5 w-1/2 rounded-md bg-gray-200" />
+                        <Skeleton className="h-5 w-3/4 rounded-md bg-gray-200" />
+                        <Skeleton className="h-5 w-1/3 rounded-md bg-gray-200" />
+                        <Skeleton className="h-14 rounded-md bg-gray-200" />
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     );
 }

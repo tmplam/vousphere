@@ -23,7 +23,6 @@ RUN dotnet restore "./Services/UserService/UserService.API/UserService.API.cspro
 COPY . .
 WORKDIR "/src/Services/UserService/UserService.API"
 RUN dotnet build "./UserService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

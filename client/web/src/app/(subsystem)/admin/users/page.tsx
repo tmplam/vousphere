@@ -46,13 +46,13 @@ export const resolveRoleBadge = (role: string) => {
             );
         case "user":
             return (
-                <Badge key="user" className="bg-amber-600">
+                <Badge key="user" className="bg-amber-600 text-white">
                     User
                 </Badge>
             );
         case "counterpart":
             return (
-                <Badge key="counterpart" className="bg-blue-600">
+                <Badge key="counterpart" className="bg-blue-600 text-white">
                     Counterpart
                 </Badge>
             );
@@ -156,10 +156,10 @@ export default function UserManagement() {
                     </div>
                 </div>
             </div>
-            <div className="overflow-x-auto rounded-md border ">
+            <div className="overflow-x-auto rounded-md border bg-white dark:bg-slate-900">
                 <Table>
                     <TableHeader>
-                        <TableRow>
+                        <TableRow className="bg-gray-200 hover:bg-gray-200 dark:bg-gray-800">
                             <TableHead>No.</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
@@ -185,7 +185,10 @@ export default function UserManagement() {
                                     </div>
                                 </TableCell>
                                 <TableCell className="content-center">
-                                    <Badge variant={user.status ? "default" : "destructive"} className="rounded-full">
+                                    <Badge
+                                        variant={user.status ? "default" : "destructive"}
+                                        className={`rounded-full text-white ${user.status ? "bg-green-600" : ""}`}
+                                    >
                                         {user.status ? "Active" : "Suspended"}
                                     </Badge>
                                 </TableCell>

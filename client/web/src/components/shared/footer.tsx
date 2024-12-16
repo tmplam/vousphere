@@ -2,16 +2,16 @@
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-900 text-white py-12 px-4 font-sans tracking-wide">
+        <footer className="bg-white dark:bg-slate-800 text-white py-4 mt-6 px-4 font-sans tracking-wide border-t border-t-gray-200">
             <div className="text-center">
-                <h6 className="text-lg text-gray-300">Stay connected with us:</h6>
+                <h6 className="text-lg text-slate-800 dark:text-gray-200 font-semibold">Stay connected with us:</h6>
 
-                <ul className="flex flex-wrap justify-center gap-x-8 gap-4 mt-8 mb-12">
+                <ul className="flex flex-wrap justify-center gap-x-8 gap-4 my-4">
                     <li>
                         <a href="javascript:void(0)">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="fill-blue-600 w-8 h-8"
+                                className="fill-blue-500 w-8 h-8"
                                 viewBox="0 0 49.652 49.652"
                             >
                                 <path
@@ -35,7 +35,11 @@ export default function Footer() {
                     </li>
                     <li>
                         <a href="javascript:void(0)">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 152 152">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-8 h-8 border border-rose-400 rounded-full"
+                                viewBox="0 0 152 152"
+                            >
                                 <linearGradient
                                     id="a"
                                     x1="22.26"
@@ -53,7 +57,7 @@ export default function Footer() {
                                 <g data-name="Layer 2">
                                     <g data-name="03.Instagram">
                                         <rect width="152" height="152" fill="url(#a)" data-original="url(#a)" rx="76" />
-                                        <g fill="#fff">
+                                        <g fill="hotpink">
                                             <path
                                                 fill="#ffffff10"
                                                 d="M133.2 26c-11.08 20.34-26.75 41.32-46.33 60.9S46.31 122.12 26 133.2q-1.91-1.66-3.71-3.46A76 76 0 1 1 129.74 22.26q1.8 1.8 3.46 3.74z"
@@ -90,7 +94,9 @@ export default function Footer() {
                     </li>
                 </ul>
 
-                <p className="text-base text-gray-300">© 21120461 - 21120465 - 21120477 - 21120480 - 21120492</p>
+                <p className="text-base text-gray-900 dark:text-gray-300">
+                    © 21120461 - 21120465 - 21120477 - 21120480 - 21120492
+                </p>
             </div>
         </footer>
     );
