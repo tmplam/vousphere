@@ -14,16 +14,8 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const playTurnTodayData = [
-    { game: "quiz", plays: 4, fill: "hsl(var(--chart-1))" },
-    { game: "shake", plays: 32, fill: "hsl(var(--chart-4))" },
-];
-
-const playTurnThisWeekData = [
-    { game: "quiz", plays: 75, fill: "hsl(var(--chart-1))" },
-    { game: "shake", plays: 100, fill: "hsl(var(--chart-4))" },
-];
+import { getCachedPlayTurnStatistic } from "@/lib/react-query/dashboardCache";
+import { PlayTurnSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 
 const chartConfig = {
     plays: {
@@ -40,28 +32,31 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function PlayTurnStatistics() {
-    const [playTurnData, setPlayTurnData] = useState(playTurnTodayData);
-    const totalPlays = useMemo(() => {
-        return playTurnData.reduce((acc, curr) => acc + curr.plays, 0);
-    }, []);
-
+    const [time, setTime] = useState("today");
+    const { data: playTurnData, isLoading, isError, isPaused } = getCachedPlayTurnStatistic(time);
+    if (isError) return <div>Error</div>;
+    if (isLoading || isPaused || !playTurnData) return <PlayTurnSkeleton />;
+    const totalPlays = playTurnData.reduce((acc, curr) => acc + curr.plays, 0);
+    const timeLabel = time == "today" ? "today" : time == "week" ? "this week" : "this month";
     return (
         <Card className="flex flex-col border-gray-50">
-            <CardHeader className="items-center p-0 flex flex-row justify-between">
-                <CardTitle className="px-5 flex-[1]">Total play turn this week</CardTitle>
-                <Select
-                    onValueChange={(value) =>
-                        setPlayTurnData(value === "today" ? playTurnTodayData : playTurnThisWeekData)
-                    }
-                >
+            <CardHeader className="items-center p-0 pt-1 flex flex-row justify-between">
+                <div className=" px-5 flex-[1]">
+                    <CardTitle className="text-md">Play turns</CardTitle>
+                    <CardDescription className="text-xs">
+                        Total plays turns which are taken <b>{timeLabel}</b>
+                    </CardDescription>
+                </div>
+                <Select onValueChange={(value) => setTime(value)}>
                     <SelectTrigger className="w-[120px] scale-90 border-gray-300">
-                        <SelectValue placeholder="Last 3 days" />
+                        <SelectValue placeholder="Today" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="today" defaultChecked>
-                            Last 3 days
+                            Today
                         </SelectItem>
                         <SelectItem value="week">This week</SelectItem>
+                        <SelectItem value="month">This month</SelectItem>
                     </SelectContent>
                 </Select>
             </CardHeader>

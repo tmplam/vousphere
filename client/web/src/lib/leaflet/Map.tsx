@@ -5,11 +5,12 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 import { memo, useState } from "react";
-import { mapMarkActiveIcon, RenderSelectedLocation } from "@/lib/leaflet/MapSupplier";
+import { RenderSelectedLocation } from "@/lib/leaflet/MapSupplier";
 
-const MapWithClick = memo(({ onChange }: { onChange: (location: number[]) => void }) => {
-    const [selectedLocation, setSelectedLocation] = useState<LatLngLiteral | null>(null);
-
+const MapWithClick = memo(({ location, onChange }: { location?: number[]; onChange: (location: number[]) => void }) => {
+    const [selectedLocation, setSelectedLocation] = useState<LatLngLiteral | null>(
+        location ? { lat: location[0], lng: location[1] } : null
+    );
     const MapClickHandler = () => {
         useMapEvents({
             click: (e) => {

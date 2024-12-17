@@ -14,20 +14,8 @@ import {
 } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-const chartData = [
-    { date: "2024-06-24", happening: 2, ended: 2 },
-    { date: "2024-06-25", happening: 10, ended: 1 },
-    { date: "2024-06-26", happening: 4, ended: 1 },
-    { date: "2024-06-27", happening: 8, ended: 0 },
-    { date: "2024-06-28", happening: 1, ended: 2 },
-    { date: "2024-06-29", happening: 0, ended: 0 },
-    { date: "2024-06-30", happening: 4, ended: 10 },
-];
-const chartTodayData = [
-    { date: "2024-06-24", happening: 2, ended: 2 },
-    { date: "2024-06-25", happening: 10, ended: 1 },
-    { date: "2024-06-26", happening: 4, ended: 1 },
-];
+import { getCachedEventStatusStatistic } from "@/lib/react-query/dashboardCache";
+import { EventStatusSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 
 const chartConfig = {
     happening: {
@@ -41,25 +29,32 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function EventStatusStatistics() {
-    const [eventData, setEventData] = useState(chartTodayData);
+    // const [eventData, setEventData] = useState(chartTodayData);
+    const [time, setTime] = useState("last3days");
+    const { data: eventData, isLoading, isError, isPaused } = getCachedEventStatusStatistic(time);
+    if (isError) return <div>Error</div>;
+    if (isLoading || isPaused || !eventData) return <EventStatusSkeleton />;
+    const timeLabel = time == "last3days" ? "last three days" : "this week";
     return (
-        <Card className="w-full mt-3 border-gray-50">
-            <CardHeader className="py-3 px-5 flex flex-row justify-between flex-nowrap">
+        <Card className="w-full mb-3 border-gray-50">
+            <CardHeader className="pt-1 px-5 flex flex-row justify-between flex-nowrap">
                 <div>
-                    <CardTitle className="text-md">Event statistics</CardTitle>
+                    <CardTitle className="text-md">Event participants</CardTitle>
                     <CardDescription className="text-xs line-clamp-1">
-                        Showing how many events are happening and ended this week
+                        Showing how many events are happening and ended <b>{timeLabel}</b>
                     </CardDescription>
                 </div>
-                <Select onValueChange={(value) => setEventData(value === "today" ? chartTodayData : chartData)}>
+                <Select onValueChange={(value) => setTime(value)}>
                     <SelectTrigger className="w-[120px] scale-90 border-gray-300">
                         <SelectValue placeholder="Last 3 days" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="today" defaultChecked>
+                        <SelectItem value="last3days" defaultChecked={time == "last3days"}>
                             Last 3 days
                         </SelectItem>
-                        <SelectItem value="week">This week</SelectItem>
+                        <SelectItem value="week" defaultChecked={time == "week"}>
+                            This week
+                        </SelectItem>
                     </SelectContent>
                 </Select>
             </CardHeader>
@@ -81,8 +76,9 @@ export function EventStatusStatistics() {
                             tickMargin={8}
                             tickFormatter={(value) => {
                                 const date = new Date(value);
-                                return date.toLocaleDateString("en-US", {
+                                return date.toLocaleDateString("vi", {
                                     month: "numeric",
+                                    year: "numeric",
                                     day: "numeric",
                                 });
                             }}

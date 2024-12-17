@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { getCachedAdminDataStatistic } from "@/lib/react-query/dashboardCache";
+import { getCachedCounterpartDataStatistic } from "@/lib/react-query/counterpartDashboardCache";
 import { StatisticDataCardSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 import {
     DropdownMenu,
@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const OverviewStatistics = () => {
-    const { data, isLoading, isError, isPaused } = getCachedAdminDataStatistic();
+    const { data, isLoading, isError, isPaused } = getCachedCounterpartDataStatistic();
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !data)
         return (
@@ -70,19 +70,19 @@ const OverviewStatistics = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <DataCard
-                    title="Total Event"
+                    title="Released Vouchers"
                     data={revenue.data}
                     trending={revenue.trending}
                     icon={{ icon: PartyPopper }}
                 />
                 <DataCard
-                    title="Total Counterpart"
+                    title="Used Vouchers"
                     data={orders.data}
                     trending={orders.trending}
                     icon={{ icon: UserPlus2 }}
                 />
-                <DataCard title="Total Player" data={users.data} trending={users.trending} icon={{ icon: UserPlus2 }} />
-                <DataCard title="Total incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} />
+                <DataCard title="Total Events" data={users.data} trending={users.trending} icon={{ icon: UserPlus2 }} />
+                <DataCard title="Total Incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} />
             </div>
         </>
     );

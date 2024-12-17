@@ -9,9 +9,13 @@ import { Button } from "@/components/ui/button";
 export function DarkModeToggle() {
     const { theme, setTheme } = useTheme();
     useEffect(() => {
-        setTheme("light"); // Set default theme when a use first accesses the page
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            setTheme("light"); // Set default theme when a use first accesses the page
+        }
     }, []);
-    // const theme = sessionStorage.getItem("theme") || "system";
 
     return (
         // Toggle theme without DropdownMenu

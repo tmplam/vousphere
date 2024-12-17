@@ -10,54 +10,61 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SubscriptionRequestDTO, SubscriptionRequestSchema } from "@/schema/event.schema";
+import { UpdateSubscriptionRequestDTO, UpdateSubscriptionRequestSchema, SubscriptionType } from "@/schema/event.schema";
 import MapWithClick from "@/lib/leaflet/Map";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-export function SubscriptionForm() {
+export function UpdateSubscriptionForm({
+    subscription,
+    back,
+}: {
+    subscription: SubscriptionType | null | undefined;
+    back: (refetch?: boolean) => void;
+}) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
-    const router = useRouter();
-    const createSubscriptionForm = useForm<SubscriptionRequestDTO>({
-        resolver: zodResolver(SubscriptionRequestSchema),
+    const updateSubscriptionForm = useForm<UpdateSubscriptionRequestDTO>({
+        resolver: zodResolver(UpdateSubscriptionRequestSchema),
         defaultValues: {
-            name: "Alysa Kendall",
-            address: "123 Main Street, Anytown, USA",
+            id: subscription!.id,
+            name: subscription!.name,
+            address: subscription!.address,
+            areaId: subscription!.area!.id,
+            location: subscription!.location,
+            status: subscription!.status,
         },
     });
-    async function onSubmit(values: SubscriptionRequestDTO) {
+    async function onSubmit(values: UpdateSubscriptionRequestDTO) {
         if (loading) return;
         setLoading(true);
         try {
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
             // const result = await authApiRequest.login(values);
             console.log({ ...values });
             toast({
-                description: "Login successfully",
+                description: "Update subscription successfully",
                 duration: 2000,
                 className: "bg-green-500 text-white",
             });
-            createSubscriptionForm.reset();
-            router.push("/counterpart/subscription");
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            updateSubscriptionForm.reset();
+            back(true);
         } catch (error: any) {
             handleErrorApi({
                 error,
-                setError: createSubscriptionForm.setError,
+                setError: updateSubscriptionForm.setError,
             });
         } finally {
             setLoading(false);
         }
     }
     return (
-        <Form {...createSubscriptionForm}>
+        <Form {...updateSubscriptionForm}>
             <form
-                onSubmit={createSubscriptionForm.handleSubmit(onSubmit)}
+                onSubmit={updateSubscriptionForm.handleSubmit(onSubmit)}
                 className="w-full space-y-3 border rounded-md p-3 bg-white dark:bg-gray-950 border-gray-100"
                 noValidate
             >
                 <FormField
-                    control={createSubscriptionForm.control}
+                    control={updateSubscriptionForm.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
@@ -71,7 +78,7 @@ export function SubscriptionForm() {
                     )}
                 />
                 <FormField
-                    control={createSubscriptionForm.control}
+                    control={updateSubscriptionForm.control}
                     name="address"
                     render={({ field }) => (
                         <FormItem>
@@ -90,7 +97,7 @@ export function SubscriptionForm() {
                     )}
                 />
                 <FormField
-                    control={createSubscriptionForm.control}
+                    control={updateSubscriptionForm.control}
                     name="areaId"
                     render={({ field }) => (
                         <FormItem>
@@ -102,9 +109,15 @@ export function SubscriptionForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent className="z-50 border-gray-200">
-                                    <SelectItem value="1">Food</SelectItem>
-                                    <SelectItem value="2">Drink</SelectItem>
-                                    <SelectItem value="3">Fashion</SelectItem>
+                                    <SelectItem value="1" defaultChecked={field.value === "1"}>
+                                        Food
+                                    </SelectItem>
+                                    <SelectItem value="2" defaultChecked={field.value === "2"}>
+                                        Drink
+                                    </SelectItem>
+                                    <SelectItem value="3" defaultChecked={field.value === "3"}>
+                                        Fashion
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                             {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
@@ -113,14 +126,14 @@ export function SubscriptionForm() {
                     )}
                 />
                 <FormField
-                    control={createSubscriptionForm.control}
+                    control={updateSubscriptionForm.control}
                     name="location"
                     render={({ field, fieldState }) => (
                         <FormItem>
                             <FormLabel>Location</FormLabel>
                             <FormControl>
                                 <div className="w-full md:w-[40rem] lg:w-[50rem] xl:w-[60rem] mx-auto h-[20rem] md:h-[30rem]">
-                                    <MapWithClick onChange={field.onChange} />
+                                    <MapWithClick location={field.value} onChange={field.onChange} />
                                 </div>
                             </FormControl>
                             <FormMessage>{fieldState.error && fieldState.error.message}</FormMessage>
@@ -128,13 +141,18 @@ export function SubscriptionForm() {
                     )}
                 />
                 <div className="!mt-6 flex justify-center items-center gap-5 ">
-                    <Button className="bg-rose-500 hover:bg-rose-600">
-                        <Link href="/counterpart/subscription" className="text-white">
-                            Cancel
-                        </Link>
+                    <Button
+                        className="bg-rose-500 hover:bg-rose-600 text-white"
+                        type="button"
+                        onClick={() => {
+                            updateSubscriptionForm.reset();
+                            back();
+                        }}
+                    >
+                        Cancel
                     </Button>
                     <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
-                        Create
+                        Update
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
                     </Button>
                 </div>

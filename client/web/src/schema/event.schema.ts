@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { string } from "zod";
 
 export type EventGameType = {
     id: number;
@@ -71,14 +71,16 @@ export const SubscriptionRequestSchema = z.object({
         .min(2, {
             message: "Name is invalid",
         })
-        .max(70, {
-            message: "Name must not exceed 70 characters",
+        .max(200, {
+            message: "Name must not exceed 200 characters",
         })
         .regex(/\w+\s\w+/, { message: "Name is too short" }),
-    area: z.string({
+    areaId: z.string({
         required_error: "Area is required",
     }),
-    address: z.string(),
+    address: z.string({
+        required_error: "Address is required",
+    }),
     location: z.array(z.number(), { required_error: "Location is required" }).length(2, {
         message: "Location is required",
     }),
@@ -86,4 +88,39 @@ export const SubscriptionRequestSchema = z.object({
 });
 
 export type SubscriptionRequestDTO = z.infer<typeof SubscriptionRequestSchema>;
-export type SubscriptionType = SubscriptionRequestDTO & { id: string };
+export type SubscriptionType = Omit<SubscriptionRequestDTO, "areaId"> & {
+    id: string;
+    area: { id: string; name: string };
+};
+
+export const UpdateSubscriptionRequestSchema = z.object({
+    id: z
+        .string({
+            required_error: "Invalid subscription!",
+        })
+        .nonempty(),
+    name: z
+        .string({
+            required_error: "Invalid name",
+        })
+        .trim()
+        .min(2, {
+            message: "Name is invalid",
+        })
+        .max(200, {
+            message: "Name must not exceed 200 characters",
+        })
+        .regex(/\w+\s\w+/, { message: "Name is too short" }),
+    areaId: z.string({
+        required_error: "Area is required",
+    }),
+    address: z.string({
+        required_error: "Address is required",
+    }),
+    location: z.array(z.number(), { required_error: "Location is required" }).length(2, {
+        message: "Location is required",
+    }),
+    status: z.boolean().default(true),
+});
+
+export type UpdateSubscriptionRequestDTO = z.infer<typeof UpdateSubscriptionRequestSchema>;

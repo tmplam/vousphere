@@ -17,7 +17,9 @@ export default function Home() {
                         type="submit"
                         className="!mt-8 block m-auto bg-gradient-to-br from-sky-400 to-fuchsia-400 transition-all duration-1000 hover:bg-gradient-to-br hover:from-sky-500 hover:to-fuchsia-500"
                     >
-                        <Link href="/login">Login</Link>
+                        <Link href="/login" className="text-white">
+                            Login
+                        </Link>
                     </Button>
                 </div>
             </div>

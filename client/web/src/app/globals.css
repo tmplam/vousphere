@@ -96,6 +96,14 @@ body {
     }
 }
 
+/* Text gradient */
+.text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-fuchsia-600 to-violet-500;
+}
+.text-gradient-blue {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-500;
+}
+
 /* Dynamic text clip */
 .dynamic-text,
 .dynamic-text-2 {
@@ -207,7 +215,7 @@ body {
     }
 }
 
-/* customizable snowflake styling */
+/* customizable snowflake falling style */
 .snowflake {
     color: #fff;
     font-size: 1.4rem;

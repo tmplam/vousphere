@@ -5,15 +5,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-const chartData = [
-    { date: "2024-06-24", counterpart: 132, customer: 180 },
-    { date: "2024-06-25", counterpart: 141, customer: 190 },
-    { date: "2024-06-26", counterpart: 434, customer: 380 },
-    { date: "2024-06-27", counterpart: 448, customer: 490 },
-    { date: "2024-06-28", counterpart: 149, customer: 200 },
-    { date: "2024-06-29", counterpart: 103, customer: 160 },
-    { date: "2024-06-30", counterpart: 446, customer: 400 },
-];
+import { getCachedNewUsersStatistic } from "@/lib/react-query/dashboardCache";
+import { NewUserChartBarSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 
 const chartConfig = {
     views: {
@@ -31,22 +24,20 @@ const chartConfig = {
 
 export function NewUserStatistics() {
     const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("counterpart");
-
-    const total = React.useMemo(
-        () => ({
-            counterpart: chartData.reduce((acc, curr) => acc + curr.counterpart, 0),
-            customer: chartData.reduce((acc, curr) => acc + curr.customer, 0),
-        }),
-        []
-    );
-
+    const { data: newUsersData, isLoading, isError, isPaused } = getCachedNewUsersStatistic("week");
+    if (isError) return <div>Error</div>;
+    if (isLoading || isPaused || !newUsersData) return <NewUserChartBarSkeleton />;
+    const total = {
+        counterpart: newUsersData.reduce((acc, curr) => acc + curr.counterpart, 0),
+        customer: newUsersData.reduce((acc, curr) => acc + curr.customer, 0),
+    };
     return (
         <Card className="border-gray-50">
             <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-b-gray-200 p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-0">
-                    <CardTitle className="text-md p-0">Participants Statistics</CardTitle>
+                <div className="flex flex-1 flex-col justify-center px-6 py-0">
+                    <CardTitle className="text-md p-0">Registered accounts</CardTitle>
                     <CardDescription className="text-xs line-clamp-2">
-                        Showing how many total users have participated in this week
+                        Showing how many users have registered an account this week
                     </CardDescription>
                 </div>
                 <div className="flex">
@@ -59,7 +50,7 @@ export function NewUserStatistics() {
                                 className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 py-2"
                                 onClick={() => setActiveChart(chart)}
                             >
-                                <p className="text-xs text-muted-foreground">{chartConfig[chart].label}</p>
+                                <p className="text-xs text-gradient-blue font-semibold">{chartConfig[chart].label}</p>
                                 <p className="text-md font-bold leading-none sm:text-xl text-center">
                                     {total[key as keyof typeof total].toLocaleString()}
                                 </p>
@@ -72,7 +63,7 @@ export function NewUserStatistics() {
                 <ChartContainer config={chartConfig} className="aspect-auto h-56 w-full">
                     <BarChart
                         accessibilityLayer
-                        data={chartData}
+                        data={newUsersData}
                         margin={{
                             left: 12,
                             right: 12,

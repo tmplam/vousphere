@@ -11,21 +11,21 @@ export default function DashboardPage() {
             <OverviewStatistics />
 
             <div className="pt-4">
-                <h3 className="text-2xl font-semibold">User Statistics</h3>
+                <h3 className="text-2xl text-gradient font-semibold">User Statistics</h3>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <NewUserStatistics />
-                    <BasicLineChart />
-                </div>
-                <div className="flex">
-                    <EventStatusStatistics />
+                    {/* <BasicLineChart /> */}
                 </div>
             </div>
 
             <div className="pt-4">
-                <h3 className="text-2xl font-semibold">Game Statistics</h3>
+                <h3 className="text-2xl text-gradient font-semibold">Game and Event Statistics</h3>
+                <div className="flex">
+                    <EventStatusStatistics />
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <PlayTurnStatistics />
-                    <BasicLineChart />
+                    {/* <BasicLineChart /> */}
                 </div>
             </div>
         </div>

@@ -18,12 +18,12 @@ export default function Notification({ children }: { children: React.ReactNode }
                         </div>
                     </div>
                 </PopoverTrigger>
-                <PopoverContent className="mt-2 min-w-[20rem] p-0 border border-gray-200">
+                <PopoverContent className="mt-2 min-w-[23rem] p-0 border border-gray-200">
                     <p className="text-center font-semibold pt-1 border-b border-b-gray-200">Notification</p>
                     <ul className="py-1">
                         <Link
                             href="#"
-                            className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-1 px-2 cursor-pointer"
+                            className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-1 px-3 cursor-pointer"
                         >
                             <div className="flex items-center justify-center w-8 md:w-12 ">
                                 <img
@@ -33,24 +33,26 @@ export default function Notification({ children }: { children: React.ReactNode }
                                 />
                             </div>
                             <div className="content flex-[1]">
-                                <h1 className="line-clamp-1 text-sm">Message title</h1>
-                                <p className="line-clamp-2 text-xs">
-                                    Message description Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                                    officia, voluptatibus delectus quisquam tempora cum beatae provident, sapiente hic
-                                    non ex nemo consectetur vero molestias rem voluptas recusandae eos ipsam.
-                                </p>
+                                <div className="flex justify-between items-center">
+                                    <h1 className="line-clamp-1 text-sm">Message title</h1>
+                                    <span className="text-[.75rem]">2023-01-01</span>
+                                </div>
+                                <p className="line-clamp-2 text-xs text-justify">Your event has been rejected!</p>
                             </div>
                         </Link>
                         <Link
                             href="#"
-                            className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-1 px-2 cursor-pointer"
+                            className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-1 px-3 cursor-pointer"
                         >
                             <div className="flex items-center justify-center w-8 md:w-12 bg-slate-50 dark:bg-slate-800 rounded-sm">
                                 <BellRing className="w-12 h-8 md:h-10 rounded-md object-cover m-auto" />
                             </div>
                             <div className="content flex-[1]">
-                                <h1 className="line-clamp-1 text-sm">Message title</h1>
-                                <p className="line-clamp-2 text-xs">
+                                <div className="flex justify-between items-center">
+                                    <h1 className="line-clamp-1 text-sm">Message title</h1>
+                                    <span className="text-[.75rem]">2023-01-01</span>
+                                </div>
+                                <p className="line-clamp-2 text-xs text-justify">
                                     Message description Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
                                     officia, voluptatibus delectus quisquam tempora cum beatae provident, sapiente hic
                                     non ex nemo consectetur vero molestias rem voluptas recusandae eos ipsam.
