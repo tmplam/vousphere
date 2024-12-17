@@ -1,5 +1,18 @@
 services:
   # Databases
+  eventdb:
+    container_name: eventdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=EventDb
+    restart: always
+    ports:
+      - "5401:5432"
+    volumes:
+      - postgres_event:/var/lib/postgresql/data/
+
+
   userdb:
     container_name: userdb
     environment:
@@ -29,6 +42,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=userdb;Database=UserDb;User Id=sa;Password=Phulam2003@;Encrypt=False;TrustServerCertificate=True
     restart: on-failure:3
     ports:
       - "6000:8080"
