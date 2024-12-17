@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions.Enums;
+﻿using BuildingBlocks.Auth.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserService.Domain.Entities;

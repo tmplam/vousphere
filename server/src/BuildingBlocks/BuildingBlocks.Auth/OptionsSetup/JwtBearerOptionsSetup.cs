@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions.Oprions;
+﻿using BuildingBlocks.Auth.Oprions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

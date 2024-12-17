@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions.Services;
+﻿using BuildingBlocks.Auth.Services;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Exceptions;
 using UserService.Application.Repositories;

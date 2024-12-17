@@ -13,7 +13,7 @@ public class SignIn : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/users/sign-in", async (SignInRequest request, ISender sender) =>
+        app.MapPost("/users/sign-in", async (SignInRequest request, ISender sender, HttpContext context) =>
         {
             var query = request.Adapt<SignInQuery>();
 

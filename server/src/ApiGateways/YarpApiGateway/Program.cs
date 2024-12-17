@@ -1,4 +1,4 @@
-using BuildingBlocks.Auth.Abstractions.Middlewares;
+using BuildingBlocks.Auth.Middlewares;
 using BuildingBlocks.Auth.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 

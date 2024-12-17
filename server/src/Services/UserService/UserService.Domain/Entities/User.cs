@@ -1,5 +1,5 @@
 ﻿using UserService.Domain.Enums;
-using BuildingBlocks.Auth.Abstractions;
+using BuildingBlocks.Auth;
 
 namespace UserService.Domain.Entities;
 

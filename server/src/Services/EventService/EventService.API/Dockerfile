@@ -13,10 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/EventService/EventService.API/EventService.API.csproj", "Services/EventService/EventService.API/"]
-COPY ["Services/EventService/EventService.Application/EventService.Application.csproj", "Services/EventService/EventService.Application/"]
+COPY ["BuildingBlocks/BuildingBlocks.Auth/BuildingBlocks.Auth.csproj", "BuildingBlocks/BuildingBlocks.Auth/"]
 COPY ["BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "BuildingBlocks/BuildingBlocks/"]
-COPY ["Services/EventService/EventService.Domain/EventService.Domain.csproj", "Services/EventService/EventService.Domain/"]
-COPY ["Services/EventService/EventService.Infrastructure/EventService.Infrastructure.csproj", "Services/EventService/EventService.Infrastructure/"]
 RUN dotnet restore "./Services/EventService/EventService.API/EventService.API.csproj"
 COPY . .
 WORKDIR "/src/Services/EventService/EventService.API"

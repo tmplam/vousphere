@@ -1,6 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions;
-using BuildingBlocks.Auth.Abstractions.Oprions;
-using BuildingBlocks.Auth.Abstractions.Services;
+﻿using BuildingBlocks.Auth.Oprions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

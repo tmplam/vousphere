@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions.Oprions;
+﻿using BuildingBlocks.Auth.Oprions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 

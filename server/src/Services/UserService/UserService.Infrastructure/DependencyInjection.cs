@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions;
-using BuildingBlocks.Auth.Abstractions.Services;
+﻿using BuildingBlocks.Auth;
 using BuildingBlocks.Auth.OptionsSetup;
 using BuildingBlocks.Auth.Services;
 using Microsoft.AspNetCore.Identity;

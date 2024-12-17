@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Auth.Abstractions.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace BuildingBlocks.Auth.Services;
