@@ -12,6 +12,7 @@ import { handleErrorApi } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UpdateSubscriptionRequestDTO, UpdateSubscriptionRequestSchema, SubscriptionType } from "@/schema/event.schema";
 import MapWithClick from "@/lib/leaflet/Map";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export function UpdateSubscriptionForm({
     subscription,
@@ -142,7 +143,7 @@ export function UpdateSubscriptionForm({
                 />
                 <div className="!mt-6 flex justify-center items-center gap-5 ">
                     <Button
-                        className="bg-rose-500 hover:bg-rose-600 text-white"
+                        className="cancel-btn-color text-base"
                         type="button"
                         onClick={() => {
                             updateSubscriptionForm.reset();
@@ -151,10 +152,10 @@ export function UpdateSubscriptionForm({
                     >
                         Cancel
                     </Button>
-                    <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
+                    <AnimationButton type="submit" className="block px-3 py-[.37rem]">
                         Update
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </Form>

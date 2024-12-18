@@ -4,6 +4,7 @@ import { GameInfoSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons"
 import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import UpdateGameForm from "@/app/(subsystem)/admin/games/[id]/update-game-form";
 import ErrorPage from "@/app/error";
+import { AnimationButton } from "@/components/shared/custom-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -106,16 +107,13 @@ export default function Game() {
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <div className="flex justify-center items-center py-3 gap-4 w-full">
-                                    <Button>
+                                <div className="flex justify-center items-center pt-3 gap-6 w-full">
+                                    <Button className="text-base cancel-btn-color">
                                         <Link href="/admin/games">Back</Link>
                                     </Button>
-                                    <Button
-                                        onClick={() => setUpdate(!update)}
-                                        className="bg-lime-500 hover:bg-lime-600 text-white"
-                                    >
+                                    <AnimationButton onClick={() => setUpdate(!update)} className="px-3 py-[.37rem]">
                                         Update info
-                                    </Button>
+                                    </AnimationButton>
                                 </div>
                             </CardFooter>
                         </Card>

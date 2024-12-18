@@ -1,7 +1,5 @@
 "use client";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { GameType } from "@/schema/game.schema";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";

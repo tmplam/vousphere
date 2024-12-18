@@ -108,6 +108,9 @@ body {
     background-clip: text;
     color: transparent;
 }
+.cancel-btn-color {
+    @apply bg-gradient-to-r from-pink-500 to-orange-500 text-white;
+}
 
 /* Dynamic text clip */
 .dynamic-text,

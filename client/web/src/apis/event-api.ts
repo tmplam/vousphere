@@ -86,7 +86,7 @@ export async function getEventDetail(id: number): Promise<EventGameType | null> 
     // return null;
     return {
         id: 1,
-        name: "New Year 2024",
+        name: "The opening of ABC company in the New Year 2025",
         image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
         vouchers: [
             {
@@ -95,7 +95,7 @@ export async function getEventDetail(id: number): Promise<EventGameType | null> 
                     code: "UUDI-123D",
                     qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
                     image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    value: 10,
+                    value: 8,
                     description: "Free 10% off on all products",
                     expiryDate: "2024-12-01T10:00:00Z",
                     status: true,
@@ -107,15 +107,27 @@ export async function getEventDetail(id: number): Promise<EventGameType | null> 
                     code: "UUDI-125D",
                     qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
                     image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    value: 14,
+                    value: 25,
                     description: "Free 14% off on all products",
                     expiryDate: "2024-12-01T10:00:00Z",
                     status: true,
                 },
             },
+            {
+                amount: 5,
+                voucher: {
+                    code: "UUDI-125D",
+                    qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
+                    image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
+                    value: 50,
+                    description: "Free 50% off on all products",
+                    expiryDate: "2024-12-01T10:00:00Z",
+                    status: true,
+                },
+            },
         ],
-        startTime: "2024-12-01T10:00:00Z",
-        endTime: "2024-12-01T12:00:00Z",
+        startTime: "2024-12-01T10:00",
+        endTime: "2024-12-01T12:00",
         games: [
             {
                 id: "HDFS-sdfd",

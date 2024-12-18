@@ -6,6 +6,7 @@ import ViewVoucherModal from "@/app/(subsystem)/counterpart/event/detail/[id]/vi
 import { VoucherAmount } from "@/app/(subsystem)/counterpart/event/new-event/page";
 import { MyEventDetailsSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import ErrorPage from "@/app/error";
+import { AnimationButton } from "@/components/shared/custom-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useCachedMyEventDetailQuery } from "@/lib/react-query/eventCache";
@@ -54,7 +55,7 @@ export default function EventDetails() {
                 <>
                     <div className="p-3 w-[90vw] sm:w-[80vw] lg:w-[60vw] mx-auto">
                         <div className="space-y-4 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white mx-auto py-3">
-                            <div className="flex justify-center items-center w-[85%] md:w-[80%] h-80 lg:h-96 overflow-hidden rounded-lg mx-auto">
+                            <div className="flex justify-center items-center w-[85%] md:w-[80%] h-64 sm:h-80 lg:h-96 overflow-hidden rounded-lg mx-auto">
                                 <img
                                     src={myEventDetail!.image}
                                     alt={myEventDetail!.name}
@@ -65,7 +66,7 @@ export default function EventDetails() {
                             </div>
                             <div className="px-4 sm:px-8 xl:px-12">
                                 <div className="flex flex-col w-full space-y-2">
-                                    <div className="flex items-center gap-1 text-xl sm:text-2xl font-thin">
+                                    <div className="text-xl sm:text-2xl font-thin">
                                         <b className="font-semibold">Event name:</b> {myEventDetail!.name}
                                     </div>
                                     <div className="flex items-center gap-1">
@@ -106,23 +107,23 @@ export default function EventDetails() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         <p className="flex items-center gap-1">
                                             <Ticket className="inline w-6" size={18} />
                                             <b className="text-lg">Total vouchers:</b> {totalNumOfVouchers}
                                         </p>
-                                        <div className="grid grid-col-1 md:grid-cols-2 gap-4">
+                                        <div className="grid grid-col-1 md:grid-cols-2 gap-3">
                                             {myEventDetail!.vouchers.map((item, index) => (
                                                 <VoucherItem key={index} item={item} />
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         <p className="flex items-center gap-1">
                                             <Gamepad2 className="inline w-6" size={18} />
                                             <b className="text-lg">Games:</b>
                                         </p>
-                                        <div className="grid grid-col-1 md:grid-cols-2 gap-4">
+                                        <div className="grid grid-col-1 md:grid-cols-2 gap-3">
                                             {myEventDetail!.games.map((item, index) => (
                                                 <GameItem key={index} item={item} />
                                             ))}
@@ -131,18 +132,20 @@ export default function EventDetails() {
                                 </div>
                             </div>
                             <Separator />
-                            <div className="flex justify-center items-center gap-4">
-                                <Button className="bg-rose-500 hover:bg-rose-600 text-white">
-                                    <Link href="/counterpart/event">Back</Link>
+                            <div className="flex justify-center items-center gap-6">
+                                <Button className="cancel-btn-color">
+                                    <Link href="/counterpart/event" className="text-base font-normal">
+                                        Back
+                                    </Link>
                                 </Button>
-                                <Button
-                                    className="bg-lime-500 hover:bg-lime-600 text-white"
+                                <AnimationButton
+                                    className="px-3 py-[.37rem] text-white"
                                     onClick={() => {
                                         setUpdate(true);
                                     }}
                                 >
                                     Update
-                                </Button>
+                                </AnimationButton>
                             </div>
                         </div>
                     </div>

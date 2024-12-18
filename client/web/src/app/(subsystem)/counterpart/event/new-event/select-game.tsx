@@ -39,7 +39,7 @@ export default function SelectGameModal({
         onAddingGames(selectedGames);
         toast({
             title: "Success",
-            className: "bg-lime-500",
+            className: "bg-lime-500 text-white",
             description: "Game added successfully",
         });
         setOpen(false);
@@ -89,7 +89,7 @@ export default function SelectGameModal({
                         ))}
                     </div>
                     <div className="flex justify-center items-center mt-5">
-                        <AnimationColorfulButton className="py-1 px-2" type="submit" onClick={handleAddingGames}>
+                        <AnimationColorfulButton className="py-[.37rem] px-3" type="submit" onClick={handleAddingGames}>
                             Add games
                         </AnimationColorfulButton>
                     </div>

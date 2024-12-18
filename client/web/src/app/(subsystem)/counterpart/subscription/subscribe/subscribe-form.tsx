@@ -14,6 +14,7 @@ import { SubscriptionRequestDTO, SubscriptionRequestSchema } from "@/schema/even
 import MapWithClick from "@/lib/leaflet/Map";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export function SubscriptionForm() {
     const [loading, setLoading] = useState(false);
@@ -128,15 +129,15 @@ export function SubscriptionForm() {
                     )}
                 />
                 <div className="!mt-6 flex justify-center items-center gap-5 ">
-                    <Button className="bg-rose-500 hover:bg-rose-600">
+                    <Button className="text-base cancel-btn-color">
                         <Link href="/counterpart/subscription" className="text-white">
                             Cancel
                         </Link>
                     </Button>
-                    <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
+                    <AnimationButton type="submit" className="block px-3 py-[.37rem]">
                         Create
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </Form>

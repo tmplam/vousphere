@@ -22,6 +22,7 @@ import { handleErrorApi } from "@/lib/utils";
 import { UpdateVoucherRequestDTO, UpdateVoucherRequestSchema } from "@/schema/event.schema";
 import { useState } from "react";
 import { CircleX } from "lucide-react";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export default function UpdateVoucherModal({
     children,
@@ -248,12 +249,12 @@ function VoucherAmountForm({
                 </div>
                 <div className="!mt-5 flex !justify-center items-center gap-2 md:gap-5">
                     <DialogClose asChild>
-                        <Button className="block bg-rose-500 hover:bg-rose-600 text-white">Close</Button>
+                        <Button className="block text-base cancel-btn-color">Close</Button>
                     </DialogClose>
-                    <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
+                    <AnimationButton type="submit" className="block px-3 py-[.37rem]">
                         Update
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </Form>

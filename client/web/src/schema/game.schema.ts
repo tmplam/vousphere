@@ -54,15 +54,6 @@ export type GameType = {
     guide: string;
 };
 
-export type EventGameType = {
-    id: number;
-    name: string;
-    image: string;
-    voucherCount: number;
-    startTime: string;
-    endTime: string;
-};
-
 export type VoucherType = {
     code: string;
     qrCode: string;

@@ -19,7 +19,7 @@ export default function Event() {
         return (
             <>
                 <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-4xl font-bold text-gradient">Event</h1>
+                    <h1 className="text-4xl font-bold text-gradient">My Event</h1>
                     <AnimationButton className="p-2 px-3">
                         <Link href="/counterpart/event/new-event">New event</Link>
                         <PartyPopper />
@@ -36,7 +36,7 @@ export default function Event() {
         return (
             <div>
                 <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-4xl font-bold">Event</h1>
+                    <h1 className="text-4xl font-bold text-gradient">My Event</h1>
                     <AnimationButton className="p-2 px-3">
                         <Link href="/counterpart/event/new-event">New event</Link>
                         <PartyPopper />
@@ -49,13 +49,13 @@ export default function Event() {
     return (
         <>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-4xl font-bold text-gradient">Event</h1>
+                <h1 className="text-4xl font-bold text-gradient">My Event</h1>
                 <AnimationButton className="p-2 px-3">
                     <Link href="/counterpart/event/new-event">New event</Link>
                     <PartyPopper />
                 </AnimationButton>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center xl:justify-start">
                 {myEvents?.map((event, index) => (
                     <Link key={index} href={`/counterpart/event/detail/${event.id}`} className="flex-grow-0">
                         <EventCard key={index} event={event} />

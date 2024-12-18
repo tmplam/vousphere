@@ -140,7 +140,7 @@ export function GameListSkeleton({ total = 3 }: { total?: number }) {
 export function GameInfoSkeleton() {
     return (
         <div className={`${shimmer} relative overflow-hidden rounded-xl p-2 shadow-sm`}>
-            <h1 className="text-2xl md:text-4xl font-bold">Game Info</h1>
+            <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Info</h1>
             <div className="py-5">
                 <Card>
                     <CardContent className="py-4">

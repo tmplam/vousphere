@@ -6,9 +6,9 @@ import { Calendar, Clock, Star, Ticket } from "lucide-react";
 const EventCard = ({ event }: { event: EventGameType }) => {
     const totalNumOfVouchers = event.vouchers.reduce((prev, curr) => prev + curr.amount, 0);
     return (
-        <div className="min-w-[310px] max-w-80 dark:bg-slate-800 rounded-xl border border-gray-100 overflow-hidden mx-auto">
+        <div className="min-w-[290px] max-w-80 dark:bg-slate-800 rounded-xl border border-gray-100 overflow-hidden mx-auto">
             <img className="w-full h-48 object-cover" src={event.image} alt="Event image" />
-            <div className="p-4 pt-2 bg-slate-200 dark:bg-slate-800 space-y-1">
+            <div className="p-3 pt-2 bg-slate-200 dark:bg-slate-800 space-y-1">
                 <h2 className="text-xl font-semibold mb-2 line-clamp-2 min-h-14">{event.name}</h2>
                 <div className="flex gap-1">
                     <div className="w-28">

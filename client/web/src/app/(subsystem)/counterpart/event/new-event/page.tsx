@@ -3,6 +3,7 @@
 import CreateVoucherModal from "@/app/(subsystem)/counterpart/event/new-event/create-voucher-modal";
 import SelectGameModal from "@/app/(subsystem)/counterpart/event/new-event/select-game";
 import UpdateVoucherModal from "@/app/(subsystem)/counterpart/event/new-event/update-voucher-modal";
+import { AnimationButton } from "@/components/shared/custom-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -119,7 +120,7 @@ const EventForm = () => {
         toast({
             description: "Add event successfully",
             duration: 2000,
-            className: "bg-green-500 text-white",
+            className: "bg-lime-500 text-white",
         });
         // router.push("/counterpart/event");
     };
@@ -295,13 +296,13 @@ const EventForm = () => {
                     </div>
                 </div>
                 <div className="!mt-6 flex justify-center items-center gap-5 ">
-                    <Button className="bg-rose-500 hover:bg-rose-600 text-white">
+                    <Button className="text-base cancel-btn-color">
                         <Link href="/counterpart/event">Cancel</Link>
                     </Button>
-                    <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
+                    <AnimationButton type="submit" className="block px-4 py-[.37rem]">
                         Add
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </>

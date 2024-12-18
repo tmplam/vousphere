@@ -97,7 +97,7 @@ export default function UserManagement() {
         toast({
             title: "Success",
             description: "User status updated successfully",
-            className: "bg-green-500 text-white",
+            className: "bg-lime-500 text-white",
         });
     }
     if (loading) {
@@ -113,7 +113,7 @@ export default function UserManagement() {
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl md:text-4xl font-bold text-gradient">User Management</h1>
                 <CreateUserDialog>
-                    <AnimationButton className="py-1 px-2 font-semibold flex items-center">
+                    <AnimationButton className="py-[.37rem] px-3 flex items-center">
                         Create User <UserPlus2 size={20} />
                     </AnimationButton>
                 </CreateUserDialog>

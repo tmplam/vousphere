@@ -4,6 +4,7 @@ import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import { MySubscriptionSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import { UpdateSubscriptionForm } from "@/app/(subsystem)/counterpart/subscription/subscribe/update-subscribe-form";
 import ErrorPage from "@/app/error";
+import { AnimationButton } from "@/components/shared/custom-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import MapWithClick from "@/lib/leaflet/Map";
@@ -99,14 +100,14 @@ export default function MySubscription() {
                             </div>
                         </div>
                         <div className="flex justify-between items-center w-full mt-3 lg:mt-6">
-                            <Button
+                            <AnimationButton
                                 onClick={() => {
                                     setUpdate(!update);
                                 }}
-                                className="bg-lime-500 hover:bg-lime-600 text-white mx-auto"
+                                className="mx-auto py-[.37rem] px-3"
                             >
                                 Update subscription
-                            </Button>
+                            </AnimationButton>
                         </div>
                     </div>
                 </>
@@ -123,11 +124,11 @@ export default function MySubscription() {
             )}
 
             <div className="flex justify-between items-center w-full mt-6">
-                <Button className="bg-lime-500 hover:bg-lime-600">
+                <AnimationButton className="py-[.37rem] px-3">
                     <Link href="/counterpart/subscription/subscribe" className="text-white">
                         Create new subscription
                     </Link>
-                </Button>
+                </AnimationButton>
             </div>
         </>
     );

@@ -18,7 +18,7 @@ export function CreateUserDialog({ children }: { children: React.ReactNode }) {
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="max-w-[80vw] sm:max-w-[60vw] md:max-w-[70vw] lg:max-w-[70vw] xl:max-w-[60vw] rounded-md">
                 <DialogHeader>
-                    <DialogTitle>Create user</DialogTitle>
+                    <DialogTitle className="text-center text-2xl uppercase text-gradient">Create user</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="max-h-[80vh]">
                     <CreateUserForm />
