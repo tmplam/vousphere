@@ -24,7 +24,7 @@ export default function MySubscription() {
         return (
             <>
                 <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-4xl font-bold">My subscription</h1>
+                    <h1 className="text-4xl font-bold text-gradient">My subscription</h1>
                 </div>
                 <div className="p-3 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white">
                     <div className="flex items-center justify-center gap-3 min-h-[20rem] flex-col">
@@ -38,7 +38,7 @@ export default function MySubscription() {
         return (
             <>
                 <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-4xl font-bold">My subscription</h1>
+                    <h1 className="text-4xl font-bold text-gradient">My subscription</h1>
                 </div>
                 <div className="p-3 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white">
                     <div className="flex items-center justify-center gap-3 min-h-[20rem] flex-col">
@@ -57,17 +57,17 @@ export default function MySubscription() {
     return (
         <>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-4xl font-bold">My subscription</h1>
+                <h1 className="text-4xl font-bold text-gradient">My subscription</h1>
             </div>
             {!update ? (
                 <>
                     <div className="p-3 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white">
                         <div className="flex flex-wrap justify-between gap-3 min-h-[20rem]">
-                            <div className="info xl:max-w-[23rem] flex-shrink-0">
-                                <div className="py-1">
+                            <div className="info xl:max-w-[23rem]">
+                                <p className="py-1">
                                     <b className="font-semibold">Name: </b>
-                                    {subscription?.name}
-                                </div>
+                                    <span>{subscription?.name}</span>
+                                </p>
                                 <div className="py-1 flex items-center gap-3">
                                     <b className="font-semibold">Area: </b>
                                     <span className={getBadge()}>{subscription?.area?.name}</span>

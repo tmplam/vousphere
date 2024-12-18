@@ -29,14 +29,14 @@ export default function Game() {
         <>
             {update ? (
                 <>
-                    <h1 className="text-2xl md:text-4xl font-bold">Update game info</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold text-gradient">Update game info</h1>
                     <div className="w-[70vw] mx-4 sm:w-sm md:w-sm lg:w-sm xl:w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto shadow-xl rounded-lg text-gray-900">
                         <UpdateGameForm game={game} back={() => setUpdate(!update)} />
                     </div>
                 </>
             ) : (
                 <>
-                    <h1 className="text-2xl md:text-4xl font-bold">Game Info</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Info</h1>
                     <div className="py-5">
                         <Card>
                             <CardContent className="py-4">

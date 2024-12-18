@@ -59,3 +59,27 @@ export function getQueryParams<T>(params: Params, key: string): T {
     if (!value) throw new Error(`"${key}" not found`);
     return typeof value === "string" ? (value as T) : (value[0] as T);
 }
+
+export function printDateTime(date: Date) {
+    return date.toLocaleString();
+}
+
+export function printTime(date: Date) {
+    if (!date) return "";
+    const hour = date.getHours();
+    const hourLabel = hour > 12 ? hour : "0" + hour;
+    const minute = date.getMinutes();
+    const minuteLabel = minute > 9 ? minute : "0" + minute;
+    const second = date.getSeconds();
+    const secondLabel = second > 9 ? second : "0" + second;
+    return `${hourLabel}:${minuteLabel}:${secondLabel}`;
+}
+
+export function printTimeNoSecond(date: Date) {
+    if (!date) return "";
+    const hour = date.getHours();
+    const hourLabel = hour > 12 ? hour : "0" + hour;
+    const minute = date.getMinutes();
+    const minuteLabel = minute > 9 ? minute : "0" + minute;
+    return `${hourLabel}:${minuteLabel}`;
+}

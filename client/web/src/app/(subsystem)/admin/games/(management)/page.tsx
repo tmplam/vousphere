@@ -8,6 +8,7 @@ import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import ErrorPage from "@/app/error";
 import { GameListSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 import { useCachedGameListQuery } from "@/lib/react-query/gameCache";
+import AnimationColorfulButton from "@/components/shared/custom-button";
 
 export default function GameCard() {
     const { data: gameList, isLoading, isError, isPaused } = useCachedGameListQuery();
@@ -15,13 +16,13 @@ export default function GameCard() {
     if (isLoading || isPaused || !gameList)
         return (
             <>
-                <h1 className="text-2xl md:text-4xl font-bold">Game Management</h1>
+                <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Management</h1>
                 <GameListSkeleton total={2} />
             </>
         ); // isLoading is true when api in queryFn was calling and data doesn't exist in cache
     return (
         <>
-            <h1 className="text-2xl md:text-4xl font-bold">Game Management</h1>
+            <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Management</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 py-5 dark:text-white">
                 {gameList.map((game, index) => (
                     <Card
@@ -56,7 +57,7 @@ export default function GameCard() {
 
                         <CardFooter className="flex justify-center !p-3">
                             <Link href={`/admin/games/${game.id}`}>
-                                <Button>View details</Button>
+                                <AnimationColorfulButton className="px-3 py-1">View details</AnimationColorfulButton>
                             </Link>
                         </CardFooter>
                     </Card>

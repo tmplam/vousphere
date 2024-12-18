@@ -35,6 +35,7 @@ import { UserType } from "@/schema/auth.schema";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCachedUserList } from "@/lib/react-query/userCache";
 import Loading from "@/app/loading";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export const resolveRoleBadge = (role: string) => {
     switch (role.toLowerCase()) {
@@ -110,11 +111,11 @@ export default function UserManagement() {
     return (
         <div className="rounded-sm">
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl md:text-4xl font-bold">User Management</h1>
+                <h1 className="text-2xl md:text-4xl font-bold text-gradient">User Management</h1>
                 <CreateUserDialog>
-                    <Button>
-                        Create User <UserPlus2 className="h-4 w-4" />
-                    </Button>
+                    <AnimationButton className="py-1 px-2 font-semibold flex items-center">
+                        Create User <UserPlus2 size={20} />
+                    </AnimationButton>
                 </CreateUserDialog>
             </div>
             <div className="flex items-center justify-between my-2 gap-4">

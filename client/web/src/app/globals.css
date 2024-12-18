@@ -97,11 +97,16 @@ body {
 }
 
 /* Text gradient */
-.text-gradient {
+.text-gradients {
     @apply bg-clip-text text-transparent bg-gradient-to-br from-fuchsia-600 to-violet-500;
 }
 .text-gradient-blue {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-500;
+}
+.text-gradient {
+    background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+    background-clip: text;
+    color: transparent;
 }
 
 /* Dynamic text clip */
@@ -118,6 +123,55 @@ body {
 }
 .dynamic-text-2 {
     background-image: url(https://i.pinimg.com/originals/54/c1/48/54c1480e3be2a062f7ccfe6550002d76.gif);
+}
+
+/* Image checkbox */
+input.image-checkbox[type="checkbox"][id^="image-checkbox"] {
+    display: none;
+}
+label.image-checkbox-label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+}
+label.image-checkbox-label:before {
+    color: white;
+    content: " ";
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid purple;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+}
+label.image-checkbox-label > * {
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+:checked + label.image-checkbox-label {
+    border-color: violet;
+    border-width: 0.1rem;
+    border-radius: 0.75rem;
+}
+:checked + label.image-checkbox-label:before {
+    content: "✓";
+    z-index: 999;
+    background: url(https://i.makeagif.com/media/11-18-2022/0OX_n9.gif) no-repeat 50% 50%;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(1.1);
+}
+:checked + label.image-checkbox-label > * {
+    transform: scale(0.95);
+    z-index: -1;
 }
 
 /* background wave */

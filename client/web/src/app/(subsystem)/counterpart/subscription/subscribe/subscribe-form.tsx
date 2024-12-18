@@ -36,7 +36,7 @@ export function SubscriptionForm() {
             toast({
                 description: "Login successfully",
                 duration: 2000,
-                className: "bg-green-500 text-white",
+                className: "bg-lime-500 text-white",
             });
             createSubscriptionForm.reset();
             router.push("/counterpart/subscription");

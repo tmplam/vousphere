@@ -7,13 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { PasswordInput } from "@/components/ui/password-input";
 import { CreateUserRequestSchema, CreateUserRequestDTO } from "@/schema/user.schema";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function CreateUserForm() {

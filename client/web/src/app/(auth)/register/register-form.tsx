@@ -39,7 +39,7 @@ export function RegisterForm() {
                 toast({
                     description: "Register successfully",
                     duration: 2000,
-                    className: "bg-green-500 text-white",
+                    className: "bg-lime-500 text-white",
                 });
                 router.push("/login");
             } else {

@@ -8,13 +8,13 @@ export const counterpartNavMain = [
         isActive: false,
     },
     {
-        title: "Event",
+        title: "Events",
         url: "/counterpart/event",
         icon: CalendarDays,
         isActive: true,
         items: [
             {
-                title: "Event Overview",
+                title: "My events",
                 url: "/counterpart/event",
                 icon: Calendar,
             },

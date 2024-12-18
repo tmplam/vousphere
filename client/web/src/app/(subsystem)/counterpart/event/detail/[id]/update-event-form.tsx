@@ -1,8 +1,7 @@
 "use client";
-
+import { EventGameType } from "@/schema/event.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -10,30 +9,28 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UpdateSubscriptionRequestDTO, UpdateSubscriptionRequestSchema, SubscriptionType } from "@/schema/event.schema";
-import MapWithClick from "@/lib/leaflet/Map";
+import { UpdateEventRequestSchema, UpdateEventRequestDTO } from "@/schema/event.schema";
 
-export function UpdateSubscriptionForm({
-    subscription,
+export default function UpdateEventForm({
+    event,
     back,
 }: {
-    subscription: SubscriptionType | null | undefined;
-    back: (refetch?: boolean) => void;
+    event: EventGameType;
+    back: (refetchData?: boolean) => void;
 }) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
-    const updateSubscriptionForm = useForm<UpdateSubscriptionRequestDTO>({
-        resolver: zodResolver(UpdateSubscriptionRequestSchema),
+    const updateEventForm = useForm<UpdateEventRequestDTO>({
+        resolver: zodResolver(UpdateEventRequestSchema),
         defaultValues: {
-            id: subscription!.id,
-            name: subscription!.name,
-            address: subscription!.address,
-            areaId: subscription!.area!.id,
-            location: subscription!.location,
-            status: subscription!.status,
+            name: event.name,
+            image: event.image,
+            totalVoucher: [],
+            startTime: event.startTime,
+            endTime: event.endTime,
         },
     });
-    async function onSubmit(values: UpdateSubscriptionRequestDTO) {
+    async function onSubmit(values: UpdateEventRequestDTO) {
         if (loading) return;
         setLoading(true);
         try {
@@ -42,29 +39,29 @@ export function UpdateSubscriptionForm({
             toast({
                 description: "Update subscription successfully",
                 duration: 2000,
-                className: "bg-lime-500 text-white",
+                className: "bg-green-500 text-white",
             });
             await new Promise((resolve) => setTimeout(resolve, 0));
-            updateSubscriptionForm.reset();
+            updateEventForm.reset();
             back(true);
         } catch (error: any) {
             handleErrorApi({
                 error,
-                setError: updateSubscriptionForm.setError,
+                setError: updateEventForm.setError,
             });
         } finally {
             setLoading(false);
         }
     }
     return (
-        <Form {...updateSubscriptionForm}>
+        <Form {...updateEventForm}>
             <form
-                onSubmit={updateSubscriptionForm.handleSubmit(onSubmit)}
+                onSubmit={updateEventForm.handleSubmit(onSubmit)}
                 className="w-full space-y-3 border rounded-md p-3 bg-white dark:bg-gray-950 border-gray-100"
                 noValidate
             >
                 <FormField
-                    control={updateSubscriptionForm.control}
+                    control={updateEventForm.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
@@ -78,8 +75,8 @@ export function UpdateSubscriptionForm({
                     )}
                 />
                 <FormField
-                    control={updateSubscriptionForm.control}
-                    name="address"
+                    control={updateEventForm.control}
+                    name="startTime"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Address</FormLabel>
@@ -97,8 +94,8 @@ export function UpdateSubscriptionForm({
                     )}
                 />
                 <FormField
-                    control={updateSubscriptionForm.control}
-                    name="areaId"
+                    control={updateEventForm.control}
+                    name="endTime"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Area</FormLabel>
@@ -126,15 +123,13 @@ export function UpdateSubscriptionForm({
                     )}
                 />
                 <FormField
-                    control={updateSubscriptionForm.control}
-                    name="location"
+                    control={updateEventForm.control}
+                    name="totalVoucher"
                     render={({ field, fieldState }) => (
                         <FormItem>
                             <FormLabel>Location</FormLabel>
                             <FormControl>
-                                <div className="w-full md:w-[40rem] lg:w-[50rem] xl:w-[60rem] mx-auto h-[20rem] md:h-[30rem]">
-                                    <MapWithClick location={field.value} onChange={field.onChange} />
-                                </div>
+                                <div className="w-full md:w-[40rem] lg:w-[50rem] xl:w-[60rem] mx-auto h-[20rem] md:h-[30rem]"></div>
                             </FormControl>
                             <FormMessage>{fieldState.error && fieldState.error.message}</FormMessage>
                         </FormItem>
@@ -145,7 +140,7 @@ export function UpdateSubscriptionForm({
                         className="bg-rose-500 hover:bg-rose-600 text-white"
                         type="button"
                         onClick={() => {
-                            updateSubscriptionForm.reset();
+                            updateEventForm.reset();
                             back();
                         }}
                     >
@@ -158,5 +153,15 @@ export function UpdateSubscriptionForm({
                 </div>
             </form>
         </Form>
+    );
+}
+
+function UpdateEventForms() {
+    return (
+        <div className="p-3 w-[90vw] sm:w-[80vw] lg:w-[60vw] mx-auto">
+            <div className="space-y-4 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white mx-auto py-3">
+                UpdateEventForm
+            </div>
+        </div>
     );
 }

@@ -43,7 +43,7 @@ export function LoginForm() {
             toast({
                 description: "Login successfully",
                 duration: 2000,
-                className: "bg-green-500 text-white",
+                className: "bg-lime-500 text-white",
             });
             if (includeRole(user.roles, ROLE_ADMIN)) {
                 router.push("/admin");
