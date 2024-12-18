@@ -11,10 +11,13 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddCarter();
 
-builder.Services.AddMarten(config =>
+builder.Services.AddMarten(options =>
 {
-    config.Connection(builder.Configuration.GetConnectionString("Database")!);
-    config.DisableNpgsqlLogging = true;
+    options.Connection(builder.Configuration.GetConnectionString("Database")!);
+    options.Schema.For<Event>();
+    options.Schema.For<VoucherCodeTransaction>();
+    options.Schema.For<ItemPieceTransaction>();
+    options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
