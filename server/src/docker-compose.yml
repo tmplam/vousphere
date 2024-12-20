@@ -4,6 +4,23 @@ services:
     image: mcr.microsoft.com/mssql/server
 
 
+  eventdb:
+    image: postgres
+
+
+  voucherdb:
+    image: postgres
+
+
+  gamedb:
+    image: postgres
+
+
+  # Message broker
+  messagebroker:
+    image: rabbitmq:management
+
+
   # Api gateway
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
@@ -18,6 +35,13 @@ services:
     build:
       context: .
       dockerfile: Services/EventService/EventService.API/Dockerfile
+
+
+  voucherservice.api:
+    image: ${DOCKER_REGISTRY-}voucherserviceapi
+    build:
+      context: .
+      dockerfile: Services/VoucherService/VoucherService.API/Dockerfile
 
 
   gameservice.api:
@@ -59,4 +83,6 @@ services:
 # Volumes
 volumes:
   postgres_event:
+  postgres_voucher:
+  postgres_game:
   sqlserver_user:

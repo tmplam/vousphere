@@ -13,6 +13,32 @@ services:
       - postgres_event:/var/lib/postgresql/data/
 
 
+  voucherdb:
+    container_name: voucherdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=VoucherDb
+    restart: always
+    ports:
+      - "5402:5432"
+    volumes:
+      - postgres_voucher:/var/lib/postgresql/data/
+
+
+  gamedb:
+    container_name: gamedb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=GameDb
+    restart: always
+    ports:
+      - "5403:5432"
+    volumes:
+      - postgres_game:/var/lib/postgresql/data/
+
+
   userdb:
     container_name: userdb
     environment:
@@ -25,6 +51,19 @@ services:
       - sqlserver_user:/var/opt/mssql
 
 
+  # Message broker
+  messagebroker:
+    container_name: messagebroker
+    hostname: vousphere-mq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672" 
+
+
   # Api gateway
   yarpapigateway:
     container_name: yarpapigateway
@@ -33,7 +72,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
     restart: on-failure:3
     ports:
-      - "6006:8080"
+      - "6000:8080"
 
 
   # Services
@@ -42,10 +81,24 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=userdb;Database=UserDb;User Id=sa;Password=Phulam2003@;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Database=Server=eventdb;Port=5432;Database=EventDb;User Id=postgres;Password=postgres;Include Error Detail=true
     restart: on-failure:3
+    depends_on:
+      - eventdb
     ports:
-      - "6000:8080"
+      - "6001:8080"
+
+
+  voucherservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=voucherdb;Port=5432;Database=VoucherDb;User Id=postgres;Password=postgres;Include Error Detail=true
+    restart: on-failure:3
+    depends_on:
+      - voucherdb
+    ports:
+      - "6002:8080"
 
 
   gameservice.api:
@@ -53,9 +106,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=gamedb;Port=5432;Database=GameDb;User Id=postgres;Password=postgres;Include Error Detail=true
     restart: on-failure:3
+    depends_on:
+      - gamedb
     ports:
-      - "6001:8080"
+      - "6003:8080"
 
 
   mediaservice.api:
@@ -65,7 +121,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
     restart: on-failure:3
     ports:
-      - "6002:8080"
+      - "6004:8080"
 
 
   notificationservice.api:
@@ -75,7 +131,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
     restart: on-failure:3
     ports:
-      - "6003:8080"
+      - "6005:8080"
 
 
   paymentservice.api:
@@ -85,7 +141,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
     restart: on-failure:3
     ports:
-      - "6004:8080"
+      - "6006:8080"
 
 
   userservice.api:
@@ -101,7 +157,8 @@ services:
     depends_on:
       - userdb
     ports:
-      - "6005:8080"
+      - "6007:8080"
+
 
 
 networks:
