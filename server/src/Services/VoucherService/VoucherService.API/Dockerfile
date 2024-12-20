@@ -12,21 +12,21 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Services/GameService/GameService.API/GameService.API.csproj", "Services/GameService/GameService.API/"]
+COPY ["Services/VoucherService/VoucherService.API/VoucherService.API.csproj", "Services/VoucherService/VoucherService.API/"]
 COPY ["BuildingBlocks/BuildingBlocks.Auth/BuildingBlocks.Auth.csproj", "BuildingBlocks/BuildingBlocks.Auth/"]
 COPY ["BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "BuildingBlocks/BuildingBlocks/"]
-RUN dotnet restore "./Services/GameService/GameService.API/GameService.API.csproj"
+RUN dotnet restore "./Services/VoucherService/VoucherService.API/VoucherService.API.csproj"
 COPY . .
-WORKDIR "/src/Services/GameService/GameService.API"
-RUN dotnet build "./GameService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Services/VoucherService/VoucherService.API"
+RUN dotnet build "./VoucherService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./GameService.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./VoucherService.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "GameService.API.dll"]
+ENTRYPOINT ["dotnet", "VoucherService.API.dll"]

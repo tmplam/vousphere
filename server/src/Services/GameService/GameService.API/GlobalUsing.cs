@@ -1,9 +1,12 @@
 ﻿global using BuildingBlocks.Auth.Middlewares;
 global using BuildingBlocks.Behaviors;
+global using BuildingBlocks.CQRS;
 global using BuildingBlocks.Exceptions.Handlers;
 global using Carter;
 global using FluentValidation;
+global using GameService.API;
+global using GameService.API.Data;
+global using GameService.API.Entities;
 global using Marten;
+global using Mapster;
 global using MediatR;
-global using VoucherService.API;
-global using VoucherService.API.Entities;

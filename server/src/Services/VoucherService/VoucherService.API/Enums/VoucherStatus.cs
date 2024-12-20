@@ -1,4 +1,4 @@
-﻿namespace EventService.API.Enums;
+﻿namespace VoucherService.API.Enums;
 
 public enum VoucherStatus
 {

@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.CQRS;
 using EventService.API.Dtos;
 
-namespace EventService.API.Features.Events.CreateEvent;
+namespace EventService.API.Features.Events.Commands.CreateEvent;
 
 public record CreateEventCommand(
     string Name,

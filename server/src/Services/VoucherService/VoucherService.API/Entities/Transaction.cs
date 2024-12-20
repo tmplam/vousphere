@@ -1,6 +1,6 @@
 ﻿using VoucherService.API.Enums;
 
-namespace EventService.API.Entities;
+namespace VoucherService.API.Entities;
 
 public class Transaction
 {

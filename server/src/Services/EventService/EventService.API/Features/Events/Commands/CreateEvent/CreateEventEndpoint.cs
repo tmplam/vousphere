@@ -2,14 +2,14 @@
 using EventService.API.Dtos;
 using Mapster;
 
-namespace EventService.API.Features.Events.CreateEvent;
+namespace EventService.API.Features.Events.Commands.CreateEvent;
 
 
 public record CreateEventRequest(
-    string Name, 
-    string Image, 
-    string Description, 
-    DateTimeOffset StartTime, 
+    string Name,
+    string Image,
+    string Description,
+    DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherDto> Vouchers,
     List<Guid> Games,

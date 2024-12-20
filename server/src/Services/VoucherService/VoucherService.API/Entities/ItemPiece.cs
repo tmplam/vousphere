@@ -1,4 +1,4 @@
-﻿namespace EventService.API.Entities;
+﻿namespace VoucherService.API.Entities;
 
 public class ItemPiece
 {
