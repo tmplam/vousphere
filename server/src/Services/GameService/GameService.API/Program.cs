@@ -20,6 +20,8 @@ builder.Services.AddMarten(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
+builder.Services.AddAuthorization();
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.InitializeMartenWith<InitialData>();

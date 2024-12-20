@@ -20,8 +20,12 @@ builder.Services.AddMarten(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
+builder.Services.AddAuthorization();
+
+
 
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipline

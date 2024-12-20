@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Shared;
 using EventService.API.Dtos;
 using Mapster;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EventService.API.Features.Events.Commands.CreateEvent;
 
@@ -22,7 +23,7 @@ public class CreateEventEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/events", async (CreateEventRequest request, ISender sender) =>
+        app.MapPost("/events", async ([FromBody] CreateEventRequest request, [FromServices] ISender sender) =>
         {
             var command = request.Adapt<CreateEventCommand>();
 

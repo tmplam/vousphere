@@ -22,7 +22,7 @@ public class UserFromHeaderMiddleware
         {
             try
             {
-                var claimsList = JsonSerializer.Deserialize<List<ClaimDto>>(claimsJson)!;
+                var claimsList = JsonSerializer.Deserialize<List<ClaimDto>>(claimsJson!)!;
 
                 var claims = claimsList.Select(c => new Claim(c.Type, c.Value));
 

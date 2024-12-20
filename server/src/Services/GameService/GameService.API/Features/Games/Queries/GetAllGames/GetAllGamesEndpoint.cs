@@ -1,6 +1,8 @@
-﻿namespace GameService.API.Features.Games.Queries.GetAllGames;
+﻿using BuildingBlocks.Shared;
+using Microsoft.AspNetCore.Mvc;
 
-public record GetAllGamesRequest();
+namespace GameService.API.Features.Games.Queries.GetAllGames;
+
 public record GetAllGamesResponse(IEnumerable<Game> Games);
 
 
@@ -8,15 +10,13 @@ public class GetAllGamesEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/games", async (GetAllGamesRequest request, ISender sender) =>
+        app.MapGet("/games", async ([FromServices] ISender sender) =>
         {
-            var query = request.Adapt<GetAllGamesQuery>();
-
-            var result = await sender.Send(query);
+            var result = await sender.Send(new GetAllGamesQuery());
 
             var response = result.Adapt<GetAllGamesResponse>();
 
-            return Results.Ok(response);
+            return Results.Ok(ApiResult.Success(response, "Get all games successfully"));
         });
     }
 }

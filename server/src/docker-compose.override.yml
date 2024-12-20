@@ -90,6 +90,7 @@ services:
 
 
   voucherservice.api:
+    container_name: voucherservice.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
