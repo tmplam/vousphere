@@ -1,6 +1,6 @@
-﻿namespace EventService.API.Entities;
+﻿namespace EventService.API.Dtos;
 
-public class Item
+public class ItemDto
 {
     public string Image { get; set; } = string.Empty;
     public int NumberPieces { get; set; }

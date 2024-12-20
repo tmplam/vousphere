@@ -1,7 +1,7 @@
 ﻿namespace EventService.API.Enums;
 
-public enum VoucherCodeStatus
+public enum VoucherStatus
 {
     Active = 0,
-    Used = 1,
+    Redeemed = 1,
 }

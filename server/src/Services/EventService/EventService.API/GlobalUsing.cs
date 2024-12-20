@@ -5,3 +5,4 @@ global using EventService.API;
 global using EventService.API.Entities;
 global using FluentValidation;
 global using Marten;
+global using MediatR;

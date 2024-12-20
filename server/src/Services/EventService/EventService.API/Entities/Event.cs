@@ -14,9 +14,9 @@ public class Event
     public DateTimeOffset EndTime { get; set; }
     public Guid BrandId { get; set; }
 
-    public List<Voucher> Vouchers { get; set; } = new();
-    public int TotalCodes => Vouchers.Sum(voucher => voucher.TotalCodes);
-    public int TotalPublishedCodes => Vouchers.Sum(voucher => voucher.VoucherCodes.Count());
+    public List<VoucherType> VoucherTypes { get; set; } = new();
+    public int TotalVouchers => VoucherTypes.Sum(voucherType => voucherType.Total);
+    public int TotalPublishedVouchers => VoucherTypes.Sum(voucherType => voucherType.Total - voucherType.Remaining);
 
     public List<EventGame> Games { get; set; } = new();
     public Item? Item { get; set; }

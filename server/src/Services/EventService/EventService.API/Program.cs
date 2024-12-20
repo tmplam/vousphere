@@ -1,3 +1,5 @@
+using BuildingBlocks.Auth.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -15,8 +17,6 @@ builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
     options.Schema.For<Event>();
-    options.Schema.For<VoucherCodeTransaction>();
-    options.Schema.For<ItemPieceTransaction>();
     options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
@@ -28,6 +28,10 @@ var app = builder.Build();
 
 // Configure the HTTP request pipline
 app.UseExceptionHandler(config => { });
+
+app.UseMiddleware<UserFromHeaderMiddleware>();
+
+app.UseAuthorization();
 
 app.MapCarter();
 
