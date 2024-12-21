@@ -1,6 +1,9 @@
-﻿using BuildingBlocks.Auth.Middlewares;
+﻿using BuildingBlocks.Auth;
+using BuildingBlocks.Auth.Middlewares;
+using BuildingBlocks.Auth.Policies;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
+using Microsoft.AspNetCore.Authentication;
 
 namespace UserService.API;
 
@@ -10,7 +13,9 @@ public static class DependencyInjection
     {
         services.AddHttpContextAccessor();
         services.AddCarter();
-        services.AddAuthorization();
+        services.AddAuthentication("NoAuth")
+            .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoAuth", _ => { });
+        services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
         services.AddExceptionHandler<GlobalExceptionhandler>();
 
         return services;

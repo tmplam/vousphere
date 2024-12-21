@@ -15,17 +15,23 @@ builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
     options.Schema.For<Game>();
+    options.Schema.For<Quiz>();
     options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("NoAuth")
+    .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoAuth", _ => { });
+builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.InitializeMartenWith<InitialData>();
 }
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 
 
@@ -37,7 +43,6 @@ var app = builder.Build();
 app.UseExceptionHandler(config => { });
 
 app.UseMiddleware<UserFromHeaderMiddleware>();
-
 app.UseAuthorization();
 
 app.MapCarter();

@@ -71,8 +71,8 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
 public class CreateEventHandler(IDocumentSession session) : ICommandHandler<CreateEventCommand, CreateEventResult>
 {
-    public async Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
+    public Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
     {
-        
+        throw new NotImplementedException();
     }
 }

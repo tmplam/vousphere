@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Text.Json;
@@ -15,7 +16,7 @@ public class UserFromHeaderMiddleware
         _next = next;
         _logger = logger;
     }
-
+    
     public async Task InvokeAsync(HttpContext context)
     {
         if (context.Request.Headers.TryGetValue("X-User-Claims", out var claimsJson))
@@ -26,7 +27,7 @@ public class UserFromHeaderMiddleware
 
                 var claims = claimsList.Select(c => new Claim(c.Type, c.Value));
 
-                var identity = new ClaimsIdentity(claims, "Bearer");
+                var identity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
                 var user = new ClaimsPrincipal(identity);
 
                 context.User = user;

@@ -20,7 +20,9 @@ builder.Services.AddMarten(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("NoAuth")
+    .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoAuth", _ => { });
+builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 
 
