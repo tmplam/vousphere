@@ -1,6 +1,6 @@
-﻿namespace EventService.API.Entities;
+﻿namespace EventService.API.Dtos;
 
-public class EventGame
+public class EventGameDto
 {
     public Guid GameId { get; set; }
     public bool PopUpItemsEnabled { get; set; } = false;

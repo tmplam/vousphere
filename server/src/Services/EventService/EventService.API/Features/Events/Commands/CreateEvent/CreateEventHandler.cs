@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using EventService.API.Dtos;
+﻿using EventService.API.Dtos;
 
 namespace EventService.API.Features.Events.Commands.CreateEvent;
 
@@ -9,8 +8,8 @@ public record CreateEventCommand(
     string Description,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
-    List<VoucherDto> Vouchers,
-    List<Guid> Games,
+    List<VoucherTypeDto> VoucherTypes,
+    List<EventGameDto> Games,
     ItemDto? Item) : ICommand<CreateEventResult>;
 public record CreateEventResult(Guid EventId);
 
@@ -36,20 +35,26 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
             .NotEmpty().WithMessage("Event end time is required")
             .GreaterThan(e => e.StartTime).WithMessage("End time must be greater than start time");
 
-        RuleFor(e => e.Vouchers)
+        RuleFor(e => e.VoucherTypes)
             .NotEmpty().WithMessage("Event must have at least one voucher");
 
-        RuleForEach(e => e.Vouchers).ChildRules(voucher =>
+        RuleForEach(e => e.VoucherTypes).ChildRules(voucher =>
         {
-            voucher.RuleFor(v => v.Name)
-                .NotEmpty().WithMessage("Voucher name is required");
-
             voucher.RuleFor(v => v.Discount)
                 .GreaterThan(0).WithMessage("Voucher discount must be greater than 0")
                 .LessThan(100).WithMessage("Voucher discount must be less than 100");
 
-            voucher.RuleFor(v => v.TotalCodes)
+            voucher.RuleFor(v => v.Total)
                 .GreaterThan(0).WithMessage("Voucher total codes must be greater than 0");
+        });
+
+        RuleFor(e => e.Games)
+            .NotEmpty().WithMessage("Event must have at least one game");
+
+        RuleForEach(e => e.Games).ChildRules(game =>
+        {
+            game.RuleFor(g => g.GameId)
+                .NotEmpty().WithMessage("Game Id is required");
         });
 
         When(x => x.Item is not null, () =>
@@ -66,8 +71,8 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
 public class CreateEventHandler(IDocumentSession session) : ICommandHandler<CreateEventCommand, CreateEventResult>
 {
-    public Task<CreateEventResult> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+    public async Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        
     }
 }

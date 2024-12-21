@@ -2,7 +2,7 @@
 
 public class VoucherType
 {
-    public string Type { get; set; } = string.Empty; // 20%, 30%, ...
+    public double Discount { get; set; }
     public int Total { get; set; }
     public int Remaining { get; set; }
 }

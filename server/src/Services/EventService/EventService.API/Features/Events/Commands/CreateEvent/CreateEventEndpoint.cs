@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.Shared;
 using EventService.API.Dtos;
-using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventService.API.Features.Events.Commands.CreateEvent;
@@ -12,9 +11,9 @@ public record CreateEventRequest(
     string Description,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
-    List<VoucherDto> Vouchers,
-    List<Guid> Games,
-    ItemDto Item);
+    List<VoucherTypeDto> VoucherTypes,
+    List<EventGameDto> Games,
+    ItemDto? Item);
 
 public record CreateEventResponse(Guid EventId);
 
@@ -32,6 +31,7 @@ public class CreateEventEndpoint : ICarterModule
             var response = result.Adapt<CreateEventResponse>();
 
             return Results.Ok(ApiResult.Success(response, "Event created"));
-        });
+        })
+            .RequireAuthorization();
     }
 }

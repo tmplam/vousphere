@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Events\Queries\" />
+    <Folder Include="Features\Events\Queries\GetBrandEvents\" />
   </ItemGroup>
 
 </Project>

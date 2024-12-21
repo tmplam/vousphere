@@ -1,11 +1,9 @@
 ﻿global using BuildingBlocks.Auth.Middlewares;
 global using BuildingBlocks.Behaviors;
-global using BuildingBlocks.CQRS;
 global using BuildingBlocks.Exceptions.Handlers;
 global using Carter;
-global using EventService.API;
-global using EventService.API.Entities;
 global using FluentValidation;
 global using Marten;
 global using Mapster;
 global using MediatR;
+global using MediaService.API;
