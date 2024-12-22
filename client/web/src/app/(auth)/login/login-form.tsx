@@ -43,7 +43,7 @@ export function LoginForm() {
             toast({
                 description: "Login successfully",
                 duration: 2000,
-                className: "bg-green-500 text-white",
+                className: "bg-lime-500 text-white",
             });
             if (includeRole(user.roles, ROLE_ADMIN)) {
                 router.push("/admin");
@@ -63,15 +63,20 @@ export function LoginForm() {
     }
     return (
         <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-2 max-w-[600px]" noValidate>
+            <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-4" noValidate>
                 <FormField
                     control={loginForm.control}
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel className="text-md">Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email" type="email" {...field} className="!mt-0" />
+                                <Input
+                                    placeholder="Enter your email"
+                                    type="email"
+                                    {...field}
+                                    className="!mt-0 border-gray-300 dark:border-white"
+                                />
                             </FormControl>
                             {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                             <FormMessage />
@@ -83,9 +88,13 @@ export function LoginForm() {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel className="text-md">Password</FormLabel>
                             <FormControl>
-                                <PasswordInput placeholder="Enter your password" {...field} className="!mt-0" />
+                                <PasswordInput
+                                    placeholder="Enter your password"
+                                    {...field}
+                                    className="!mt-0 border-gray-300 dark:border-white"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -93,8 +102,11 @@ export function LoginForm() {
                     defaultValue="123456"
                 />
 
-                <Button type="submit" className="!mt-5 block m-auto">
-                    Login
+                <Button
+                    type="submit"
+                    className="!mt-5 block m-auto bg-gradient-to-br from-sky-400 to-fuchsia-400 transition-all duration-1000 hover:bg-gradient-to-br hover:from-sky-500 hover:to-fuchsia-500"
+                >
+                    <span className="text-white text-md">Login</span>
                     {loading && <span className="ml-2 animate-spin">⌛</span>}
                 </Button>
             </form>

@@ -20,6 +20,7 @@ import "froala-editor/js/plugins/align.min.js";
 import "froala-editor/js/plugins/char_counter.min.js";
 import FroalaEditorComponent from "react-froala-wysiwyg";
 import { CircleX } from "lucide-react";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 const options = {
     toolbarButtons: [
@@ -62,7 +63,7 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
             toast({
                 description: "Login successfully",
                 duration: 2000,
-                className: "bg-green-500 text-white",
+                className: "bg-lime-500 text-white",
             });
             back();
         } catch (error: any) {
@@ -81,23 +82,25 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                     <div className="image">
                         <label
                             htmlFor="uploadFile1"
-                            className="text-gray-500 dark:text-white font-semibold text-base rounded max-w-md h-24 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif] py-2 mt-3"
+                            className="text-gray-500 dark:text-white font-semibold text-base rounded max-w-md h-18 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif] py-2"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-8 mb-2 fill-gray-500 dark:fill-white"
-                                viewBox="0 0 32 32"
-                            >
-                                <path
-                                    d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
-                                    data-original="#000000"
-                                />
-                                <path
-                                    d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
-                                    data-original="#000000"
-                                />
-                            </svg>
-                            Upload file
+                            <div className="flex items-center gap-2">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-8 mb-2 fill-gray-500 dark:fill-white"
+                                    viewBox="0 0 32 32"
+                                >
+                                    <path
+                                        d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
+                                        data-original="#000000"
+                                    />
+                                    <path
+                                        d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
+                                        data-original="#000000"
+                                    />
+                                </svg>
+                                Upload file
+                            </div>
                             <input
                                 type="file"
                                 id="uploadFile1"
@@ -108,7 +111,7 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                                 }}
                                 value=""
                             />
-                            <p className="text-xs font-medium text-gray-400 mt-2">
+                            <p className="text-xs font-medium text-gray-400">
                                 PNG, JPG SVG, WEBP, and GIF are Allowed.
                             </p>
                         </label>
@@ -142,7 +145,7 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                                             placeholder="Enter game name"
                                             type="name"
                                             {...field}
-                                            className="!mt-0 dark:text-white dark:border-white"
+                                            className="!mt-0 border-gray-200 bg-white dark:bg-black dark:text-white "
                                         />
                                     </FormControl>
                                     {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
@@ -195,13 +198,17 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                         />
                     </div>
                 </div>
-                <div className="!mt-5 flex justify-center items-center gap-5 ">
-                    <Button className="block" onClick={() => back()} variant="destructive">
+                <div className="!mt-5 flex justify-center items-center gap-6 ">
+                    <Button
+                        className="block text-base !py-0 cancel-btn-color"
+                        onClick={() => back()}
+                        variant="destructive"
+                    >
                         Cancel
                     </Button>
-                    <Button type="submit" className="block bg-lime-500 hover:bg-lime-600 text-white">
+                    <AnimationButton type="submit" className="block px-3 py-[.37rem]">
                         Update {loading ? <span className="animate-spin">⌛</span> : ""}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </Form>

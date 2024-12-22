@@ -1,74 +1,69 @@
+"use client";
+
+import * as React from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { getCachedNewUsersStatistic } from "@/lib/react-query/dashboardCache";
+import { NewUserChartBarSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
 
-const chartData = [
-    { date: "2024-04-01", desktop: 222, mobile: 150 },
-    { date: "2024-04-02", desktop: 97, mobile: 180 },
-    { date: "2024-04-03", desktop: 167, mobile: 120 },
-    { date: "2024-04-04", desktop: 242, mobile: 260 },
-    { date: "2024-04-05", desktop: 373, mobile: 290 },
-    { date: "2024-04-06", desktop: 301, mobile: 340 },
-    { date: "2024-04-07", desktop: 245, mobile: 180 },
-    { date: "2024-04-08", desktop: 409, mobile: 320 },
-    { date: "2024-04-09", desktop: 59, mobile: 110 },
-    { date: "2024-04-10", desktop: 261, mobile: 190 },
-    { date: "2024-04-11", desktop: 327, mobile: 350 },
-];
 const chartConfig = {
     views: {
-        label: "Page Views",
+        label: "Participants",
     },
-    desktop: {
-        label: "Desktop",
+    counterpart: {
+        label: "Counterpart",
         color: "hsl(var(--chart-1))",
     },
-    mobile: {
-        label: "Mobile",
+    customer: {
+        label: "Customer",
         color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig;
-export function MobileDesktop() {
-    const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("desktop");
-    const total = React.useMemo(
-        () => ({
-            desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-            mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-        }),
-        []
-    );
+
+export function NewUserStatistics() {
+    const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("counterpart");
+    const { data: newUsersData, isLoading, isError, isPaused } = getCachedNewUsersStatistic("week");
+    if (isError) return <div>Error</div>;
+    if (isLoading || isPaused || !newUsersData) return <NewUserChartBarSkeleton />;
+    const total = {
+        counterpart: newUsersData.reduce((acc, curr) => acc + curr.counterpart, 0),
+        customer: newUsersData.reduce((acc, curr) => acc + curr.customer, 0),
+    };
     return (
-        <Card>
-            <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                    <CardTitle>Bar Chart - Interactive</CardTitle>
-                    <CardDescription>Showing total visitors for the last 3 months</CardDescription>
+        <Card className="border-gray-50">
+            <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-b-gray-200 p-0 sm:flex-row">
+                <div className="flex flex-1 flex-col justify-center px-6 py-0">
+                    <CardTitle className="text-md p-0">Registered accounts</CardTitle>
+                    <CardDescription className="text-xs line-clamp-2">
+                        Showing how many users have registered an account this week
+                    </CardDescription>
                 </div>
                 <div className="flex">
-                    {["desktop", "mobile"].map((key) => {
+                    {["counterpart", "customer"].map((key) => {
                         const chart = key as keyof typeof chartConfig;
                         return (
                             <button
                                 key={chart}
                                 data-active={activeChart === chart}
-                                className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                                className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 py-2"
                                 onClick={() => setActiveChart(chart)}
                             >
-                                <span className="text-xs text-muted-foreground">{chartConfig[chart].label}</span>
-                                <span className="text-lg font-bold leading-none sm:text-3xl">
+                                <p className="text-xs text-gradient-blue font-semibold">{chartConfig[chart].label}</p>
+                                <p className="text-md font-bold leading-none sm:text-xl text-center">
                                     {total[key as keyof typeof total].toLocaleString()}
-                                </span>
+                                </p>
                             </button>
                         );
                     })}
                 </div>
             </CardHeader>
-            <CardContent className="px-2 sm:p-6">
-                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+            <CardContent className="px-2 sm:p-6 !pl-0">
+                <ChartContainer config={chartConfig} className="aspect-auto h-56 w-full">
                     <BarChart
                         accessibilityLayer
-                        data={chartData}
+                        data={newUsersData}
                         margin={{
                             left: 12,
                             right: 12,
@@ -77,8 +72,8 @@ export function MobileDesktop() {
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="date"
-                            tickLine={false}
-                            axisLine={false}
+                            tickLine={true}
+                            axisLine={true}
                             tickMargin={8}
                             minTickGap={32}
                             tickFormatter={(value) => {
@@ -89,6 +84,7 @@ export function MobileDesktop() {
                                 });
                             }}
                         />
+                        <YAxis tickLine={true} axisLine={true} tickMargin={8} tickCount={3} />
                         <ChartTooltip
                             content={
                                 <ChartTooltipContent

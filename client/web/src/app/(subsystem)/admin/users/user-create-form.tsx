@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { PasswordInput } from "@/components/ui/password-input";
 import { CreateUserRequestSchema, CreateUserRequestDTO } from "@/schema/user.schema";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export function CreateUserForm() {
     const [loading, setLoading] = useState(false);
@@ -38,7 +37,7 @@ export function CreateUserForm() {
             toast({
                 description: "Login successfully",
                 duration: 2000,
-                className: "bg-green-500 text-white",
+                className: "bg-lime-500 text-white",
             });
             createUserForm.reset();
         } catch (error: any) {
@@ -56,27 +55,29 @@ export function CreateUserForm() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div className="image">
                         <label
-                            htmlFor="uploadFile1"
-                            className="bg-white text-gray-500 font-semibold text-base rounded max-w-md h-36 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif]"
+                            htmlFor="uploadAvatarFile"
+                            className=" text-gray-700 dark:text-gray-300 font-semibold text-base rounded max-w-md h-20 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif]"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-11 mb-2 fill-gray-500"
-                                viewBox="0 0 32 32"
-                            >
-                                <path
-                                    d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
-                                    data-original="#000000"
-                                />
-                                <path
-                                    d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
-                                    data-original="#000000"
-                                />
-                            </svg>
-                            Upload file
+                            <div className="flex items-center gap-2">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-9 fill-gray-700 dark:fill-gray-300"
+                                    viewBox="0 0 32 32"
+                                >
+                                    <path
+                                        d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
+                                        data-original="#000000"
+                                    />
+                                    <path
+                                        d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
+                                        data-original="#000000"
+                                    />
+                                </svg>
+                                Upload file
+                            </div>
                             <input
                                 type="file"
-                                id="uploadFile1"
+                                id="uploadAvatarFile"
                                 className="hidden"
                                 accept="image/*"
                                 onChange={(e) => {
@@ -84,7 +85,7 @@ export function CreateUserForm() {
                                 }}
                                 value=""
                             />
-                            <p className="text-xs font-medium text-gray-400 mt-2">
+                            <p className="text-xs font-medium text-gray-400">
                                 PNG, JPG SVG, WEBP, and GIF are Allowed.
                             </p>
                         </label>
@@ -92,11 +93,11 @@ export function CreateUserForm() {
                             <img
                                 src={URL.createObjectURL(image)}
                                 alt="your image"
-                                className="mt-2 w-96 mx-auto border rounded-sm"
+                                className="mt-2 max-w-96 max-h-72 mx-auto object-cover border border-gray-200 rounded-sm"
                             />
                         )}
                     </div>
-                    <div className="info">
+                    <div className="space-y-2">
                         <FormField
                             control={createUserForm.control}
                             name="name"
@@ -104,7 +105,11 @@ export function CreateUserForm() {
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your name" {...field} className="!mt-0" />
+                                        <Input
+                                            placeholder="Enter your name"
+                                            {...field}
+                                            className="!mt-0 border-gray-200"
+                                        />
                                     </FormControl>
                                     {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                                     <FormMessage />
@@ -122,7 +127,7 @@ export function CreateUserForm() {
                                             placeholder="Enter your email"
                                             type="email"
                                             {...field}
-                                            className="!mt-0"
+                                            className="!mt-0 border-gray-200"
                                         />
                                     </FormControl>
                                     {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
@@ -137,7 +142,11 @@ export function CreateUserForm() {
                                 <FormItem>
                                     <FormLabel>Phone</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your phone number" {...field} className="!mt-0" />
+                                        <Input
+                                            placeholder="Enter your phone number"
+                                            {...field}
+                                            className="!mt-0 border-gray-200"
+                                        />
                                     </FormControl>
                                     {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                                     <FormMessage />
@@ -152,7 +161,7 @@ export function CreateUserForm() {
                                     <FormLabel>Role</FormLabel>
                                     <Select onValueChange={field.onChange} {...field}>
                                         <FormControl>
-                                            <SelectTrigger className="w-full !mt-0">
+                                            <SelectTrigger className="w-full !mt-0 border-gray-200">
                                                 <SelectValue placeholder="Select a role" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -174,7 +183,11 @@ export function CreateUserForm() {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <PasswordInput placeholder="Enter your password" className="mt-0" {...field} />
+                                        <PasswordInput
+                                            placeholder="Enter your password"
+                                            className="mt-0 border-gray-200"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -183,18 +196,16 @@ export function CreateUserForm() {
                         />
                     </div>
                 </div>
-                <div className="!mt-3 flex justify-center items-center gap-5 ">
+                <div className="!mt-5 flex justify-center items-center gap-6">
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button className="block" variant="destructive">
-                                Close
-                            </Button>
+                            <Button className="block text-base font-normal !py-0 cancel-btn-color">Close</Button>
                         </DialogClose>
                     </DialogFooter>
-                    <Button type="submit" className="block">
+                    <AnimationButton type="submit" className="block py-[.37rem] px-3">
                         Create
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
-                    </Button>
+                    </AnimationButton>
                 </div>
             </form>
         </Form>

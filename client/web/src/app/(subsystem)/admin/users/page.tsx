@@ -35,6 +35,7 @@ import { UserType } from "@/schema/auth.schema";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCachedUserList } from "@/lib/react-query/userCache";
 import Loading from "@/app/loading";
+import { AnimationButton } from "@/components/shared/custom-button";
 
 export const resolveRoleBadge = (role: string) => {
     switch (role.toLowerCase()) {
@@ -46,13 +47,13 @@ export const resolveRoleBadge = (role: string) => {
             );
         case "user":
             return (
-                <Badge key="user" className="bg-amber-600">
+                <Badge key="user" className="bg-amber-600 text-white">
                     User
                 </Badge>
             );
         case "counterpart":
             return (
-                <Badge key="counterpart" className="bg-blue-600">
+                <Badge key="counterpart" className="bg-blue-600 text-white">
                     Counterpart
                 </Badge>
             );
@@ -96,7 +97,7 @@ export default function UserManagement() {
         toast({
             title: "Success",
             description: "User status updated successfully",
-            className: "bg-green-500 text-white",
+            className: "bg-lime-500 text-white",
         });
     }
     if (loading) {
@@ -110,11 +111,11 @@ export default function UserManagement() {
     return (
         <div className="rounded-sm">
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl md:text-4xl font-bold">User Management</h1>
+                <h1 className="text-2xl md:text-4xl font-bold text-gradient">User Management</h1>
                 <CreateUserDialog>
-                    <Button>
-                        Create User <UserPlus2 className="h-4 w-4" />
-                    </Button>
+                    <AnimationButton className="py-[.37rem] px-3 flex items-center">
+                        Create User <UserPlus2 size={20} />
+                    </AnimationButton>
                 </CreateUserDialog>
             </div>
             <div className="flex items-center justify-between my-2 gap-4">
@@ -156,10 +157,10 @@ export default function UserManagement() {
                     </div>
                 </div>
             </div>
-            <div className="overflow-x-auto rounded-md border ">
+            <div className="overflow-x-auto rounded-md border bg-white dark:bg-slate-900">
                 <Table>
                     <TableHeader>
-                        <TableRow>
+                        <TableRow className="bg-gray-200 hover:bg-gray-200 dark:bg-gray-800">
                             <TableHead>No.</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
@@ -185,7 +186,10 @@ export default function UserManagement() {
                                     </div>
                                 </TableCell>
                                 <TableCell className="content-center">
-                                    <Badge variant={user.status ? "default" : "destructive"} className="rounded-full">
+                                    <Badge
+                                        variant={user.status ? "default" : "destructive"}
+                                        className={`rounded-full text-white ${user.status ? "bg-green-600" : ""}`}
+                                    >
                                         {user.status ? "Active" : "Suspended"}
                                     </Badge>
                                 </TableCell>

@@ -39,7 +39,7 @@ export function RegisterForm() {
                 toast({
                     description: "Register successfully",
                     duration: 2000,
-                    className: "bg-green-500 text-white",
+                    className: "bg-lime-500 text-white",
                 });
                 router.push("/login");
             } else {
@@ -68,10 +68,14 @@ export function RegisterForm() {
                     control={registerForm.control}
                     name="name"
                     render={({ field }) => (
-                        <FormItem className="mt-3">
+                        <FormItem className="mt-0">
                             <FormLabel>Full name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your name" className="!mt-0" {...field} />
+                                <Input
+                                    placeholder="Enter your name"
+                                    className="!mt-0 border-gray-300 dark:border-white"
+                                    {...field}
+                                />
                             </FormControl>
                             {/* <FormDescription>This is your public display name.</FormDescription> */}
                             <FormMessage />
@@ -85,7 +89,12 @@ export function RegisterForm() {
                         <FormItem className="mt-3">
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email" className="!mt-0" type="email" {...field} />
+                                <Input
+                                    placeholder="Enter your email"
+                                    className="!mt-0 border-gray-300 dark:border-white"
+                                    type="email"
+                                    {...field}
+                                />
                             </FormControl>
                             {/* <FormDescription>This is your public display name.</FormDescription> */}
                             <FormMessage />
@@ -99,7 +108,11 @@ export function RegisterForm() {
                         <FormItem className="mt-3">
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <PasswordInput placeholder="Enter your password" className="mt-0" {...field} />
+                                <PasswordInput
+                                    placeholder="Enter your password"
+                                    className="mt-0 border-gray-300 dark:border-white"
+                                    {...field}
+                                />
                             </FormControl>
                             {/* <FormDescription>This is your public display name.</FormDescription> */}
                             <FormMessage />
@@ -113,7 +126,11 @@ export function RegisterForm() {
                         <FormItem className="mt-3">
                             <FormLabel>Confirm password</FormLabel>
                             <FormControl>
-                                <PasswordInput placeholder="Enter your password again" className="mt-0" {...field} />
+                                <PasswordInput
+                                    placeholder="Enter your password again"
+                                    className="mt-0 border-gray-300 dark:border-white"
+                                    {...field}
+                                />
                             </FormControl>
                             {/* <FormDescription>This is your public display name.</FormDescription> */}
                             <FormMessage />
@@ -121,8 +138,11 @@ export function RegisterForm() {
                     )}
                 />
 
-                <Button type="submit" disabled={loading} className="!mt-3 m-auto block">
-                    Register
+                <Button
+                    type="submit"
+                    className="!mt-5 block m-auto bg-gradient-to-br from-sky-400 to-fuchsia-400 transition-all duration-1000 hover:bg-gradient-to-br hover:from-sky-500 hover:to-fuchsia-500"
+                >
+                    <span className="text-white text-md">Register</span>
                     {loading && <span className="animate-ping">⌛</span>}
                 </Button>
             </form>
