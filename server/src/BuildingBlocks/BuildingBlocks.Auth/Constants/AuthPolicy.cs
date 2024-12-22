@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Auth.Constants;
 
-public class AuthPolicy
+public static class AuthPolicy
 {
     public const string Admin = "Admin";
     public const string BrandOrAdmin = "BrandOrAdmin";

@@ -34,6 +34,12 @@ public class GlobalExceptionhandler(ILogger<GlobalExceptionhandler> _logger) : I
                 exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest
             ),
+            ForbiddenException =>
+            (
+                exception.Message,
+                exception.GetType().Name,
+                context.Response.StatusCode = StatusCodes.Status403Forbidden
+            ),
             NotFoundException =>
             (
                 exception.Message,

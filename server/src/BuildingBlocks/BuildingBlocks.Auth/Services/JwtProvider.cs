@@ -22,7 +22,7 @@ public sealed class JwtProvider : IJwtProvider
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.MobilePhone, user.PhoneNumber),
-            new(ClaimTypes.Role, user.Role.ToString())
+            new(ClaimTypes.Role, user.Role.ToString()),
         };
 
         var signingCredentials = new SigningCredentials(
@@ -34,7 +34,7 @@ public sealed class JwtProvider : IJwtProvider
             _options.Audience,
             claims,
             null,
-            DateTime.UtcNow.AddHours(1),
+            DateTime.UtcNow.AddHours(5),
             signingCredentials);
 
         string tokenValue = new JwtSecurityTokenHandler()

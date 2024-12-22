@@ -1,8 +1,8 @@
-﻿using BuildingBlocks.Auth.Constants;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 namespace BuildingBlocks.Auth.Middlewares;
+
 
 public class UserToHeaderMiddleware
 {

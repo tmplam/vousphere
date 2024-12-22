@@ -1,10 +1,20 @@
-﻿using BuildingBlocks.Auth.Services;
-
-namespace GameService.API.Features.Quizzes.Commands.CreateQuiz;
+﻿namespace GameService.API.Features.Quizzes.Commands.CreateQuiz;
 
 
 public record CreateQuizCommand(string Name, string Description) : ICommand<CreateQuizResult>;
 public record CreateQuizResult(Guid QuizId);
+
+public class CreateQuizCommandValidator : AbstractValidator<CreateQuizCommand>
+{
+    public CreateQuizCommandValidator()
+    {
+        RuleFor(q => q.Name)
+            .NotEmpty().WithMessage("Quiz name is requied");
+
+        RuleFor(q => q.Description)
+            .NotEmpty().WithMessage("Quiz description is requied");
+    }
+}
 
 
 public class CreateQuizHandler(

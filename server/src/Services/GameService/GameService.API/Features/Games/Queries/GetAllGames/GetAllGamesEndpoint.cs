@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.Shared;
-using Microsoft.AspNetCore.Mvc;
-
-namespace GameService.API.Features.Games.Queries.GetAllGames;
+﻿namespace GameService.API.Features.Games.Queries.GetAllGames;
 
 public record GetAllGamesResponse(IEnumerable<Game> Games);
 
@@ -17,6 +14,7 @@ public class GetAllGamesEndpoint : ICarterModule
             var response = result.Adapt<GetAllGamesResponse>();
 
             return Results.Ok(ApiResult.Success(response, "Get all games successfully"));
-        });
+        })
+            .RequireAuthorization(AuthPolicy.BrandOrAdmin);
     }
 }
