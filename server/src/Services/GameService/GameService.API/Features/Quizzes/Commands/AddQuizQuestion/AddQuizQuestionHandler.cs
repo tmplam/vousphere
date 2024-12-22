@@ -1,6 +1,4 @@
-﻿using BuildingBlocks.Exceptions;
-
-namespace GameService.API.Features.Quizzes.Commands.AddQuizQuestion;
+﻿namespace GameService.API.Features.Quizzes.Commands.AddQuizQuestion;
 
 public record AddQuizQuestionCommand(Guid QuizId, string Content, List<QuestionOptionDto> Options) : ICommand<AddQuizQuestionResult>;
 public record AddQuizQuestionResult(Guid QuestionId);

@@ -18,6 +18,7 @@ public class GetQuizByIdEndpoint : ICarterModule
             var response = result.Adapt<GetQuizByIdResponse>();
 
             return Results.Ok(ApiResult.Success(response.Quiz));
-        });
+        })
+            .RequireAuthorization(AuthPolicy.BrandOrAdmin);
     }
 }
