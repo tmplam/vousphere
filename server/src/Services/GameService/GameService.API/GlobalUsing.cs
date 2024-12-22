@@ -11,6 +11,7 @@ global using Carter;
 global using FluentValidation;
 global using GameService.API;
 global using GameService.API.Data;
+global using GameService.API.Dtos;
 global using GameService.API.Entities;
 global using Marten;
 global using Mapster;

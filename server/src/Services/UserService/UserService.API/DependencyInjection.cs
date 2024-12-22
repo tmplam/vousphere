@@ -1,5 +1,5 @@
-﻿using BuildingBlocks.Auth;
-using BuildingBlocks.Auth.Middlewares;
+﻿using BuildingBlocks.Auth.Middlewares;
+using BuildingBlocks.Auth.PayloadAuth;
 using BuildingBlocks.Auth.Policies;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
@@ -13,8 +13,13 @@ public static class DependencyInjection
     {
         services.AddHttpContextAccessor();
         services.AddCarter();
-        services.AddAuthentication("NoAuth")
-            .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoAuth", _ => { });
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = PayloadDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = PayloadDefaults.AuthenticationScheme;
+            })
+            .AddScheme<AuthenticationSchemeOptions, PayloadAuthenticationHandler>(PayloadDefaults.AuthenticationScheme, options => { });
         services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
         services.AddExceptionHandler<GlobalExceptionhandler>();
 
@@ -27,7 +32,7 @@ public static class DependencyInjection
 
         app.UseRouting();
         
-        app.UseMiddleware<UserFromHeaderMiddleware>();
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

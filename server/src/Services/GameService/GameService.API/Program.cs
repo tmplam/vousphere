@@ -1,3 +1,5 @@
+using BuildingBlocks.Auth.PayloadAuth;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -21,8 +23,14 @@ builder.Services.AddMarten(options =>
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
-builder.Services.AddAuthentication("NoAuth")
-    .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoAuth", _ => { });
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = PayloadDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = PayloadDefaults.AuthenticationScheme;
+    })
+    .AddScheme<AuthenticationSchemeOptions, PayloadAuthenticationHandler>(PayloadDefaults.AuthenticationScheme, options => { });
+
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 if (builder.Environment.IsDevelopment())
@@ -42,7 +50,7 @@ var app = builder.Build();
 // Configure the HTTP request pipline
 app.UseExceptionHandler(config => { });
 
-app.UseMiddleware<UserFromHeaderMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
