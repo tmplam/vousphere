@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e3e819e1-62b3-43e6-9ae3-7c178f73d42a",
+		"_postman_id": "04fb1ffe-9db5-42fe-9c2a-ef84019ce3a2",
 		"name": "VouSphere",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39526978"
@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"PhoneNumber\": \"0909878746\",\r\n    \"Password\": \"Phulam2003@\",\r\n    \"IsBrand\": false\r\n}",
+									"raw": "{\r\n    \"PhoneNumber\": \"0123456789\",\r\n    \"Password\": \"lam2003\",\r\n    \"IsBrand\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -47,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"PhoneNumber\": \"0909878746\",\r\n    \"Password\": \"Phulam2003@\"\r\n}",
+									"raw": "{\r\n    \"PhoneNumber\": \"0123456789\",\r\n    \"Password\": \"lam2003\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -69,8 +69,192 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Game",
+					"item": [
+						{
+							"name": "Get all games",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/games",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"games"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create quiz",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Gud job em\",\r\n    \"description\": \"Custom event\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add quiz question",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId",
+										"questions"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get quizzes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes?page=1&perPage=10",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Event",
+					"item": [
+						{
+							"name": "Get events",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Voucher",
+					"item": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjJmZDg1NDZkLTFmOGYtNDM1NC1iNmNkLTk3ODExZjBhYTE5YyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDEyMzQ1Njc4OSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlBsYXllciIsImV4cCI6MTczNDg3ODkyMiwiaXNzIjoiVm91U3BoZXJlIiwiYXVkIjoiVm91U3BoZXJlIn0.DSv3vFBIjFIFUjvWt0R6NC9mAL1rEZ4gJgZ65-ynepM",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
