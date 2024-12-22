@@ -47,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"PhoneNumber\": \"0123456789\",\r\n    \"Password\": \"lam2003\"\r\n}",
+									"raw": "{\r\n    \"PhoneNumber\": \"0909643661\",\r\n    \"Password\": \"lam2003\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -159,7 +159,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes?page=1&perPage=10",
+									"raw": "{{yarp_base_url}}/game-service/quizzes?page=1&perPage=10&includeQuestions=false",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -175,6 +175,196 @@
 										{
 											"key": "perPage",
 											"value": "10"
+										},
+										{
+											"key": "includeQuestions",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get quiz by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update quiz question",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"id\": \"c04dafab-e592-47d7-867f-6378a01a0646\",\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"id\": \"3be00b20-8ca6-494d-80cd-2f83de384fd9\",\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"id\": null,\r\n            \"content\": \"oke la 3\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get quiz question by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete quiz question",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update quiz",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Gud job em\",\r\n    \"description\": \"abc test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193ea0f-d302-4ae6-b26c-16c7bf78effe"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete quiz",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"quizzes",
+										":quizId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193ea0f-d302-4ae6-b26c-16c7bf78effe"
 										}
 									]
 								}
@@ -199,6 +389,14 @@
 				{
 					"name": "Voucher",
 					"item": []
+				},
+				{
+					"name": "Notification",
+					"item": []
+				},
+				{
+					"name": "Payment",
+					"item": []
 				}
 			],
 			"auth": {
@@ -206,7 +404,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjJmZDg1NDZkLTFmOGYtNDM1NC1iNmNkLTk3ODExZjBhYTE5YyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDEyMzQ1Njc4OSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlBsYXllciIsImV4cCI6MTczNDg3ODkyMiwiaXNzIjoiVm91U3BoZXJlIiwiYXVkIjoiVm91U3BoZXJlIn0.DSv3vFBIjFIFUjvWt0R6NC9mAL1rEZ4gJgZ65-ynepM",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImMxMGYyYzRlLTY4MzYtNGNjNC1iOWFkLTg0YzRmNTIwOTczMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDkwOTY0MzY2MSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkJyYW5kIiwiZXhwIjoxNzM0ODkzMzEzLCJpc3MiOiJWb3VTcGhlcmUiLCJhdWQiOiJWb3VTcGhlcmUifQ.5cUQf4K4mZPbKCEQZBVvxsJVweQqHxZrDPUlbbMyxZU",
 						"type": "string"
 					}
 				]
