@@ -1,6 +1,6 @@
 ﻿namespace GameService.API.Features.Quizzes.Queries.GetQuizzes;
 
-public record GetQuizzesRequest(int Page = 1, int PerPage = 10, bool GetQuestions = false);
+public record GetQuizzesRequest(int Page = 1, int PerPage = 10, bool IncludeQuestions = false);
 public record GetQuizzesResponse(PaginationResult<Quiz> Quizzes);
 
 

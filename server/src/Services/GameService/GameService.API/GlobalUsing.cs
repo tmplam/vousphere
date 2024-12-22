@@ -1,10 +1,10 @@
-﻿global using BuildingBlocks.Auth;
-global using BuildingBlocks.Auth.Constants;
-global using BuildingBlocks.Auth.Middlewares;
+﻿global using BuildingBlocks.Auth.Constants;
+global using BuildingBlocks.Auth.PayloadAuth;
 global using BuildingBlocks.Auth.Policies;
 global using BuildingBlocks.Auth.Services;
 global using BuildingBlocks.Behaviors;
 global using BuildingBlocks.CQRS;
+global using BuildingBlocks.Exceptions;
 global using BuildingBlocks.Exceptions.Handlers;
 global using BuildingBlocks.Shared;
 global using Carter;
