@@ -1,8 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using UserService.API;
 using UserService.Application;
 using UserService.Infrastructure;
-using UserService.Infrastructure.Persistence;
+using UserService.Infrastructure.Persistence.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +15,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
-    }
+    await app.InitialiseDatabaseAsync();
 }
 
 // Configure the HTTP request pipline

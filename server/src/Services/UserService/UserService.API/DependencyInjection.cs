@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Auth.Middlewares;
-using BuildingBlocks.Auth.PayloadAuth;
+﻿using BuildingBlocks.Auth.PayloadAuth;
 using BuildingBlocks.Auth.Policies;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;

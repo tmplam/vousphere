@@ -14,7 +14,7 @@ public class RejectEventHandler(
 
         if (existingEvent == null) throw new NotFoundException("Event not found");
 
-        existingEvent.Status = EventStatus.Approved;
+        existingEvent.Status = EventStatus.Rejected;
         existingEvent.Comment = command.Comment;
 
         session.Update(existingEvent);
