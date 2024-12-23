@@ -1,6 +1,5 @@
 ﻿namespace GameService.API.Features.Quizzes.Commands.CreateQuiz;
 
-
 public record CreateQuizCommand(string Name, string Description) : ICommand<CreateQuizResult>;
 public record CreateQuizResult(Guid QuizId);
 

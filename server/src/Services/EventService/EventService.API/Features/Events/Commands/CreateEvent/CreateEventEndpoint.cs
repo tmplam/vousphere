@@ -1,14 +1,9 @@
-﻿using BuildingBlocks.Shared;
-using EventService.API.Dtos;
-using Microsoft.AspNetCore.Mvc;
-
-namespace EventService.API.Features.Events.Commands.CreateEvent;
-
+﻿namespace EventService.API.Features.Events.Commands.CreateEvent;
 
 public record CreateEventRequest(
     string Name,
-    string Image,
     string Description,
+    string Image,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,
@@ -30,8 +25,8 @@ public class CreateEventEndpoint : ICarterModule
 
             var response = result.Adapt<CreateEventResponse>();
 
-            return Results.Ok(ApiResult.Success(response, "Event created"));
+            return Results.Created($"/events/{response.EventId}", ApiResult.Success(response, "Event created"));
         })
-            .RequireAuthorization();
+            .RequireAuthorization(AuthPolicy.BrandOrAdmin);
     }
 }

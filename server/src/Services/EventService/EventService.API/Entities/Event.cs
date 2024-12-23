@@ -1,6 +1,4 @@
-﻿using EventService.API.Enums;
-
-namespace EventService.API.Entities;
+﻿namespace EventService.API.Entities;
 
 public class Event
 {

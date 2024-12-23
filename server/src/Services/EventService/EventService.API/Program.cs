@@ -1,5 +1,3 @@
-using BuildingBlocks.Auth.PayloadAuth;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -31,6 +29,9 @@ builder.Services
     .AddScheme<AuthenticationSchemeOptions, PayloadAuthenticationHandler>(PayloadDefaults.AuthenticationScheme, options => { });
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 
 
