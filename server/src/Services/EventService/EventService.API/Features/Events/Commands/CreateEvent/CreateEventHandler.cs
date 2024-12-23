@@ -87,6 +87,7 @@ public class CreateEventHandler(
             Image = command.Image,
             StartTime = command.StartTime,
             EndTime = command.EndTime,
+            BrandId = brandId,
             VoucherTypes = command.VoucherTypes.Select(vt => new VoucherType
             {
                 Id = Guid.NewGuid(),
