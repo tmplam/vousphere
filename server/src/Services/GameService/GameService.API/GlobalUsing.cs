@@ -18,3 +18,5 @@ global using Mapster;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Mvc;
+global using System.Text.Json.Serialization;
+global using Weasel.Core;

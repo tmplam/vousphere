@@ -1,5 +1,3 @@
-using BuildingBlocks.Auth.PayloadAuth;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -12,14 +10,20 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddCarter();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
+    options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
+    options.DisableNpgsqlLogging = true;
+
     options.Schema.For<Voucher>();
     options.Schema.For<ItemPiece>();
     options.Schema.For<Transaction>();
-    options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
@@ -33,7 +37,6 @@ builder.Services
     .AddScheme<AuthenticationSchemeOptions, PayloadAuthenticationHandler>(PayloadDefaults.AuthenticationScheme, options => { });
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
-
 
 
 

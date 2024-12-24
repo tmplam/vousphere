@@ -10,13 +10,19 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddCarter();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
+    options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
+    options.DisableNpgsqlLogging = true;
+
     options.Schema.For<Game>();
     options.Schema.For<Quiz>();
-    options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();

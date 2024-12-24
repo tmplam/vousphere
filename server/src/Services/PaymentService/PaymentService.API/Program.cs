@@ -1,5 +1,3 @@
-using BuildingBlocks.Auth.PayloadAuth;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -16,6 +14,7 @@ builder.Services.AddCarter();
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
+    options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
     options.DisableNpgsqlLogging = true;
 }).UseLightweightSessions();
 
@@ -30,7 +29,6 @@ builder.Services
     .AddScheme<AuthenticationSchemeOptions, PayloadAuthenticationHandler>(PayloadDefaults.AuthenticationScheme, options => { });
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
-
 
 
 

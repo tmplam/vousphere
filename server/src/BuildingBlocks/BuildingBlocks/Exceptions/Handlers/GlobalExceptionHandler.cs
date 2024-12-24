@@ -28,6 +28,7 @@ public class GlobalExceptionhandler(ILogger<GlobalExceptionhandler> _logger) : I
                 exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity
             ),
+            BadHttpRequestException or
             BadRequestException =>
             (
                 exception.Message,

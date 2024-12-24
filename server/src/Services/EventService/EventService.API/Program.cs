@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -10,12 +12,20 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddCarter();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
-    options.Schema.For<Event>();
+    options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
     options.DisableNpgsqlLogging = true;
+
+    options.Schema.For<Event>()
+        .NgramIndex(e => e.Name)
+        .NgramIndex(e => e.Description);
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();

@@ -28,7 +28,7 @@ public class GetQuizzesHandler(
         }
 
         return new GetQuizzesResult(
-            new PaginationResult<Quiz>(
+            PaginationResult<Quiz>.Create(
                 quizzes.PageNumber, 
                 quizzes.PageSize, 
                 quizzes.TotalItemCount, 

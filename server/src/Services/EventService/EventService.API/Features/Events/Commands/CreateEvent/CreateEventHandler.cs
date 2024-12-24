@@ -85,6 +85,7 @@ public class CreateEventHandler(
             Name = command.Name,
             Description = command.Description,
             Image = command.Image,
+            CreatedAt = DateTimeOffset.UtcNow,
             StartTime = command.StartTime,
             EndTime = command.EndTime,
             BrandId = brandId,

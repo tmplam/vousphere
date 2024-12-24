@@ -1,16 +1,25 @@
 ﻿namespace EventService.API.Features.Events.Queries.GetEvents;
 
-public record GetEventsRequest();
-public record GetEventsResponse();
+public record GetEventsRequest(
+    int Page = 1,
+    int PerPage = 10,
+    string Keyword = "");
+public record GetEventsResponse(PaginationResult<Event> Events);
 
 
 public class GetEventsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/events", () =>
+        app.MapGet("/events", async ([AsParameters] GetEventsRequest request, [FromServices] ISender sender) =>
         {
+            var query = request.Adapt<GetEventsQuery>();
 
+            var result = await sender.Send(query);
+
+            var response = result.Adapt<GetEventsResponse>();
+
+            return Results.Ok(ApiResult.Success(response));
         });
     }
 }

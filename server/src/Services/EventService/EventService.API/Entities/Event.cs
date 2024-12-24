@@ -8,6 +8,7 @@ public class Event
     public string? Image { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Pending;
     public string? Comment { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     public Guid BrandId { get; set; }

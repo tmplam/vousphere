@@ -21,8 +21,9 @@ public sealed class JwtProvider : IJwtProvider
         var claims = new Claim[]
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.MobilePhone, user.PhoneNumber),
             new(ClaimTypes.Role, user.Role.ToString()),
+            new(ClaimTypes.MobilePhone, user.PhoneNumber),
+            new(ClaimTypes.Name, user.Name ?? ""),
         };
 
         var signingCredentials = new SigningCredentials(

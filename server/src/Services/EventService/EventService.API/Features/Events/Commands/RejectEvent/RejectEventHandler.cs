@@ -3,6 +3,14 @@
 public record RejectEventCommand(Guid EventId, string Comment) : ICommand<RejectEventResult>;
 public record RejectEventResult();
 
+public class RejectEventCommandValidator : AbstractValidator<RejectEventCommand>
+{
+    public RejectEventCommandValidator()
+    {
+        RuleFor(r => r.Comment)
+            .NotEmpty().WithMessage("Reject comment is required");
+    }
+}
 
 public class RejectEventHandler(
     IDocumentSession session)
