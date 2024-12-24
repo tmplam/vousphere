@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"PhoneNumber\": \"0123456789\",\r\n    \"Password\": \"lam2003\",\r\n    \"IsBrand\": false\r\n}",
+									"raw": "{\r\n    \"phoneNumber\": \"0909987652\",\r\n    \"password\": \"admin123@\",\r\n    \"isBrand\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -47,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"PhoneNumber\": \"0909643661\",\r\n    \"Password\": \"lam2003\"\r\n}",
+									"raw": "{\r\n    \"phoneNumber\": \"0000000000\",\r\n    \"password\": \"admin123@\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -68,7 +68,8 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admin account:\n\n- 0000000000\n    \n- admin123@"
 				},
 				{
 					"name": "Game",
@@ -377,14 +378,231 @@
 					"name": "Event",
 					"item": [
 						{
-							"name": "Get events",
+							"name": "Get events (for player)",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events?page=1&perPage=2&keyword",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "2"
+										},
+										{
+											"key": "keyword",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create event",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"image\": \"123123124\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Approve event",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events/:eventId/approve",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events",
+										":eventId",
+										"approve"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reject event",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"comment\": \"Violate rules\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events/:eventId/reject",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events",
+										":eventId",
+										"reject"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get events (for brand)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events/registered?page=1&perPage=2&keyword=sh 11&status=Pending&startTime=2024-12-25T04:24:20.305Z&endTime=2024-12-30T04:24:20.305Z",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events",
+										"registered"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "2"
+										},
+										{
+											"key": "keyword",
+											"value": "sh 11"
+										},
+										{
+											"key": "status",
+											"value": "Pending"
+										},
+										{
+											"key": "startTime",
+											"value": "2024-12-25T04:24:20.305Z"
+										},
+										{
+											"key": "endTime",
+											"value": "2024-12-30T04:24:20.305Z"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update event",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"image\": \"123123124\",\r\n    \"startTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-30T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events/:eventId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f48c-8f40-4a9c-98c2-250e7680e698"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get event by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/events/:eventId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f48c-8f40-4a9c-98c2-250e7680e698"
+										}
+									]
+								}
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Event status:\n\n- Pending\n    \n- Approved\n    \n- Rejected"
 				},
 				{
 					"name": "Voucher",
@@ -404,7 +622,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImMxMGYyYzRlLTY4MzYtNGNjNC1iOWFkLTg0YzRmNTIwOTczMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDkwOTY0MzY2MSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkJyYW5kIiwiZXhwIjoxNzM0ODkzMzEzLCJpc3MiOiJWb3VTcGhlcmUiLCJhdWQiOiJWb3VTcGhlcmUifQ.5cUQf4K4mZPbKCEQZBVvxsJVweQqHxZrDPUlbbMyxZU",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE0MDViNGRiLTc4ZGItNDNjZC05MWQyLWEyOWYwMWE0MTZmMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDAwMDAwMDAwMCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzM0OTYxMzYxLCJpc3MiOiJWb3VTcGhlcmUiLCJhdWQiOiJWb3VTcGhlcmUifQ.zqppC7mq4pt-a7to4xsuIMLDUFccSL-_zCoOQCCcc98",
 						"type": "string"
 					}
 				]
