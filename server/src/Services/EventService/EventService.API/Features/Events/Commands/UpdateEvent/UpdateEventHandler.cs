@@ -1,6 +1,7 @@
-﻿namespace EventService.API.Features.Events.Commands.CreateEvent;
+﻿namespace EventService.API.Features.Events.Commands.UpdateEvent;
 
-public record CreateEventCommand(
+public record UpdateEventCommand(
+    Guid EventId,
     string Name,
     string Description,
     string Image,
@@ -8,13 +9,12 @@ public record CreateEventCommand(
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,
     List<EventGameDto> Games,
-    ItemDto? Item) : ICommand<CreateEventResult>;
-public record CreateEventResult(Guid EventId);
+    ItemDto? Item) : ICommand<UpdateEventResult>;
+public record UpdateEventResult();
 
-
-public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
+public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
 {
-    public CreateEventCommandValidator()
+    public UpdateEventCommandValidator()
     {
         RuleFor(e => e.Name)
             .NotEmpty().WithMessage("Event name is required");
@@ -67,49 +67,55 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 }
 
 
-public class CreateEventHandler(
+public class UpdateEventHandler(
     IDocumentSession session,
-    IClaimService claimService)
-    : ICommandHandler<CreateEventCommand, CreateEventResult>
+    IClaimService claimService) : ICommandHandler<UpdateEventCommand, UpdateEventResult>
 {
-    public async Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
+    public async Task<UpdateEventResult> Handle(UpdateEventCommand command, CancellationToken cancellationToken)
     {
-        var brandId = Guid.Parse(claimService.GetUserId());
-
         var popUpItemsEnabled = command.Games.Any(g => g.PopUpItemsEnabled);
 
-        if (popUpItemsEnabled && command.Item == null) 
+        if (popUpItemsEnabled && command.Item == null)
             throw new BadRequestException("There is pop up items game, but no item specified");
 
-        var newEvent = new Event
-        {
-            Name = command.Name,
-            Description = command.Description,
-            Image = command.Image,
-            CreatedAt = DateTimeOffset.UtcNow,
-            StartTime = command.StartTime,
-            EndTime = command.EndTime,
-            BrandId = brandId,
-            VoucherTypes = command.VoucherTypes.Select(vt => new VoucherType
+        var existingEvent = await session.LoadAsync<Event>(command.EventId);
+
+        if (existingEvent == null)
+            throw new NotFoundException("Event not found");
+
+        var brandId = Guid.Parse(claimService.GetUserId());
+
+        if (brandId != existingEvent.BrandId) throw new ForbiddenException();
+
+        if (existingEvent.Status == EventStatus.Approved && DateTimeOffset.UtcNow >= existingEvent.StartTime)
+            throw new BadRequestException("Can't update started event");
+
+        existingEvent.Name = command.Name;
+        existingEvent.Description = command.Description;
+        existingEvent.Image = command.Image;
+        existingEvent.StartTime = command.StartTime;
+        existingEvent.EndTime = command.EndTime;
+        existingEvent.Games = command.Games.Select(g => new EventGame
+            {
+                GameId = g.GameId,
+                PopUpItemsEnabled = g.PopUpItemsEnabled,
+                QuizzCollectionId = g.QuizzCollectionId,
+            }).ToList();
+
+        existingEvent.VoucherTypes = command.VoucherTypes.Select(vt => new VoucherType
             {
                 Id = Guid.NewGuid(),
                 Discount = vt.Discount,
                 Total = vt.Total,
                 Remaining = vt.Total
-            }).ToList(),
-            Games = command.Games.Select(g => new EventGame
-            {
-                GameId = g.GameId,
-                PopUpItemsEnabled = g.PopUpItemsEnabled,
-                QuizzCollectionId = g.QuizzCollectionId,
-            }).ToList(),
-            Item = command.Item == null ? 
-                null : new Item { Image = command.Item.Image, NumberPieces = command.Item.NumberPieces },
-        };
+            }).ToList();
 
-        session.Store(newEvent);
+        existingEvent.Item = command.Item == null ?
+                null : new Item { Image = command.Item.Image, NumberPieces = command.Item.NumberPieces };
+
+        session.Update(existingEvent);
         await session.SaveChangesAsync();
 
-        return new CreateEventResult(newEvent.Id);
+        return new UpdateEventResult();
     }
 }

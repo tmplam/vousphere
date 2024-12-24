@@ -17,6 +17,8 @@ public class GetEventsHandler(IDocumentSession session) : IQueryHandler<GetEvent
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));
 
+        eventsQuery = eventsQuery.OrderBy(e => e.StartTime);
+
         var events = await eventsQuery.ToPagedListAsync(query.Page, query.PerPage, cancellationToken);
 
 
