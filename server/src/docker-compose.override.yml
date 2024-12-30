@@ -39,6 +39,19 @@ services:
       - postgres_game:/var/lib/postgresql/data/
 
 
+  mediadb:
+    container_name: mediadb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=MediaDb
+    restart: always
+    ports:
+      - "5404:5432"
+    volumes:
+      - postgres_media:/var/lib/postgresql/data/
+
+
   userdb:
     container_name: userdb
     environment:
@@ -123,6 +136,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=mediadb;Port=5432;Database=MediaDb;User Id=postgres;Password=postgres;Include Error Detail=true
     restart: on-failure:3
     ports:
       - "6004:8080"

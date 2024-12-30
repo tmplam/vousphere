@@ -1,3 +1,5 @@
+using MediaService.API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -16,6 +18,8 @@ builder.Services.AddMarten(options =>
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
     options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
     options.DisableNpgsqlLogging = true;
+
+    options.Schema.For<Media>();
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
@@ -31,6 +35,14 @@ builder.Services
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 
+builder.Services.AddScoped<IFileStorageService, AzureFileStorageService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("AzureBlobStorage")!;
+    return new AzureFileStorageService(connectionString);
+});
+
+
 
 var app = builder.Build();
 
@@ -41,6 +53,7 @@ app.UseExceptionHandler(config => { });
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapCarter();
 

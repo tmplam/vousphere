@@ -16,6 +16,10 @@ services:
     image: postgres
 
 
+  mediadb:
+    image: postgres
+
+
   # Message broker
   messagebroker:
     image: rabbitmq:management
@@ -85,4 +89,5 @@ volumes:
   postgres_event:
   postgres_voucher:
   postgres_game:
+  postgres_media:
   sqlserver_user:
