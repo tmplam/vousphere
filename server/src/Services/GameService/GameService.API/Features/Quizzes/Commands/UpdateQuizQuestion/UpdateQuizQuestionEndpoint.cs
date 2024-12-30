@@ -7,7 +7,7 @@ public class UpdateQuizQuestionEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/quizzes/{quizId:guid}/questions/{questionId:guid}", async (
+        app.MapPut("/api/quizzes/{quizId:guid}/questions/{questionId:guid}", async (
             [FromRoute] Guid quizId,
             [FromRoute] Guid questionId,
             [FromBody] UpdateQuizQuestionRequest request, 

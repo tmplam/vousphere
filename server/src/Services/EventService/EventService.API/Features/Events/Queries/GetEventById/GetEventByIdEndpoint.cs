@@ -7,7 +7,7 @@ public class GetEventByIdEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/events/{eventId:guid}", async (
+        app.MapGet("/api/events/{eventId:guid}", async (
             [FromRoute] Guid eventId, 
             [FromServices] ISender sender) =>
         {

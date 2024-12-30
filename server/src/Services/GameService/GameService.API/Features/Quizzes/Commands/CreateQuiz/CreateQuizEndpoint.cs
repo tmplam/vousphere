@@ -8,7 +8,7 @@ public class CreateQuizEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/quizzes", async ([FromBody] CreateQuizRequest request, [FromServices] ISender sender) =>
+        app.MapPost("/api/quizzes", async ([FromBody] CreateQuizRequest request, [FromServices] ISender sender) =>
         {
             var command = request.Adapt<CreateQuizCommand>();
 

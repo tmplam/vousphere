@@ -17,7 +17,7 @@ public class CreateEventEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/events", async ([FromBody] CreateEventRequest request, [FromServices] ISender sender) =>
+        app.MapPost("/api/events", async ([FromBody] CreateEventRequest request, [FromServices] ISender sender) =>
         {
             var command = request.Adapt<CreateEventCommand>();
 

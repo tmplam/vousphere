@@ -14,7 +14,7 @@ public class GetBrandEventsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/events/registered", async ([AsParameters] GetBrandEventsRequest request, [FromServices] ISender sender) =>
+        app.MapGet("/api/events/registered", async ([AsParameters] GetBrandEventsRequest request, [FromServices] ISender sender) =>
         {
 
             var query = request.Adapt<GetBrandEventsQuery>();

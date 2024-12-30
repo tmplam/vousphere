@@ -27,12 +27,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/user-service/users/sign-up",
+									"raw": "{{yarp_base_url}}/user-service/api/users/sign-up",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"user-service",
+										"api",
 										"users",
 										"sign-up"
 									]
@@ -55,12 +56,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/user-service/users/sign-in",
+									"raw": "{{yarp_base_url}}/user-service/api/users/sign-in",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"user-service",
+										"api",
 										"users",
 										"sign-in"
 									]
@@ -80,12 +82,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/games",
+									"raw": "{{yarp_base_url}}/game-service/api/games",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"games"
 									]
 								}
@@ -107,12 +110,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes"
 									]
 								}
@@ -134,12 +138,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId",
 										"questions"
@@ -160,12 +165,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes?page=1&perPage=10&includeQuestions=false",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes?page=1&perPage=10&includeQuestions=false",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes"
 									],
 									"query": [
@@ -192,12 +198,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId"
 									],
@@ -226,12 +233,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId",
 										"questions",
@@ -257,12 +265,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId",
 										"questions",
@@ -288,12 +297,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId/questions/:questionId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId",
 										"questions",
@@ -328,12 +338,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId"
 									],
@@ -353,12 +364,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/quizzes/:quizId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
+										"api",
 										"quizzes",
 										":quizId"
 									],
@@ -383,12 +395,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events?page=1&perPage=2&keyword",
+									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2&keyword",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events"
 									],
 									"query": [
@@ -424,12 +437,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events",
+									"raw": "{{yarp_base_url}}/event-service/api/events",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events"
 									]
 								}
@@ -442,12 +456,13 @@
 								"method": "PATCH",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events/:eventId/approve",
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/approve",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events",
 										":eventId",
 										"approve"
@@ -477,12 +492,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events/:eventId/reject",
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/reject",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events",
 										":eventId",
 										"reject"
@@ -503,12 +519,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events/registered?page=1&perPage=2&keyword=sh 11&status=Pending&startTime=2024-12-25T04:24:20.305Z&endTime=2024-12-30T04:24:20.305Z",
+									"raw": "{{yarp_base_url}}/event-service/api/events/registered?page=1&perPage=2&keyword=sh 11&status=Pending&startTime=2024-12-25T04:24:20.305Z&endTime=2024-12-30T04:24:20.305Z",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events",
 										"registered"
 									],
@@ -557,12 +574,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events/:eventId",
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events",
 										":eventId"
 									],
@@ -582,12 +600,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/events/:eventId",
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"event-service",
+										"api",
 										"events",
 										":eventId"
 									],

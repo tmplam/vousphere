@@ -7,7 +7,7 @@ public class RejectEventEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPatch("/events/{eventId:guid}/reject", async (
+        app.MapPatch("/api/events/{eventId:guid}/reject", async (
             [FromRoute] Guid eventId,
             [FromBody] RejectEventRequest request,
             [FromServices] ISender sender) =>

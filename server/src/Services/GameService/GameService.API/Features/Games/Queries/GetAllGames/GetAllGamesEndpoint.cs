@@ -7,7 +7,7 @@ public class GetAllGamesEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/games", async ([FromServices] ISender sender) =>
+        app.MapGet("/api/games", async ([FromServices] ISender sender) =>
         {
             var result = await sender.Send(new GetAllGamesQuery());
 

@@ -4,7 +4,7 @@ public class ApproveEventEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPatch("/events/{eventId:guid}/approve", async ([FromRoute] Guid eventId, [FromServices] ISender sender) =>
+        app.MapPatch("/api/events/{eventId:guid}/approve", async ([FromRoute] Guid eventId, [FromServices] ISender sender) =>
         {
             var command = new ApproveEventCommand(eventId);
             

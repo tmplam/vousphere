@@ -4,7 +4,7 @@ public class DeleteQuizQuestionEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/quizzes/{quizId:guid}/questions/{questionId:guid}", async (
+        app.MapDelete("/api/quizzes/{quizId:guid}/questions/{questionId:guid}", async (
             [FromRoute] Guid quizId,
             [FromRoute] Guid questionId,
             [FromServices] ISender sender) =>

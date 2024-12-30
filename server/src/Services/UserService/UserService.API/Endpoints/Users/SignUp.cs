@@ -13,7 +13,7 @@ public class SignUp : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/users/sign-up", async (SignUpRequest request, ISender sender) =>
+        app.MapPost("/api/users/sign-up", async (SignUpRequest request, ISender sender) =>
         {
             var command = request.Adapt<SignUpCommand>();
 

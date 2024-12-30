@@ -16,7 +16,7 @@ public class UpdateEventEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/events/{eventId:guid}", async (
+        app.MapPut("/api/events/{eventId:guid}", async (
             [FromRoute] Guid eventId, 
             [FromBody] UpdateEventRequest request,
             [FromServices] ISender sender) =>
