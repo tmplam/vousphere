@@ -26,7 +26,7 @@ public class AzureFileStorageService : IFileStorageService
         return blobClient.Uri.ToString();
     }
 
-    public async Task DeleteFileAsync(string fileUrl, string containerName = "images")
+    public async Task RemoveFileAsync(string fileUrl, string containerName = "images")
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
         var blobName = Path.GetFileName(fileUrl);

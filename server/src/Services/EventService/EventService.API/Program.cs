@@ -1,3 +1,4 @@
+using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -49,10 +50,13 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 
 // Servives configuration
+builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
+
+builder.Services.AddMediaServiceClient();
 
 
 
-
+// Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
 

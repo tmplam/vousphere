@@ -1,10 +1,13 @@
-﻿namespace EventService.API.Features.Events.Commands.UpdateEvent;
+﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using MassTransit;
+
+namespace EventService.API.Features.Events.Commands.UpdateEvent;
 
 public record UpdateEventCommand(
     Guid EventId,
     string Name,
     string Description,
-    string Image,
+    Guid ImageId,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,
@@ -22,8 +25,8 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
         RuleFor(e => e.Description)
             .NotEmpty().WithMessage("Event description is required");
 
-        RuleFor(e => e.Image)
-            .NotEmpty().WithMessage("Event image is required");
+        RuleFor(e => e.ImageId)
+            .NotEmpty().WithMessage("Event imageId is required");
 
         RuleFor(e => e.StartTime)
             .NotEmpty().WithMessage("Event start time is required")
@@ -69,7 +72,8 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
 
 public class UpdateEventHandler(
     IDocumentSession session,
-    IClaimService claimService) : ICommandHandler<UpdateEventCommand, UpdateEventResult>
+    IClaimService claimService,
+    IPublishEndpoint publishEndpoint) : ICommandHandler<UpdateEventCommand, UpdateEventResult>
 {
     public async Task<UpdateEventResult> Handle(UpdateEventCommand command, CancellationToken cancellationToken)
     {
@@ -78,7 +82,7 @@ public class UpdateEventHandler(
         if (popUpItemsEnabled && command.Item == null)
             throw new BadRequestException("There is pop up items game, but no item specified");
 
-        var existingEvent = await session.LoadAsync<Event>(command.EventId);
+        var existingEvent = await session.LoadAsync<Entities.Event>(command.EventId);
 
         if (existingEvent == null)
             throw new NotFoundException("Event not found");
@@ -90,9 +94,12 @@ public class UpdateEventHandler(
         if (existingEvent.Status == EventStatus.Approved && DateTimeOffset.UtcNow >= existingEvent.StartTime)
             throw new BadRequestException("Can't update started event");
 
+        var removeMediaEventMessage = new RemoveMediaIntegrationEvent { MediaId = existingEvent.ImageId };
+        var undraftMediaEventMessage = new UndraftMediaIntegrationEvent { MediaId = command.ImageId };
+
         existingEvent.Name = command.Name;
         existingEvent.Description = command.Description;
-        existingEvent.Image = command.Image;
+        existingEvent.ImageId = command.ImageId;
         existingEvent.StartTime = command.StartTime;
         existingEvent.EndTime = command.EndTime;
         existingEvent.Games = command.Games.Select(g => new EventGame
@@ -114,7 +121,11 @@ public class UpdateEventHandler(
                 null : new Item { Image = command.Item.Image, NumberPieces = command.Item.NumberPieces };
 
         session.Update(existingEvent);
-        await session.SaveChangesAsync();
+
+        await Task.WhenAll(
+            session.SaveChangesAsync(cancellationToken),
+            publishEndpoint.Publish(undraftMediaEventMessage, cancellationToken),
+            publishEndpoint.Publish(removeMediaEventMessage, cancellationToken));
 
         return new UpdateEventResult();
     }

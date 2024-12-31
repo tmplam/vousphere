@@ -4,7 +4,7 @@ public record GetEventsRequest(
     int Page = 1,
     int PerPage = 10,
     string Keyword = "");
-public record GetEventsResponse(PaginationResult<Event> Events);
+public record GetEventsResponse(PaginationResult<EventDto> Events);
 
 
 public class GetEventsEndpoint : ICarterModule

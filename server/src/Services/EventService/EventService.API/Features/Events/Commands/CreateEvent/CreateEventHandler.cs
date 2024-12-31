@@ -26,7 +26,7 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
             .NotEmpty().WithMessage("Event description is required");
 
         RuleFor(e => e.ImageId)
-            .NotEmpty().WithMessage("Event image is required");
+            .NotEmpty().WithMessage("Event imageId is required");
 
         RuleFor(e => e.StartTime)
             .NotEmpty().WithMessage("Event start time is required")
@@ -112,10 +112,12 @@ public class CreateEventHandler(
         };
 
         session.Store(newEvent);
-        await session.SaveChangesAsync();
 
         var eventMessage = new UndraftMediaIntegrationEvent { MediaId = newEvent.ImageId };
-        await publishEndpoint.Publish(eventMessage, cancellationToken);
+
+        await Task.WhenAll(
+            session.SaveChangesAsync(cancellationToken),
+            publishEndpoint.Publish(eventMessage, cancellationToken));
 
         return new CreateEventResult(newEvent.Id);
     }

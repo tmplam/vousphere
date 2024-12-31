@@ -1,6 +1,6 @@
 ﻿namespace EventService.API.Features.Events.Queries.GetEventById;
 
-public record GetEventByIdResponse(Event Event);
+public record GetEventByIdResponse(EventDto Event);
 
 
 public class GetEventByIdEndpoint : ICarterModule

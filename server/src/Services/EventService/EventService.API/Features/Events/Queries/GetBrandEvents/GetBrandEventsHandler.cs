@@ -7,12 +7,13 @@ public record GetBrandEventsQuery(
     DateTimeOffset? StartTime = null,
     DateTimeOffset? EndTime = null,
     EventStatus? Status = null) : IQuery<GetBrandEventsResult>;
-public record GetBrandEventsResult(PaginationResult<Event> Events);
+public record GetBrandEventsResult(PaginationResult<EventDto> Events);
 
 
 public class GetBrandEventsHandler(
     IDocumentSession session,
-    IClaimService claimService)
+    IClaimService claimService,
+    IMediaApi mediaService)
     : IQueryHandler<GetBrandEventsQuery, GetBrandEventsResult>
 {
     public async Task<GetBrandEventsResult> Handle(GetBrandEventsQuery query, CancellationToken cancellationToken)
@@ -32,13 +33,26 @@ public class GetBrandEventsHandler(
 
         var events = await eventsQuery.ToPagedListAsync(query.Page, query.PerPage, cancellationToken);
 
+        var eventDtos = events.ToList().Adapt<List<EventDto>>();
+
+        var imageIds = eventDtos.Select(e => e.ImageId);
+        var imageUrlsDictionary = await mediaService.GetImageUrlsAsync(imageIds);
+
+        foreach (var eventDto in eventDtos)
+        {
+            if (imageUrlsDictionary.TryGetValue(eventDto.ImageId, out var imageUrl))
+            {
+                eventDto.Image = imageUrl;
+            }
+        }
+
 
         return new GetBrandEventsResult(
-            PaginationResult<Event>.Create(
+            PaginationResult<EventDto>.Create(
                 events.PageNumber,
                 events.PageSize,
                 events.TotalItemCount,
                 events.PageCount,
-                events));
+                eventDtos));
     }
 }

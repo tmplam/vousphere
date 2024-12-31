@@ -7,7 +7,7 @@ public record GetBrandEventsRequest(
     DateTimeOffset? StartTime = null,
     DateTimeOffset? EndTime = null,
     EventStatus? Status = null);
-public record GetBrandEventsResponse(PaginationResult<Event> Events);
+public record GetBrandEventsResponse(PaginationResult<EventDto> Events);
 
 
 public class GetBrandEventsEndpoint : ICarterModule

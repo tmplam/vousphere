@@ -1,11 +1,12 @@
 ﻿namespace EventService.API.Features.Events.Queries.GetEventById;
 
 public record GetEventByIdQuery(Guid EventId) : IQuery<GetEventByIdResult>;
-public record GetEventByIdResult(Event Event);
+public record GetEventByIdResult(EventDto Event);
 
 
 public class GetEventByIdHandler(
-    IDocumentSession session) 
+    IDocumentSession session,
+    IMediaApi mediaService) 
     : IQueryHandler<GetEventByIdQuery, GetEventByIdResult>
 {
     public async Task<GetEventByIdResult> Handle(GetEventByIdQuery query, CancellationToken cancellationToken)
@@ -15,6 +16,10 @@ public class GetEventByIdHandler(
         if (existingEvent == null)
             throw new NotFoundException("Event not found");
 
-        return new GetEventByIdResult(existingEvent);
+        var eventDto = existingEvent.Adapt<EventDto>();
+
+        eventDto.Image = await mediaService.GetImageUrlAsync(existingEvent.ImageId);
+
+        return new GetEventByIdResult(eventDto);
     }
 }

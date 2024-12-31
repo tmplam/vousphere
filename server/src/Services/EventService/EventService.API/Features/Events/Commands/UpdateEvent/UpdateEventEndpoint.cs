@@ -3,7 +3,7 @@
 public record UpdateEventRequest(
     string Name,
     string Description,
-    string Image,
+    Guid ImageId,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,
@@ -17,7 +17,7 @@ public class UpdateEventEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPut("/api/events/{eventId:guid}", async (
-            [FromRoute] Guid eventId, 
+            [FromRoute] Guid eventId,
             [FromBody] UpdateEventRequest request,
             [FromServices] ISender sender) =>
         {
@@ -25,7 +25,7 @@ public class UpdateEventEndpoint : ICarterModule
                 eventId,
                 request.Name,
                 request.Description,
-                request.Image,
+                request.ImageId,
                 request.StartTime,
                 request.EndTime,
                 request.VoucherTypes,
