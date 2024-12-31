@@ -3,7 +3,7 @@
 public record CreateEventRequest(
     string Name,
     string Description,
-    string Image,
+    Guid ImageId,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,

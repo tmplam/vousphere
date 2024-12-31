@@ -5,7 +5,7 @@ public class Event
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string? Image { get; set; }
+    public Guid ImageId { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Pending;
     public string? Comment { get; set; }
     public DateTimeOffset CreatedAt { get; set; }

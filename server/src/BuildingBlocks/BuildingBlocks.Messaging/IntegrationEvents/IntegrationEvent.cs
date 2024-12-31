@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Messaging.Events;
+﻿namespace BuildingBlocks.Messaging.IntegrationEvents;
 
 public class IntegrationEvent
 {

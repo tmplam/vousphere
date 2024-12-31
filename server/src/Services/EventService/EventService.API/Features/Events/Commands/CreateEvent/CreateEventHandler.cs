@@ -1,9 +1,12 @@
-﻿namespace EventService.API.Features.Events.Commands.CreateEvent;
+﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using MassTransit;
+
+namespace EventService.API.Features.Events.Commands.CreateEvent;
 
 public record CreateEventCommand(
     string Name,
     string Description,
-    string Image,
+    Guid ImageId,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     List<VoucherTypeDto> VoucherTypes,
@@ -22,7 +25,7 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
         RuleFor(e => e.Description)
             .NotEmpty().WithMessage("Event description is required");
 
-        RuleFor(e => e.Image)
+        RuleFor(e => e.ImageId)
             .NotEmpty().WithMessage("Event image is required");
 
         RuleFor(e => e.StartTime)
@@ -69,7 +72,8 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
 public class CreateEventHandler(
     IDocumentSession session,
-    IClaimService claimService)
+    IClaimService claimService,
+    IPublishEndpoint publishEndpoint)
     : ICommandHandler<CreateEventCommand, CreateEventResult>
 {
     public async Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
@@ -81,11 +85,11 @@ public class CreateEventHandler(
         if (popUpItemsEnabled && command.Item == null) 
             throw new BadRequestException("There is pop up items game, but no item specified");
 
-        var newEvent = new Event
+        var newEvent = new Entities.Event
         {
             Name = command.Name,
             Description = command.Description,
-            Image = command.Image,
+            ImageId = command.ImageId,
             CreatedAt = DateTimeOffset.UtcNow,
             StartTime = command.StartTime,
             EndTime = command.EndTime,
@@ -109,6 +113,9 @@ public class CreateEventHandler(
 
         session.Store(newEvent);
         await session.SaveChangesAsync();
+
+        var eventMessage = new UndraftMediaIntegrationEvent { MediaId = newEvent.ImageId };
+        await publishEndpoint.Publish(eventMessage, cancellationToken);
 
         return new CreateEventResult(newEvent.Id);
     }
