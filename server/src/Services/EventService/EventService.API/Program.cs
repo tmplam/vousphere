@@ -48,6 +48,11 @@ builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 
+// Servives configuration
+
+
+
+
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
 

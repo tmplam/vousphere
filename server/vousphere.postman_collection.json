@@ -429,7 +429,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"image\": \"123123124\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -634,6 +634,42 @@
 				{
 					"name": "Payment",
 					"item": []
+				},
+				{
+					"name": "Media",
+					"item": [
+						{
+							"name": "Upload image",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/PhuLam/Downloads/avatar.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/media-service/api/medias/upload-image",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"media-service",
+										"api",
+										"medias",
+										"upload-image"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Media service to upload images from client\n\nOther services get image urls by communicating with media service"
 				}
 			],
 			"auth": {
