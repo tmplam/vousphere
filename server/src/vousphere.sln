@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoucherService", "VoucherSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoucherService.API", "Services\VoucherService\VoucherService.API\VoucherService.API.csproj", "{BB4A56A2-111E-4059-91B1-9D5644E67E6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Messaging", "BuildingBlocks\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj", "{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{BB4A56A2-111E-4059-91B1-9D5644E67E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB4A56A2-111E-4059-91B1-9D5644E67E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB4A56A2-111E-4059-91B1-9D5644E67E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,5 +144,6 @@ Global
 		{65355B45-ACB5-485C-A07E-28429E003680} = {EF3F6287-BC04-40FE-AAFE-FE9D3631CC52}
 		{688385C8-BB5C-4C8D-8941-9EE83FA48504} = {24D32D59-5791-4EB2-A586-66A3857984BE}
 		{BB4A56A2-111E-4059-91B1-9D5644E67E6E} = {688385C8-BB5C-4C8D-8941-9EE83FA48504}
+		{7A1489E6-B5A7-45C5-B033-C9A6EC8464E5} = {EF3F6287-BC04-40FE-AAFE-FE9D3631CC52}
 	EndGlobalSection
 EndGlobal

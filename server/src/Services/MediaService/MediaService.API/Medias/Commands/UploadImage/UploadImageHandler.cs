@@ -1,6 +1,4 @@
-﻿using MediaService.API.Services;
-
-namespace MediaService.API.Medias.Commands.UploadImage;
+﻿namespace MediaService.API.Medias.Commands.UploadImage;
 
 public record class UploadImageCommand(IFormFile File) : ICommand<UploadImageResult>;
 public record UploadImageResult(Guid ImageId);

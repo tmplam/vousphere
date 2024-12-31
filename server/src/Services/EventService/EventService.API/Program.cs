@@ -1,8 +1,10 @@
+using BuildingBlocks.Messaging.MassTransit;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add pipelines
 builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
 
 builder.Services.AddMediatR(config =>
@@ -12,11 +14,13 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddCarter();
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+// Add database and message broker
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
@@ -28,8 +32,9 @@ builder.Services.AddMarten(options =>
         .NgramIndex(e => e.Description);
 }).UseLightweightSessions();
 
-builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
+builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
+// Add authentication and authorization
 builder.Services
     .AddAuthentication(options =>
     {
@@ -42,6 +47,8 @@ builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
 
 

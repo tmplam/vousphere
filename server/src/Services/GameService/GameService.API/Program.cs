@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add pipelines
 builder.Services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
 
 builder.Services.AddMediatR(config =>
@@ -10,11 +10,13 @@ builder.Services.AddMediatR(config =>
 });
 
 builder.Services.AddCarter();
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+// Add database and message broker
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
@@ -25,8 +27,7 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Quiz>();
 }).UseLightweightSessions();
 
-builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
-
+// Add authentication and authorization
 builder.Services
     .AddAuthentication(options =>
     {
@@ -44,6 +45,8 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
 
 

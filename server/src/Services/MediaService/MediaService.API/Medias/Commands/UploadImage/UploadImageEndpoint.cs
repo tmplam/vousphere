@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.Shared;
-using Microsoft.AspNetCore.Mvc;
-
-namespace MediaService.API.Medias.Commands.UploadImage;
+﻿namespace MediaService.API.Medias.Commands.UploadImage;
 
 public record UploadImageRequest(IFormFile File);
 public record UploadImageResponse(Guid ImageId);

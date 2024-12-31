@@ -98,9 +98,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=eventdb;Port=5432;Database=EventDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
     depends_on:
       - eventdb
+      - messagebroker
     ports:
       - "6001:8080"
 
@@ -111,9 +115,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=voucherdb;Port=5432;Database=VoucherDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
     depends_on:
       - voucherdb
+      - messagebroker
     ports:
       - "6002:8080"
 
@@ -137,7 +145,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=mediadb;Port=5432;Database=MediaDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
+    depends_on:
+      - mediadb
+      - messagebroker
     ports:
       - "6004:8080"
 
