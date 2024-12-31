@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Medias\EventHandlers\DomainEventHandlers\" />
-    <Folder Include="Medias\Queries\" />
   </ItemGroup>
 
 </Project>
