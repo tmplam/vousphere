@@ -1,6 +1,6 @@
 ﻿namespace GameService.API.Features.Games.Queries.GetAllGames;
 
-public record GetAllGamesResponse(IEnumerable<Game> Games);
+public record GetAllGamesResponse(IEnumerable<GameDto> Games);
 
 
 public class GetAllGamesEndpoint : ICarterModule

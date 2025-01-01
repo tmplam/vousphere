@@ -6,6 +6,7 @@ global using BuildingBlocks.Behaviors;
 global using BuildingBlocks.CQRS;
 global using BuildingBlocks.Exceptions;
 global using BuildingBlocks.Exceptions.Handlers;
+global using BuildingBlocks.Http.InternalServiceApis;
 global using BuildingBlocks.Shared;
 global using Carter;
 global using FluentValidation;

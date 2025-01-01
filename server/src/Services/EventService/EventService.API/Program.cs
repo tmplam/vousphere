@@ -55,7 +55,6 @@ builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 builder.Services.AddMediaServiceClient();
 
 
-
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 

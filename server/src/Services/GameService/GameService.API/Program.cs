@@ -1,3 +1,5 @@
+using BuildingBlocks.Http.OptionsSetup;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add pipelines
@@ -38,13 +40,19 @@ builder.Services
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimService, ClaimService>();
+
+// Servives configuration
+builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
+
+builder.Services.AddMediaServiceClient();
+
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.InitializeMartenWith<InitialData>();
 }
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IClaimService, ClaimService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
