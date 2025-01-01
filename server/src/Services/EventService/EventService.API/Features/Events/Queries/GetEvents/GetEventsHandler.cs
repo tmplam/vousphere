@@ -25,14 +25,27 @@ public class GetEventsHandler(
 
         var eventDtos = events.ToList().Adapt<List<EventDto>>();
 
-        var imageIds = eventDtos.Select(e => e.ImageId);
+        var imageIds = eventDtos.SelectMany(e =>
+        {
+            if (e.Item == null) return [e.ImageId];
+            return new[] { e.ImageId, e.Item.ImageId };
+        });
+
         var imageUrlsDictionary = await mediaService.GetImageUrlsAsync(imageIds);
 
         foreach (var eventDto in eventDtos)
         {
-            if (imageUrlsDictionary.TryGetValue(eventDto.ImageId, out var imageUrl))
+            if (imageUrlsDictionary.TryGetValue(eventDto.ImageId, out var eventImageUrl))
             {
-                eventDto.Image = imageUrl;
+                eventDto.Image = eventImageUrl;
+            }
+
+            if (eventDto.Item != null)
+            {
+                if (imageUrlsDictionary.TryGetValue(eventDto.Item.ImageId, out var itemImageUrl))
+                {
+                    eventDto.Item.Image = itemImageUrl;
+                }
             }
         }
 

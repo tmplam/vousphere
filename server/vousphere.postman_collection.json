@@ -395,7 +395,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2&keyword",
+									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2&keyword=flash",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -415,7 +415,7 @@
 										},
 										{
 											"key": "keyword",
-											"value": null
+											"value": "flash"
 										}
 									]
 								}
@@ -429,7 +429,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"imageId\": \"9737342b-aa08-4c6e-9983-f1d6f6299f1f\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -519,7 +519,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events/registered?page=1&perPage=2&keyword=sh 11&status=Pending&startTime=2024-12-25T04:24:20.305Z&endTime=2024-12-30T04:24:20.305Z",
+									"raw": "{{yarp_base_url}}/event-service/api/events/registered?page=1&perPage=2",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -540,19 +540,23 @@
 										},
 										{
 											"key": "keyword",
-											"value": "sh 11"
+											"value": "sh 11",
+											"disabled": true
 										},
 										{
 											"key": "status",
-											"value": "Pending"
+											"value": "Pending",
+											"disabled": true
 										},
 										{
 											"key": "startTime",
-											"value": "2024-12-25T04:24:20.305Z"
+											"value": "2024-12-25T04:24:20.305Z",
+											"disabled": true
 										},
 										{
 											"key": "endTime",
-											"value": "2024-12-30T04:24:20.305Z"
+											"value": "2024-12-30T04:24:20.305Z",
+											"disabled": true
 										}
 									]
 								}
@@ -566,7 +570,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"image\": \"123123124\",\r\n    \"startTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-30T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"image\": \"1211214\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-30T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"imageId\": \"9737342b-aa08-4c6e-9983-f1d6f6299f1f\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

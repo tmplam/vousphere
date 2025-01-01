@@ -18,7 +18,16 @@ public class GetEventByIdHandler(
 
         var eventDto = existingEvent.Adapt<EventDto>();
 
-        eventDto.Image = await mediaService.GetImageUrlAsync(existingEvent.ImageId);
+        if (eventDto.Item == null)
+        {
+            eventDto.Image = await mediaService.GetImageUrlAsync(existingEvent.ImageId);
+        }
+        else
+        {
+            var imageUrls = await mediaService.GetImageUrlsAsync([existingEvent.ImageId, eventDto.Item.ImageId]);
+            eventDto.Image = imageUrls[existingEvent.ImageId];
+            eventDto.Item.Image = imageUrls[eventDto.Item.ImageId];
+        }
 
         return new GetEventByIdResult(eventDto);
     }

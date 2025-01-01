@@ -2,6 +2,6 @@
 
 public class Item
 {
-    public string Image { get; set; } = string.Empty;
+    public Guid ImageId { get; set; }
     public int NumberPieces { get; set; }
 }

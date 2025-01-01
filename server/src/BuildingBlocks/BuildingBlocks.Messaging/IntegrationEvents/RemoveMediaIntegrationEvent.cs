@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Messaging.IntegrationEvents;
 
-public class RemoveMediaIntegrationEvent
+public class RemoveMediaIntegrationEvent : IntegrationEvent
 {
     public Guid MediaId { get; set; }
 }

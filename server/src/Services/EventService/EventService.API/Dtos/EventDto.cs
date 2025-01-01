@@ -19,5 +19,5 @@ public class EventDto
     public int TotalPublishedVouchers => VoucherTypes.Sum(voucherType => voucherType.Total - voucherType.Remaining);
 
     public List<EventGame> Games { get; set; } = new();
-    public Item? Item { get; set; }
+    public ItemDto? Item { get; set; }
 }

@@ -60,8 +60,8 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
         When(x => x.Item is not null, () =>
         {
-            RuleFor(x => x.Item!.Image)
-                .NotEmpty().WithMessage("Item image is required");
+            RuleFor(x => x.Item!.ImageId)
+                .NotEmpty().WithMessage("Item imageId is required");
 
             RuleFor(x => x.Item!.NumberPieces)
                 .GreaterThan(0).WithMessage("Item number of pieces must be greater than 0");
@@ -108,16 +108,24 @@ public class CreateEventHandler(
                 QuizzCollectionId = g.QuizzCollectionId,
             }).ToList(),
             Item = command.Item == null ? 
-                null : new Item { Image = command.Item.Image, NumberPieces = command.Item.NumberPieces },
+                null : new Item { ImageId = command.Item.ImageId, NumberPieces = command.Item.NumberPieces },
         };
 
         session.Store(newEvent);
 
-        var eventMessage = new UndraftMediaIntegrationEvent { MediaId = newEvent.ImageId };
+        var undraftEventImageMessage = new UndraftMediaIntegrationEvent { MediaId = newEvent.ImageId };
 
-        await Task.WhenAll(
+        var tasks = Task.WhenAll(
             session.SaveChangesAsync(cancellationToken),
-            publishEndpoint.Publish(eventMessage, cancellationToken));
+            publishEndpoint.Publish(undraftEventImageMessage, cancellationToken));
+
+        if (command.Item != null)
+        {
+            var undraftItemImageMessage = new UndraftMediaIntegrationEvent { MediaId = command.Item.ImageId };
+            tasks = Task.WhenAll(tasks, publishEndpoint.Publish(undraftItemImageMessage, cancellationToken));
+        }
+
+        await tasks;
 
         return new CreateEventResult(newEvent.Id);
     }
