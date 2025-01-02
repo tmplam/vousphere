@@ -15,6 +15,8 @@ WORKDIR /src
 COPY ["Services/UserService/UserService.API/UserService.API.csproj", "Services/UserService/UserService.API/"]
 COPY ["Services/UserService/UserService.Application/UserService.Application.csproj", "Services/UserService/UserService.Application/"]
 COPY ["BuildingBlocks/BuildingBlocks.Auth/BuildingBlocks.Auth.csproj", "BuildingBlocks/BuildingBlocks.Auth/"]
+COPY ["BuildingBlocks/BuildingBlocks.Http/BuildingBlocks.Http.csproj", "BuildingBlocks/BuildingBlocks.Http/"]
+COPY ["BuildingBlocks/BuildingBlocks.Messaging/BuildingBlocks.Messaging.csproj", "BuildingBlocks/BuildingBlocks.Messaging/"]
 COPY ["BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "BuildingBlocks/BuildingBlocks/"]
 COPY ["Services/UserService/UserService.Domain/UserService.Domain.csproj", "Services/UserService/UserService.Domain/"]
 COPY ["Services/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj", "Services/UserService/UserService.Infrastructure/"]
@@ -22,6 +24,7 @@ RUN dotnet restore "./Services/UserService/UserService.API/UserService.API.cspro
 COPY . .
 WORKDIR "/src/Services/UserService/UserService.API"
 RUN dotnet build "./UserService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

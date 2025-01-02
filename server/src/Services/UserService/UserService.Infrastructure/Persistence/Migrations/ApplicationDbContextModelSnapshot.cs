@@ -105,6 +105,27 @@ namespace UserService.Infrastructure.Persistence.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("UserService.Domain.Entities.UserFavorite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFavorites", (string)null);
+                });
+
             modelBuilder.Entity("UserService.Domain.Entities.Brand", b =>
                 {
                     b.HasOne("UserService.Domain.Entities.User", "User")
@@ -127,11 +148,24 @@ namespace UserService.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("UserService.Domain.Entities.UserFavorite", b =>
+                {
+                    b.HasOne("UserService.Domain.Entities.User", "User")
+                        .WithMany("UserFavorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("UserService.Domain.Entities.User", b =>
                 {
                     b.Navigation("Brand");
 
                     b.Navigation("Player");
+
+                    b.Navigation("UserFavorites");
                 });
 #pragma warning restore 612, 618
         }

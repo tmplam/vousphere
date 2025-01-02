@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using FluentValidation;
-
-namespace UserService.Application.Features.Users.Commands.SignUp;
+﻿namespace UserService.Application.Features.Users.Commands.SignUp;
 
 public record SignUpCommand(string PhoneNumber, string Password, bool IsBrand = false) : ICommand<SignUpResult>;
 public record SignUpResult(Guid UserId);

@@ -69,6 +69,92 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Add to favorite",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"eventId\": \"01942224-6cd5-42e7-9a4d-c588248a6352\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/favorites",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"favorites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove from favorite",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/favorites/:eventId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"favorites",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f48c-8f40-4a9c-98c2-250e7680e698"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get user favorites",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/favorites?page=1&perPage=5",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"favorites"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"description": "Admin account:\n\n- 0000000000\n    \n- admin123@"
@@ -395,7 +481,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2&keyword=flash",
+									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -415,7 +501,8 @@
 										},
 										{
 											"key": "keyword",
-											"value": "flash"
+											"value": "flash",
+											"disabled": true
 										}
 									]
 								}
@@ -429,7 +516,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-24T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"imageId\": \"9737342b-aa08-4c6e-9983-f1d6f6299f1f\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales new year 2025\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-01T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"c1b2574d-70fd-4b4b-b6db-ffcff02564c7\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -570,7 +657,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales 11/11\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n    \"startTime\": \"2024-12-25T04:21:34.544Z\",\r\n    \"endTime\": \"2024-12-30T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    \"item\": {\r\n        \"imageId\": \"9737342b-aa08-4c6e-9983-f1d6f6299f1f\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales new year 2025\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-01T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"933bd33a-121e-41d4-ba44-23e3f3675706\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -591,7 +678,7 @@
 									"variable": [
 										{
 											"key": "eventId",
-											"value": "0193f48c-8f40-4a9c-98c2-250e7680e698"
+											"value": "01942224-6cd5-42e7-9a4d-c588248a6352"
 										}
 									]
 								}
@@ -653,7 +740,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/Users/PhuLam/Downloads/avatar.jpg"
+											"src": "/C:/Users/PhuLam/Downloads/snake.jpg"
 										}
 									]
 								},

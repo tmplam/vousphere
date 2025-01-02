@@ -1,11 +1,8 @@
 ﻿using BuildingBlocks.Auth.Services;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Exceptions;
-using UserService.Application.Repositories;
 
 namespace UserService.Application.Features.Users.Queries.SignIn;
 
-public sealed class SignInHandler(
+internal sealed class SignInHandler(
     IUserRepository _userRepository,
     IPasswordService _passwordService,
     IJwtProvider _jwtProvider)

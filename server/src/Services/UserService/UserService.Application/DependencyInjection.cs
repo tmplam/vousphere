@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Behaviors;
-using FluentValidation;
+using BuildingBlocks.Http.InternalServiceApis;
+using BuildingBlocks.Http.OptionsSetup;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UserService.Application;
@@ -15,6 +16,12 @@ public static class DependencyInjection
             config.RegisterServicesFromAssembly(AssemblyReference.Assembly);
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });
+
+        // Servives configuration
+        services.ConfigureOptions<InternalServiceOptionsSetup>();
+
+        services.AddEventServiceClient();
+
         return services;
     }
 }

@@ -26,6 +26,9 @@ public static class DependencyInjection
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IUserFavoriteRepository, UserFavoriteRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services

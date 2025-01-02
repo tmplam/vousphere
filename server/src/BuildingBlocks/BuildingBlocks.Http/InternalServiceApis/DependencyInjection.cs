@@ -17,4 +17,15 @@ public static class DependencyInjection
             });
         return services;
     }
+
+    public static IServiceCollection AddEventServiceClient(this IServiceCollection services)
+    {
+        services.AddRefitClient<IEventApi>()
+            .ConfigureHttpClient((serviceProvider, client) =>
+            {
+                var options = serviceProvider.GetRequiredService<IOptions<InternalServiceOptions>>().Value;
+                client.BaseAddress = new Uri(options.EventBaseUrl);
+            });
+        return services;
+    }
 }

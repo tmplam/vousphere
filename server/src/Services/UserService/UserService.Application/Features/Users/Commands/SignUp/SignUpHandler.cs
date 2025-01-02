@@ -1,13 +1,9 @@
 ﻿using BuildingBlocks.Auth.Enums;
 using BuildingBlocks.Auth.Services;
-using BuildingBlocks.CQRS;
-using BuildingBlocks.Exceptions;
-using UserService.Application.Repositories;
-using UserService.Domain.Entities;
 
 namespace UserService.Application.Features.Users.Commands.SignUp;
 
-public sealed class SignUpHandler(
+internal sealed class SignUpHandler(
     IPasswordService _passwordService,
     IUserRepository _userRepository,
     IUnitOfWork _unitOfWork)

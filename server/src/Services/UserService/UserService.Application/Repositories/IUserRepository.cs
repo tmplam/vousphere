@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using UserService.Domain.Entities;
 
 namespace UserService.Application.Repositories;
 

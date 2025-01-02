@@ -10,6 +10,7 @@ public sealed class ApplicationDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Brand> Brands => Set<Brand>();
 
