@@ -192,7 +192,22 @@ services:
       - "6007:8080"
 
 
+  emailservice.api:
+    container_name: emailservice.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - SendgridEmailService__ApiKey=SG.9GFGZvnnT5-TK68EzANaQA.ZXxTKbSK3dxIxoImNjFY448IBXkv4vk0Z0UZ4KTkfdk
+      - SendgridEmailService__SenderEmail=phulam.dev@gmail.com
+      - SendgridEmailService__SenderName=Vousphere
+    restart: on-failure:3
+    depends_on:
+      - messagebroker
+    ports:
+      - "6008:8080"
+
 
 networks:
   default:
     name: vousphere_network
+

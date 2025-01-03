@@ -2,7 +2,7 @@
 
 public enum UserStatus
 {
-    Blocked = 0,
-    Pending = 1,
-    Active = 2,
+    Created = 0,
+    Verified = 1,
+    Blocked = 2,
 }

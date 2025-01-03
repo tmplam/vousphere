@@ -2,7 +2,11 @@
 
 namespace UserService.API.Endpoints;
 
-public record SignUpRequest(string PhoneNumber, string Password, bool IsBrand = false);
+public record SignUpRequest(
+    string Email,
+    string? Name,
+    string Password,
+    bool IsBrand = false);
 public record SignUpResponse(Guid UserId);
 
 public class SignUpEndpoint : ICarterModule

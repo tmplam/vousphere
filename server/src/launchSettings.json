@@ -11,7 +11,8 @@
         "notificationservice.api": "StartDebugging",
         "paymentservice.api": "StartDebugging",
         "userservice.api": "StartDebugging",
-        "voucherservice.api": "StartDebugging"
+        "voucherservice.api": "StartDebugging",
+        "emailservice.api": "StartDebugging"
       }
     }
   }

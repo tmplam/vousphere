@@ -77,7 +77,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": \"01942224-6cd5-42e7-9a4d-c588248a6352\"\r\n}",
+									"raw": "{\r\n    \"eventId\": \"019427e1-022e-41df-9fee-1f61f96c94e4\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -182,70 +182,6 @@
 							"response": []
 						},
 						{
-							"name": "Create quiz",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Gud job em\",\r\n    \"description\": \"Custom event\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/quizzes",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"game-service",
-										"api",
-										"quizzes"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add quiz question",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"game-service",
-										"api",
-										"quizzes",
-										":quizId",
-										"questions"
-									],
-									"variable": [
-										{
-											"key": "quizId",
-											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get quizzes",
 							"request": {
 								"method": "GET",
@@ -305,13 +241,13 @@
 							"response": []
 						},
 						{
-							"name": "Update quiz question",
+							"name": "Create quiz",
 							"request": {
-								"method": "PUT",
+								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"id\": \"c04dafab-e592-47d7-867f-6378a01a0646\",\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"id\": \"3be00b20-8ca6-494d-80cd-2f83de384fd9\",\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"id\": null,\r\n            \"content\": \"oke la 3\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"name\": \"Gud job em\",\r\n    \"description\": \"Custom event\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -319,91 +255,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes",
 									"host": [
 										"{{yarp_base_url}}"
 									],
 									"path": [
 										"game-service",
 										"api",
-										"quizzes",
-										":quizId",
-										"questions",
-										":questionId"
-									],
-									"variable": [
-										{
-											"key": "quizId",
-											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
-										},
-										{
-											"key": "questionId",
-											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get quiz question by id",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"game-service",
-										"api",
-										"quizzes",
-										":quizId",
-										"questions",
-										":questionId"
-									],
-									"variable": [
-										{
-											"key": "quizId",
-											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
-										},
-										{
-											"key": "questionId",
-											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete quiz question",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"game-service",
-										"api",
-										"quizzes",
-										":quizId",
-										"questions",
-										":questionId"
-									],
-									"variable": [
-										{
-											"key": "quizId",
-											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
-										},
-										{
-											"key": "questionId",
-											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
-										}
+										"quizzes"
 									]
 								}
 							},
@@ -469,6 +328,147 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get quiz question by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add quiz question",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"quizzes",
+										":quizId",
+										"questions"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update quiz question",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"What does the fox say?\",\r\n    \"options\": [\r\n        {\r\n            \"id\": \"c04dafab-e592-47d7-867f-6378a01a0646\",\r\n            \"content\": \"gau gau\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"id\": \"3be00b20-8ca6-494d-80cd-2f83de384fd9\",\r\n            \"content\": \"ditmemay\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"id\": null,\r\n            \"content\": \"oke la 3\",\r\n            \"isCorrect\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete quiz question",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/quizzes/:quizId/questions/:questionId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"quizzes",
+										":quizId",
+										"questions",
+										":questionId"
+									],
+									"variable": [
+										{
+											"key": "quizId",
+											"value": "0193e816-bc9f-4a62-8859-f53b4350f018"
+										},
+										{
+											"key": "questionId",
+											"value": "e48b5c58-0aa9-4350-bf3e-78252543258c"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -481,7 +481,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=2",
+									"raw": "{{yarp_base_url}}/event-service/api/events?page=1&perPage=5&keyword=",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -497,103 +497,11 @@
 										},
 										{
 											"key": "perPage",
-											"value": "2"
+											"value": "5"
 										},
 										{
 											"key": "keyword",
-											"value": "flash",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create event",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales new year 2025\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-01T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"c1b2574d-70fd-4b4b-b6db-ffcff02564c7\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"event-service",
-										"api",
-										"events"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Approve event",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/approve",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"event-service",
-										"api",
-										"events",
-										":eventId",
-										"approve"
-									],
-									"variable": [
-										{
-											"key": "eventId",
-											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Reject event",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"comment\": \"Violate rules\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/reject",
-									"host": [
-										"{{yarp_base_url}}"
-									],
-									"path": [
-										"event-service",
-										"api",
-										"events",
-										":eventId",
-										"reject"
-									],
-									"variable": [
-										{
-											"key": "eventId",
-											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
+											"value": ""
 										}
 									]
 								}
@@ -651,6 +559,109 @@
 							"response": []
 						},
 						{
+							"name": "Get events (for admin)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/api/admin/events?page=1&perPage=2&keyword=sh 11",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"api",
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "2"
+										},
+										{
+											"key": "keyword",
+											"value": "sh 11"
+										},
+										{
+											"key": "status",
+											"value": "Pending",
+											"disabled": true
+										},
+										{
+											"key": "startTime",
+											"value": "2024-12-25T04:24:20.305Z",
+											"disabled": true
+										},
+										{
+											"key": "endTime",
+											"value": "2024-12-30T04:24:20.305Z",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get event by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"api",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "019427e1-022e-41df-9fee-1f61f96c94e4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create event",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Flash sales Winter 2024\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-03T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"c1b2574d-70fd-4b4b-b6db-ffcff02564c7\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/api/events",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"api",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Update event",
 							"request": {
 								"method": "PUT",
@@ -686,12 +697,12 @@
 							"response": []
 						},
 						{
-							"name": "Get event by id",
+							"name": "Approve event",
 							"request": {
-								"method": "GET",
+								"method": "PATCH",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId",
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/approve",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -699,12 +710,49 @@
 										"event-service",
 										"api",
 										"events",
-										":eventId"
+										":eventId",
+										"approve"
 									],
 									"variable": [
 										{
 											"key": "eventId",
-											"value": "0193f48c-8f40-4a9c-98c2-250e7680e698"
+											"value": "01942224-6cd5-42e7-9a4d-c588248a6352"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reject event",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"comment\": \"Violate rules\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/event-service/api/events/:eventId/reject",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"event-service",
+										"api",
+										"events",
+										":eventId",
+										"reject"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
 										}
 									]
 								}
@@ -768,7 +816,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE0MDViNGRiLTc4ZGItNDNjZC05MWQyLWEyOWYwMWE0MTZmMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiMDAwMDAwMDAwMCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzM0OTYxMzYxLCJpc3MiOiJWb3VTcGhlcmUiLCJhdWQiOiJWb3VTcGhlcmUifQ.zqppC7mq4pt-a7to4xsuIMLDUFccSL-_zCoOQCCcc98",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE0MDViNGRiLTc4ZGItNDNjZC05MWQyLWEyOWYwMWE0MTZmMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMDAwMDAwMDAwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IiIsImV4cCI6MTczNTg5MDQ5NiwiaXNzIjoiVm91U3BoZXJlIiwiYXVkIjoiVm91U3BoZXJlIn0.bwNssAjeWVlWSpNclHt8MVyBFUHj6unPbYsdY2r9pq4",
 						"type": "string"
 					}
 				]

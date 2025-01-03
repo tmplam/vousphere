@@ -83,6 +83,11 @@ services:
       dockerfile: Services/UserService/UserService.API/Dockerfile
 
 
+  emailservice.api:
+    image: ${DOCKER_REGISTRY-}emailserviceapi
+    build:
+      context: .
+      dockerfile: Services/EmailService/EmailService.API/Dockerfile
 
 # Volumes
 volumes:
@@ -91,3 +96,4 @@ volumes:
   postgres_game:
   postgres_media:
   sqlserver_user:
+
