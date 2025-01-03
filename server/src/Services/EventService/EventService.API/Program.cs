@@ -53,6 +53,7 @@ builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 
 builder.Services.AddMediaServiceClient();
+builder.Services.AddUserServiceClient();
 
 
 // Add exception handler

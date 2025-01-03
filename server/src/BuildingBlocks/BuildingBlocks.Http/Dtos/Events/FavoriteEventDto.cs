@@ -1,4 +1,6 @@
-﻿namespace BuildingBlocks.Http.Dtos.Events;
+﻿using BuildingBlocks.Http.Dtos.Users;
+
+namespace BuildingBlocks.Http.Dtos.Events;
 
 public class FavoriteEventDto
 {

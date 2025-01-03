@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Http.Dtos.Events;
+using BuildingBlocks.Http.Dtos.Users;
 using BuildingBlocks.Http.InternalServiceApis;
 using BuildingBlocks.Shared;
 using Mapster;

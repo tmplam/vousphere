@@ -1,4 +1,6 @@
-﻿namespace EventService.API.Dtos;
+﻿using BuildingBlocks.Http.Dtos.Users;
+
+namespace EventService.API.Dtos;
 
 public class EventDto
 {
@@ -13,6 +15,7 @@ public class EventDto
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     public Guid BrandId { get; set; }
+    public BrandDto? Brand { get; set; } = null;
 
     public List<VoucherType> VoucherTypes { get; set; } = new();
     public int TotalVouchers => VoucherTypes.Sum(voucherType => voucherType.Total);

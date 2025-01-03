@@ -9,12 +9,13 @@ public record GetEventsResult(PaginationResult<EventDto> Events);
 
 public class GetEventsHandler(
     IDocumentSession session,
-    IMediaApi mediaService) : IQueryHandler<GetEventsQuery, GetEventsResult>
+    IMediaApi mediaService,
+    IUserApi userService) : IQueryHandler<GetEventsQuery, GetEventsResult>
 {
     public async Task<GetEventsResult> Handle(GetEventsQuery query, CancellationToken cancellationToken)
     {
         var eventsQuery = session.Query<Event>()
-            .Where(e => e.Status == EventStatus.Approved && e.EndTime <= DateTimeOffset.UtcNow);
+            .Where(e => e.Status == EventStatus.Approved && e.EndTime >= DateTimeOffset.UtcNow);
 
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));
@@ -30,8 +31,15 @@ public class GetEventsHandler(
             if (e.Item == null) return [e.ImageId];
             return new[] { e.ImageId, e.Item.ImageId };
         });
+        var brandIds = eventDtos.Select(e => e.BrandId);
 
-        var imageUrlsDictionary = await mediaService.GetImageUrlsAsync(imageIds);
+        var imageUrlsTask = mediaService.GetImageUrlsAsync(imageIds);
+        var brandsInfoTask = userService.GetBrandsInfoAsync(brandIds);
+
+        await Task.WhenAll(imageUrlsTask, brandsInfoTask);
+
+        var imageUrlsDictionary = await imageUrlsTask;
+        var brandsInfoDictionary = await brandsInfoTask;
 
         foreach (var eventDto in eventDtos)
         {
@@ -46,6 +54,11 @@ public class GetEventsHandler(
                 {
                     eventDto.Item.Image = itemImageUrl;
                 }
+            }
+
+            if (brandsInfoDictionary.TryGetValue(eventDto.BrandId, out var brandInfo))
+            {
+                eventDto.Brand = brandInfo;
             }
         }
 

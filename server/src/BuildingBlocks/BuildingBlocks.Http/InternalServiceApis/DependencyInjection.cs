@@ -28,4 +28,15 @@ public static class DependencyInjection
             });
         return services;
     }
+
+    public static IServiceCollection AddUserServiceClient(this IServiceCollection services)
+    {
+        services.AddRefitClient<IUserApi>()
+            .ConfigureHttpClient((serviceProvider, client) =>
+            {
+                var options = serviceProvider.GetRequiredService<IOptions<InternalServiceOptions>>().Value;
+                client.BaseAddress = new Uri(options.UserBaseUrl);
+            });
+        return services;
+    }
 }

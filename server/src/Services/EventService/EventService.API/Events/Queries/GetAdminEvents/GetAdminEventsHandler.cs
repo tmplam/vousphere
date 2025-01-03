@@ -1,26 +1,22 @@
-﻿namespace EventService.API.Events.Queries.GetBrandEvents;
+﻿namespace EventService.API.Events.Queries.GetAdminEvents;
 
-public record GetBrandEventsQuery(
+public record GetAdminEventsQuery(
     int Page = 1,
     int PerPage = 10,
     string Keyword = "",
     DateTimeOffset? StartTime = null,
     DateTimeOffset? EndTime = null,
-    EventStatus? Status = null) : IQuery<GetBrandEventsResult>;
-public record GetBrandEventsResult(PaginationResult<EventDto> Events);
+    EventStatus? Status = null) : IQuery<GetAdminEventsResult>;
+public record GetAdminEventsResult(PaginationResult<EventDto> Events);
 
-
-public class GetBrandEventsHandler(
+public class GetAdminEventsHandler(
     IDocumentSession session,
-    IClaimService claimService,
-    IMediaApi mediaService)
-    : IQueryHandler<GetBrandEventsQuery, GetBrandEventsResult>
+    IMediaApi mediaService) 
+    : IQueryHandler<GetAdminEventsQuery, GetAdminEventsResult>
 {
-    public async Task<GetBrandEventsResult> Handle(GetBrandEventsQuery query, CancellationToken cancellationToken)
+    public async Task<GetAdminEventsResult> Handle(GetAdminEventsQuery query, CancellationToken cancellationToken)
     {
-        var brandId = Guid.Parse(claimService.GetUserId());
-
-        var eventsQuery = session.Query<Event>().Where(e => e.BrandId == brandId);
+        var eventsQuery = session.Query<Event>().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));
@@ -61,7 +57,7 @@ public class GetBrandEventsHandler(
         }
 
 
-        return new GetBrandEventsResult(
+        return new GetAdminEventsResult(
             PaginationResult<EventDto>.Create(
                 events.PageNumber,
                 events.PageSize,

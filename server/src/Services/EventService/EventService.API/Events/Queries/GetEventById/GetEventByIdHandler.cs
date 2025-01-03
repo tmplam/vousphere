@@ -6,7 +6,8 @@ public record GetEventByIdResult(EventDto Event);
 
 public class GetEventByIdHandler(
     IDocumentSession session,
-    IMediaApi mediaService)
+    IMediaApi mediaService,
+    IUserApi userService)
     : IQueryHandler<GetEventByIdQuery, GetEventByIdResult>
 {
     public async Task<GetEventByIdResult> Handle(GetEventByIdQuery query, CancellationToken cancellationToken)
@@ -18,16 +19,21 @@ public class GetEventByIdHandler(
 
         var eventDto = existingEvent.Adapt<EventDto>();
 
+        var brandTask = userService.GetBrandInfoAsync(eventDto.BrandId);
+
         if (eventDto.Item == null)
         {
             eventDto.Image = await mediaService.GetImageUrlAsync(existingEvent.ImageId);
         }
         else
         {
-            var imageUrls = await mediaService.GetImageUrlsAsync(existingEvent.ImageId, eventDto.Item.ImageId);
-            eventDto.Image = imageUrls[existingEvent.ImageId];
-            eventDto.Item.Image = imageUrls[eventDto.Item.ImageId];
+            var imageUrlsTask = mediaService.GetImageUrlsAsync(eventDto.ImageId, eventDto.Item.ImageId);
+            var imageUrls = await imageUrlsTask;
+            eventDto.Image = imageUrls.TryGetValue(eventDto.ImageId, out var eventImage) ? eventImage : string.Empty;
+            eventDto.Item.Image = imageUrls.TryGetValue(eventDto.Item.ImageId, out var itemImage) ? itemImage : string.Empty;
         }
+
+        eventDto.Brand = await brandTask;
 
         return new GetEventByIdResult(eventDto);
     }
