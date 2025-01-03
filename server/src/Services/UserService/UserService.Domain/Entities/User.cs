@@ -11,4 +11,5 @@ public class User : AuthUser
     public Player? Player { get; set; }
     public Brand? Brand { get; set; }
     public ICollection<UserFavorite>? UserFavorites { get; set; }
+    public ICollection<Otp>? Otps { get; set; }
 }

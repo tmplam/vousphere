@@ -6,4 +6,5 @@ internal static class TableNames
     internal const string UserFavorites = nameof(UserFavorites);
     internal const string Brands = nameof(Brands);
     internal const string Players = nameof(Players);
+    internal const string Otps = nameof(Otps);
 }
