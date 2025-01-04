@@ -13,6 +13,16 @@ public static class ConfigurePolicies
             policy.RequireRole(UserRole.Admin.ToString());
         });
 
+        options.AddPolicy(AuthPolicy.Brand, policy =>
+        {
+            policy.RequireRole(UserRole.Brand.ToString());
+        });
+
+        options.AddPolicy(AuthPolicy.Player, policy =>
+        {
+            policy.RequireRole(UserRole.Player.ToString());
+        });
+
         options.AddPolicy(AuthPolicy.BrandOrAdmin, policy =>
         {
             policy.RequireRole(UserRole.Brand.ToString(), UserRole.Admin.ToString());

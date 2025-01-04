@@ -8,13 +8,13 @@ namespace UserService.Infrastructure.Persistence.Repositories;
 
 public class UserRepository(ApplicationDbContext _dbContext) : IUserRepository
 {
-    public async Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, bool? includePlayer = null)
+    public async Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, bool includePlayer = false, bool includeBrand = false)
     {
-        if (includePlayer == null)
-            return await _dbContext.Set<User>().FirstOrDefaultAsync(predicate);
-        else if (includePlayer is true)
+        if (includePlayer)
+            return await _dbContext.Set<User>().Include(u => u.Player).FirstOrDefaultAsync(predicate);
+        else if (includeBrand)
             return await _dbContext.Set<User>().Include(user => user.Brand).FirstOrDefaultAsync(predicate);
-        return await _dbContext.Set<User>().Include(user => user.Player).FirstOrDefaultAsync(predicate);
+        return await _dbContext.Set<User>().FirstOrDefaultAsync(predicate);
     }
 
     public async Task<User> AddAsync(User user)

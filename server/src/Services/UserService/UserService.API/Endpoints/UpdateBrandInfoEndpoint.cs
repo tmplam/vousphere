@@ -1,8 +1,11 @@
-﻿using UserService.Application.Features.Users.Commands.UpdateBrandInfo;
+﻿using BuildingBlocks.Auth.Constants;
+using UserService.Application.Features.Users.Commands.UpdateBrandInfo;
 
 namespace UserService.API.Endpoints;
 
 public record UpdateBrandInfoRequest(
+    string Name,
+    string PhoneNumber,
     double Latitude,
     double Longitude,
     string Address,
@@ -12,19 +15,14 @@ public class UpdateBrandInfoEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/brands/{brandId:guid}", async (
-            Guid brandId,
+        app.MapPut("/api/brands/brand-info", async (
             UpdateBrandInfoRequest request,
             ISender sender) =>
         {
-            var command = new UpdateBrandInfoCommand(
-                brandId,
-                request.Latitude,
-                request.Longitude,
-                request.Address,
-                request.Domain);
+            var command = request.Adapt<UpdateBrandInfoCommand>();
             var result = await sender.Send(command);
             return Results.NoContent();
-        });
+        })
+            .RequireAuthorization(AuthPolicy.Brand);
     }
 }

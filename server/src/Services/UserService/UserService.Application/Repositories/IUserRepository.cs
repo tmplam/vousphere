@@ -5,7 +5,7 @@ namespace UserService.Application.Repositories;
 
 public interface IUserRepository
 {
-    Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, bool? includePlayer = null);
+    Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, bool includePlayer = false, bool includeBrand = false);
     Task<User> AddAsync(User user);
     Task<PaginationResult<User>> GetUsersAsync(
         Expression<Func<User, bool>> predicate, 

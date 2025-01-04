@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"tranmyphulam123@gmail.com\",\r\n    \"name\": \"Lam handsome\", // Brand name / Player name\r\n    \"password\": \"123456\",\r\n    \"isBrand\": false\r\n}",
+									"raw": "{\r\n    \"email\": \"phulam.dev@gmail.com\",\r\n    \"name\": \"Poirot\", // Brand name / Player name\r\n    \"password\": \"123456\",\r\n    \"isBrand\": true\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -48,7 +48,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"tranmyphulam123@gmail.com\",\r\n    \"otpCode\": \"687433\"\r\n}",
+									"raw": "{\r\n    \"email\": \"phulam.dev@gmail.com\",\r\n    \"otpCode\": \"376735\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -123,6 +123,33 @@
 										"api",
 										"users",
 										"sign-in"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Toggle block user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/:userId/toggle-block",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										":userId",
+										"toggle-block"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "942C6080-7E10-461F-80C2-5C47505B1F1B"
+										}
 									]
 								}
 							},
@@ -213,9 +240,168 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users?page=1&perPage=5",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										},
+										{
+											"key": "keyword",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "role",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get brands",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/brands?page=1&perPage=5&keyword=",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"brands"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										},
+										{
+											"key": "keyword",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update brand info",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Lockiket\",\r\n    \"phoneNumber\": \"0981929121\",\r\n    \"latitude\": 112.3,\r\n    \"longitude\": 121.2,\r\n    \"address\": \"Khu o chuottt\",\r\n    \"domain\": \"clothing\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/brands/brand-info",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"brands",
+										"brand-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update player info",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"PhuLam\",\r\n    \"phoneNumber\": \"0909384835\",\r\n    \"dateOfBirth\": \"2003-03-20\", // this field is date only\r\n    \"gender\": \"Male\" // just string, can be anything\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/player-info",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"player-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update avatar",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"imageId\": \"29845e44-f4ea-444f-bea4-1838a8c8e953\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/image",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"image"
+									]
+								}
+							},
+							"response": []
 						}
 					],
-					"description": "**Admin account:**\n\n- admin@gmail.com\n    \n- admin123@\n    \n\n**User status:**\n\n- _Created_\n    \n- _UpdateInfoRequired_ (for Brand after verifying email)\n    \n- _Verified_ (for Player after verifying email or Brand after updating Brand info)\n    \n- _Blocked_"
+					"description": "**Admin account:**\n\n- [admin@gmail.com](https://mailto:admin@gmail.com)\n    \n- admin123@\n    \n\n**User status:**\n\n- _Created_\n    \n- _UpdateInfoRequired_ (for Brand after verifying email)\n    \n- _Verified_ (for Player after verifying email or Brand after updating Brand info)\n    \n- _Blocked_\n    \n\n**User role:**\n\n- Player\n    \n- Brand\n    \n- Admin"
 				},
 				{
 					"name": "Game",
@@ -846,7 +1032,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/Users/PhuLam/Downloads/snake.jpg"
+											"src": "/C:/Users/PhuLam/Downloads/toji.jpg"
 										}
 									]
 								},

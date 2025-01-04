@@ -1,25 +1,35 @@
-﻿using UserService.Domain.Enums;
+﻿using BuildingBlocks.Auth.Services;
+using UserService.Domain.Enums;
 
 namespace UserService.Application.Features.Users.Commands.UpdateBrandInfo;
 
 internal sealed class UpdateBrandInfoHandler(
-    IBrandRepository _brandRepository,
+    IUserRepository _userRepository,
+    IClaimService _claimService,
     IUnitOfWork _unitOfWork) : ICommandHandler<UpdateBrandInfoCommand, UpdateBrandInfoResult>
 {
     public async Task<UpdateBrandInfoResult> Handle(UpdateBrandInfoCommand command, CancellationToken cancellationToken)
     {
-        var brand = await _brandRepository.FirstOrDefaultAsync(b => b.UserId == command.BrandId, includeUser: true);
+        var brandId = Guid.Parse(_claimService.GetUserId());
+
+        var brand = await _userRepository.FirstOrDefaultAsync(b => b.Id == brandId, includeBrand: true);
 
         if (brand is null) 
-            throw new NotFoundException(nameof(Brand), command.BrandId);
+            throw new NotFoundException(nameof(Brand), brandId);
 
-        brand.Latitude = command.Latitude;
-        brand.Longitude = command.Longitude;
-        brand.Address = command.Address;
-        brand.Domain = command.Domain;
+        brand.Name = command.Name;
+        brand.PhoneNumber = command.PhoneNumber;
 
-        if (brand.User != null && brand.User.Status == UserStatus.UpdateInfoRequired)
-            brand.User.Status = UserStatus.Verified;
+        if (brand.Brand == null)
+            brand.Brand = new Brand();
+
+        brand.Brand.Latitude = command.Latitude;
+        brand.Brand.Longitude = command.Longitude;
+        brand.Brand.Address = command.Address;
+        brand.Brand.Domain = command.Domain;
+
+        if (brand.Status == UserStatus.UpdateInfoRequired)
+            brand.Status = UserStatus.Verified;
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
