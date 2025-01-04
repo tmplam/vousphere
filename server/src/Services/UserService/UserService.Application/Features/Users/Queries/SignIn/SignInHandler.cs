@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Auth.Services;
+using UserService.Domain.Enums;
 
 namespace UserService.Application.Features.Users.Queries.SignIn;
 
@@ -10,10 +11,20 @@ internal sealed class SignInHandler(
 {
     public async Task<SignInResult> Handle(SignInQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.FirstOrDefaultAsync(user => user.PhoneNumber == query.PhoneNumber);
+        var user = await _userRepository.FirstOrDefaultAsync(user => user.Email == query.Email);
         if (user is null)
         {
-            throw new BadRequestException($"Account with phone number \"{query.PhoneNumber}\" not existed.");
+            throw new BadRequestException($"Account with email \"{query.Email}\" not existed");
+        }
+
+        if (user.Status == UserStatus.Created)
+        {
+            throw new BadRequestException($"Account with email \"{query.Email}\" not verified");
+        }
+
+        if (user.Status == UserStatus.Blocked)
+        {
+            throw new BadRequestException($"Account with email \"{query.Email}\" is blocked");
         }
 
         if (_passwordService.VerifyPassword(user, query.Password))

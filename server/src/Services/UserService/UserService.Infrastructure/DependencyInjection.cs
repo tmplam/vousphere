@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Application.Repositories;
+using UserService.Application.Services;
 using UserService.Infrastructure.Persistence;
 using UserService.Infrastructure.Persistence.Repositories;
+using UserService.Infrastructure.Services;
 
 namespace UserService.Infrastructure;
 
@@ -29,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUserFavoriteRepository, UserFavoriteRepository>();
+        services.AddScoped<IOtpRepository, OtpRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services
@@ -36,6 +39,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IClaimService, ClaimService>();
+        services.AddScoped<IOtpService, OtpService>();
 
         return services;
     }

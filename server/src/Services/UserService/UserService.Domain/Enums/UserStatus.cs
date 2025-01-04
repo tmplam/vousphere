@@ -3,6 +3,7 @@
 public enum UserStatus
 {
     Created = 0,
-    Verified = 1,
-    Blocked = 2,
+    UpdateInfoRequired = 1,
+    Verified = 2,
+    Blocked = 3,
 }

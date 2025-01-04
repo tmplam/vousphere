@@ -2,7 +2,7 @@
 
 namespace UserService.API.Endpoints;
 
-public record SignInRequest(string PhoneNumber, string Password);
+public record SignInRequest(string Email, string Password);
 public record SignInResponse(string AccessToken);
 
 public class SignInEndpoint : ICarterModule

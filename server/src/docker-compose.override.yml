@@ -185,6 +185,9 @@ services:
       - Jwt__Issuer=VouSphere
       - Jwt__Audience=VouSphere
       - Jwt__SecretKey=bkdghy78ww2b-3nj9dfsnb-dfgdj-dfgdfg-dfgbdfgh232-3loqlwqe-3w25e2e4
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
     depends_on:
       - userdb
@@ -200,6 +203,9 @@ services:
       - SendgridEmailService__ApiKey=SG.9GFGZvnnT5-TK68EzANaQA.ZXxTKbSK3dxIxoImNjFY448IBXkv4vk0Z0UZ4KTkfdk
       - SendgridEmailService__SenderEmail=phulam.dev@gmail.com
       - SendgridEmailService__SenderName=Vousphere
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
     depends_on:
       - messagebroker

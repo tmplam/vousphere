@@ -13,6 +13,7 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Otp> Otps => Set<Otp>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);

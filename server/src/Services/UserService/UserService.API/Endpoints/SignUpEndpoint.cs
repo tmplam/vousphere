@@ -21,7 +21,7 @@ public class SignUpEndpoint : ICarterModule
 
             var response = result.Adapt<SignUpResponse>();
 
-            return Results.Ok(ApiResult.Success(response, "Sign up successfully"));
+            return Results.Ok(ApiResult.Success(response, "Account created, please verify otp sent to your email"));
         });
     }
 }
