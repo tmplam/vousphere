@@ -15,7 +15,10 @@ public class GetEventsHandler(
     public async Task<GetEventsResult> Handle(GetEventsQuery query, CancellationToken cancellationToken)
     {
         var eventsQuery = session.Query<Event>()
-            .Where(e => e.Status == EventStatus.Approved && e.EndTime >= DateTimeOffset.UtcNow);
+            .Where(e => 
+                e.Status != EventStatus.Created && 
+                e.Status != EventStatus.Rejected && 
+                e.EndTime >= DateTimeOffset.UtcNow);
 
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));

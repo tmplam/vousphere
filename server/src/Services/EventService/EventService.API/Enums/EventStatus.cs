@@ -2,7 +2,9 @@
 
 public enum EventStatus
 {
-    Pending = 0,
-    Approved = 1,
-    Rejected = 2
+    Created = 0,
+    Pending = 1,
+    Rejected = 2,
+    Happening = 3,
+    Ended = 4
 }

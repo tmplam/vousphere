@@ -1004,7 +1004,7 @@
 							"response": []
 						}
 					],
-					"description": "Event status:\n\n- Pending\n    \n- Approved\n    \n- Rejected"
+					"description": "Event status:\n\n- Created\n    \n- Pending\n    \n- Rejected\n    \n- Happening\n    \n- Ended"
 				},
 				{
 					"name": "Voucher",

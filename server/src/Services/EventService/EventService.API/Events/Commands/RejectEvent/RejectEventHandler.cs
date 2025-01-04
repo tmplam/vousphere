@@ -22,6 +22,9 @@ public class RejectEventHandler(
 
         if (existingEvent == null) throw new NotFoundException("Event not found");
 
+        if (existingEvent.Status == EventStatus.Happening || existingEvent.Status == EventStatus.Ended)
+            throw new BadRequestException("Event is already happening or ended");
+
         existingEvent.Status = EventStatus.Rejected;
         existingEvent.Comment = command.Comment;
 

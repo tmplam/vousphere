@@ -14,7 +14,10 @@ public class ApproveEventHandler(
 
         if (existingEvent == null) throw new NotFoundException("Event not found");
 
-        existingEvent.Status = EventStatus.Approved;
+        if (existingEvent.Status == EventStatus.Happening || existingEvent.Status == EventStatus.Ended)
+            throw new BadRequestException("Event is already happening or ended");
+
+        existingEvent.Status = EventStatus.Pending;
         existingEvent.Comment = null;
 
         session.Update(existingEvent);

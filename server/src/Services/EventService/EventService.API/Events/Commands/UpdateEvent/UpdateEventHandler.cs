@@ -92,8 +92,10 @@ public class UpdateEventHandler(
 
         if (brandId != existingEvent.BrandId) throw new ForbiddenException();
 
-        if (existingEvent.Status == EventStatus.Approved && DateTimeOffset.UtcNow >= existingEvent.StartTime)
-            throw new BadRequestException("Can't update started event");
+        if (existingEvent.Status == EventStatus.Pending || 
+            existingEvent.Status == EventStatus.Happening ||
+            existingEvent.Status == EventStatus.Ended)
+            throw new BadRequestException("Can't update approved event");
 
         var tasks = Task.CompletedTask;
 
