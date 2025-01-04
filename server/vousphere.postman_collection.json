@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"phoneNumber\": \"0909987652\",\r\n    \"password\": \"admin123@\",\r\n    \"isBrand\": false\r\n}",
+									"raw": "{\r\n    \"email\": \"tranmyphulam123@gmail.com\",\r\n    \"name\": \"Lam handsome\", // Brand name / Player name\r\n    \"password\": \"123456\",\r\n    \"isBrand\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -42,13 +42,71 @@
 							"response": []
 						},
 						{
+							"name": "Verify email",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"tranmyphulam123@gmail.com\",\r\n    \"otpCode\": \"687433\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/verify-email",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"verify-email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resend otp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/resend-otp",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										"resend-otp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Sign in",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"phoneNumber\": \"0000000000\",\r\n    \"password\": \"admin123@\"\r\n}",
+									"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin123@\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -157,7 +215,7 @@
 							"response": []
 						}
 					],
-					"description": "Admin account:\n\n- 0000000000\n    \n- admin123@"
+					"description": "**Admin account:**\n\n- admin@gmail.com\n    \n- admin123@\n    \n\n**User status:**\n\n- _Created_\n    \n- _UpdateInfoRequired_ (for Brand after verifying email)\n    \n- _Verified_ (for Player after verifying email or Brand after updating Brand info)\n    \n- _Blocked_"
 				},
 				{
 					"name": "Game",
