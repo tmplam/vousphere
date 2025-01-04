@@ -20,9 +20,7 @@ internal sealed class SignUpHandler(
         var existedUser = await _userRepository.FirstOrDefaultAsync(user => user.Email == command.Email);
 
         if (existedUser != null && existedUser.Status != UserStatus.Created)
-        {
             throw new BadRequestException($"User with email \"{command.Email}\" already existed.");
-        }
 
         var user = existedUser ?? new User
         { 

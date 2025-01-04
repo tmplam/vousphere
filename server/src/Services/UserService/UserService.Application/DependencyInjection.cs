@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.ConfigureOptions<InternalServiceOptionsSetup>();
 
         services.AddEventServiceClient();
+        services.AddMediaServiceClient();
 
         return services;
     }

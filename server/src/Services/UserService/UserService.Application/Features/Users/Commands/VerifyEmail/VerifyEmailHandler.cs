@@ -17,28 +17,18 @@ internal sealed class VerifyEmailHandler(
         var user = await _userRepository.FirstOrDefaultAsync(x => x.Email == command.Email);
 
         if (user == null)
-        {
             throw new NotFoundException("User", command.Email);
-        }
 
         if (user.Status == UserStatus.Verified || user.Status == UserStatus.Blocked)
-        {
             throw new BadRequestException("Email already verified");
-        }
 
         if (!await _otpService.VerifyOtpAsync(user.Id, command.OtpCode))
-        {
             throw new BadRequestException("Invalid OTP code");
-        }
 
         if (user.Role == UserRole.Brand)
-        {
             user.Status = UserStatus.UpdateInfoRequired;
-        }
         else
-        {
             user.Status = UserStatus.Verified;
-        }
 
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

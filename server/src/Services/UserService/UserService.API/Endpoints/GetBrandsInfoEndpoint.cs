@@ -4,6 +4,7 @@ namespace UserService.API.Endpoints;
 
 public class GetBrandsInfoEndpoint : ICarterModule
 {
+    // Internal use only
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/users/brands-info", async (

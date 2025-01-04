@@ -17,9 +17,7 @@ internal sealed class ResendOtpHandler(
         var user = await _userRepository.FirstOrDefaultAsync(user => user.Email == command.Email);
 
         if (user == null)
-        {
             throw new BadRequestException($"User with email \"{command.Email}\" not existed.");
-        }
 
         var otp = await _otpService.GenerateOtpAsync(user.Id);
 
