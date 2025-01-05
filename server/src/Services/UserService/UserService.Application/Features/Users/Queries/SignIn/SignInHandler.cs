@@ -30,7 +30,7 @@ internal sealed class SignInHandler(
         if (_passwordService.VerifyPassword(user, query.Password))
         {
             var token = _jwtProvider.GenerateToken(user);
-            return new SignInResult(token);
+            return new SignInResult(token, user.Role);
         }
 
         throw new BadRequestException($"Password not match");

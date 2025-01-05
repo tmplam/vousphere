@@ -1,9 +1,10 @@
-﻿using UserService.Application.Features.Users.Commands.VerifyEmail;
+﻿using BuildingBlocks.Auth.Enums;
+using UserService.Application.Features.Users.Commands.VerifyEmail;
 
 namespace UserService.API.Endpoints;
 
 public record VerifyEmailRequest(string Email, string OtpCode);
-public record VerifyEmailResponse(Guid UserId, string Email, string AccessToken);
+public record VerifyEmailResponse(Guid UserId, string Email, string AccessToken, UserRole Role);
 
 public class VerifyEmailEndpoint : ICarterModule
 {

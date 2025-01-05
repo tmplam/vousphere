@@ -35,6 +35,6 @@ internal sealed class VerifyEmailHandler(
 
         var token = _jwtProvider.GenerateToken(user);
 
-        return new VerifyEmailResult(user.Id, user.Email, token);
+        return new VerifyEmailResult(user.Id, user.Email, token, user.Role);
     }
 }

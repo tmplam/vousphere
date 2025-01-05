@@ -1,7 +1,9 @@
-﻿namespace UserService.Application.Features.Users.Commands.VerifyEmail;
+﻿using BuildingBlocks.Auth.Enums;
+
+namespace UserService.Application.Features.Users.Commands.VerifyEmail;
 
 public record VerifyEmailCommand(string Email, string OtpCode) : ICommand<VerifyEmailResult>;
-public record VerifyEmailResult(Guid UserId, string Email, string AccessToken);
+public record VerifyEmailResult(Guid UserId, string Email, string AccessToken, UserRole Role);
 
 public class VerifyEmailCommandValidator : AbstractValidator<VerifyEmailCommand>
 {

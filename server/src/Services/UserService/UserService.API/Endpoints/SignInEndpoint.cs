@@ -1,9 +1,10 @@
-﻿using UserService.Application.Features.Users.Queries.SignIn;
+﻿using BuildingBlocks.Auth.Enums;
+using UserService.Application.Features.Users.Queries.SignIn;
 
 namespace UserService.API.Endpoints;
 
 public record SignInRequest(string Email, string Password);
-public record SignInResponse(string AccessToken);
+public record SignInResponse(string AccessToken, UserRole Role);
 
 public class SignInEndpoint : ICarterModule
 {
