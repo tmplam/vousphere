@@ -4,28 +4,29 @@ using MassTransit;
 namespace MediaService.API.Medias.EventHandlers.IntegrationEventHandlers;
 
 public class RemoveMediaIntegrationEventHandler(
-    ILogger<RemoveMediaIntegrationEventHandler> logger,
-    IDocumentSession session,
-    IFileStorageService fileStorageService) : IConsumer<RemoveMediaIntegrationEvent>
+    ILogger<RemoveMediaIntegrationEventHandler> _logger,
+    IDocumentSession _session,
+    IFileStorageService _fileStorageService)
+    : IConsumer<RemoveMediaIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<RemoveMediaIntegrationEvent> context)
     {
-        var media = await session.LoadAsync<Media>(context.Message.MediaId);
+        var media = await _session.LoadAsync<Media>(context.Message.MediaId);
 
         if (media != null)
         {
-            session.Delete(media);
+            _session.Delete(media);
 
             await Task.WhenAll(
-                fileStorageService.RemoveFileAsync(media.Url),
-                session.SaveChangesAsync()
+                _fileStorageService.RemoveFileAsync(media.Url),
+                _session.SaveChangesAsync()
             );
 
-            logger.LogInformation("Removed media with id {MediaId}", context.Message.MediaId);
+            _logger.LogInformation("Removed media with id {MediaId}", context.Message.MediaId);
         }
         else
         {
-            logger.LogWarning("Media with id {MediaId} not found", context.Message.MediaId);
+            _logger.LogWarning("Media with id {MediaId} not found", context.Message.MediaId);
         }
     }
 }

@@ -1,7 +1,7 @@
 using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
-using NotificationService.API.Entities;
-using NotificationService.API.Hubs;
+using BuildingBlocks.Messaging.MassTransit;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +34,8 @@ builder.Services.AddMarten(options =>
 
     options.Schema.For<Notification>();
 }).UseLightweightSessions();
+
+builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
 builder.Services

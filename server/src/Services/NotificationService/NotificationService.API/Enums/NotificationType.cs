@@ -6,7 +6,7 @@ public enum NotificationType
     VoucherGifted = 1,
     ItemGifted = 2,
     NewBrandRegistered = 3,
-    NewEventCreated = 4,
+    EventCreated = 4,
     EventApproved = 5,
     EventRejected = 6,
 }

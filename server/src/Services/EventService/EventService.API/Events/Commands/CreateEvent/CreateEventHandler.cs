@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
 using MassTransit;
+using System.Security.Claims;
 
 namespace EventService.API.Events.Commands.CreateEvent;
 
@@ -71,14 +72,15 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
 
 public class CreateEventHandler(
-    IDocumentSession session,
-    IClaimService claimService,
-    IPublishEndpoint publishEndpoint)
+    IDocumentSession _session,
+    IClaimService _claimService,
+    IPublishEndpoint _publishEndpoint)
     : ICommandHandler<CreateEventCommand, CreateEventResult>
 {
     public async Task<CreateEventResult> Handle(CreateEventCommand command, CancellationToken cancellationToken)
     {
-        var brandId = Guid.Parse(claimService.GetUserId());
+        var brandId = Guid.Parse(_claimService.GetUserId());
+        var brandName = _claimService.GetClaim(ClaimTypes.Name);
 
         var popUpItemsEnabled = command.Games.Any(g => g.PopUpItemsEnabled);
 
@@ -111,18 +113,26 @@ public class CreateEventHandler(
                 null : new Item { ImageId = command.Item.ImageId, NumberPieces = command.Item.NumberPieces },
         };
 
-        session.Store(newEvent);
+        _session.Store(newEvent);
 
         var undraftEventImageMessage = new UndraftMediaIntegrationEvent { MediaId = newEvent.ImageId };
+        var eventCreatedMessage = new EventCreatedIntegrationEvent 
+        { 
+            EventId = newEvent.Id,
+            BrandId = newEvent.BrandId,
+            EventName = newEvent.Name,
+            BrandName = brandName ?? string.Empty,
+        };
 
         var tasks = Task.WhenAll(
-            session.SaveChangesAsync(cancellationToken),
-            publishEndpoint.Publish(undraftEventImageMessage, cancellationToken));
+            _session.SaveChangesAsync(cancellationToken),
+            _publishEndpoint.Publish(undraftEventImageMessage, cancellationToken),
+            _publishEndpoint.Publish(eventCreatedMessage, cancellationToken));
 
         if (command.Item != null)
         {
             var undraftItemImageMessage = new UndraftMediaIntegrationEvent { MediaId = command.Item.ImageId };
-            tasks = Task.WhenAll(tasks, publishEndpoint.Publish(undraftItemImageMessage, cancellationToken));
+            tasks = Task.WhenAll(tasks, _publishEndpoint.Publish(undraftItemImageMessage, cancellationToken));
         }
 
         await tasks;

@@ -8,4 +8,5 @@ namespace NotificationService.API.Hubs;
 [Authorize(Policy = AuthPolicy.Brand)]
 public class BrandNotificationsHub : Hub<IBrandNotificationsClient>
 {
+
 }
