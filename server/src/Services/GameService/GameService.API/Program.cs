@@ -1,3 +1,4 @@
+using BuildingBlocks.Cors;
 using BuildingBlocks.Http.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +57,9 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
+// Add cors
+builder.Services.AddAllowAllCors();
+
 
 
 var app = builder.Build();
@@ -64,6 +68,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipline
 app.UseExceptionHandler(config => { });
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,6 +1,4 @@
-﻿using BuildingBlocks.Http.InternalServiceApis;
-
-namespace GameService.API.Features.Games.Queries.GetAllGames;
+﻿namespace GameService.API.Features.Games.Queries.GetAllGames;
 
 public record GetAllGamesQuery() : IQuery<GetAllGamesResult>;
 public record GetAllGamesResult(IEnumerable<GameDto> Games);

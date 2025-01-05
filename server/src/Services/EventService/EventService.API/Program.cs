@@ -1,3 +1,4 @@
+using BuildingBlocks.Cors;
 using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using Quartz;
@@ -82,6 +83,9 @@ builder.Services.AddUserServiceClient();
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
+// Add CORS
+builder.Services.AddAllowAllCors();
+
 
 
 var app = builder.Build();
@@ -90,6 +94,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipline
 app.UseExceptionHandler(config => { });
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
