@@ -74,6 +74,6 @@ internal sealed class SignUpHandler(
             _unitOfWork.SaveChangesAsync(cancellationToken)
         );
 
-        return new SignUpResult(user.Id);
+        return new SignUpResult(user.Id, user.Email);
     }
 }

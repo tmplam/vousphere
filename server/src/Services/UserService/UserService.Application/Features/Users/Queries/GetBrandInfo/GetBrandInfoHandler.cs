@@ -1,12 +1,27 @@
-﻿namespace UserService.Application.Features.Users.Queries.GetBrandInfo;
+﻿using UserService.Application.Dtos;
+
+namespace UserService.Application.Features.Users.Queries.GetBrandInfo;
 
 internal sealed class GetBrandInfoHandler(
-    IBrandRepository _brandRepository)
+    IUserRepository _userRepository)
     : IQueryHandler<GetBrandInfoQuery, GetBrandInfoResult>
 {
     public async Task<GetBrandInfoResult> Handle(GetBrandInfoQuery query, CancellationToken cancellationToken)
     {
-        var brand = await _brandRepository.FirstOrDefaultAsync(x => x.UserId == query.BrandId);
-        return new GetBrandInfoResult(brand);
+        var user = await _userRepository.FirstOrDefaultAsync(x => x.Id == query.BrandId, includeBrand: true);
+
+        var brandInfo = new BrandInfoDto();
+        brandInfo.BrandId = query.BrandId;
+
+        if (user != null)
+        {
+            brandInfo.Name = user.Name;
+            brandInfo.Latitude = user.Brand?.Latitude;
+            brandInfo.Longitude = user.Brand?.Longitude;
+            brandInfo.Address = user.Brand?.Address ?? string.Empty;
+            brandInfo.Domain = user.Brand?.Domain ?? string.Empty;
+        }
+
+        return new GetBrandInfoResult(brandInfo);
     }
 }

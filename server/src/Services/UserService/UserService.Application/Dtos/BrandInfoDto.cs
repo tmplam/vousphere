@@ -1,6 +1,6 @@
-﻿namespace BuildingBlocks.Http.Dtos.Users;
+﻿namespace UserService.Application.Dtos;
 
-public class BrandDto
+public class BrandInfoDto
 {
     public Guid BrandId { get; set; }
     public string Name { get; set; } = string.Empty;

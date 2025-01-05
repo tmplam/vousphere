@@ -14,4 +14,5 @@ public class UserDto
     public Guid ImageId { get; set; }
     public string? Image { get; set; } = null;
     public BrandDto? Brand { get; set; }
+    public PlayerDto? Player { get; set; }
 }

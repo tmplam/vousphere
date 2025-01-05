@@ -7,7 +7,7 @@ public record SignUpRequest(
     string? Name,
     string Password,
     bool IsBrand = false);
-public record SignUpResponse(Guid UserId);
+public record SignUpResponse(Guid UserId, string Email);
 
 public class SignUpEndpoint : ICarterModule
 {

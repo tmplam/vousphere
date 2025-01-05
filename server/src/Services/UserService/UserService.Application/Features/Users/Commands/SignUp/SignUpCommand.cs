@@ -1,7 +1,7 @@
 ﻿namespace UserService.Application.Features.Users.Commands.SignUp;
 
 public record SignUpCommand(string Email, string Name, string Password, bool IsBrand = false) : ICommand<SignUpResult>;
-public record SignUpResult(Guid UserId);
+public record SignUpResult(Guid UserId, string Email);
 
 public class SignUpCommandValidator : AbstractValidator<SignUpCommand>
 {
