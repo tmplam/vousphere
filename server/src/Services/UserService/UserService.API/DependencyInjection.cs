@@ -4,7 +4,6 @@ using BuildingBlocks.Cors;
 using BuildingBlocks.Exceptions.Handlers;
 using Microsoft.AspNetCore.Authentication;
 using System.Text.Json.Serialization;
-using UserService.Application.Hubs;
 
 namespace UserService.API;
 
@@ -18,8 +17,6 @@ public static class DependencyInjection
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
-
-        services.AddSignalR();
 
         services
             .AddAuthentication(options =>
@@ -50,9 +47,6 @@ public static class DependencyInjection
         app.UseAuthorization();
 
         app.MapCarter();
-
-        // SignalR hubs
-        app.MapHub<PlayerNotificationsHub>("/hub/player-notification");
 
         return app;
     }

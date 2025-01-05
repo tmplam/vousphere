@@ -1,4 +1,4 @@
-﻿namespace UserService.Application.Hubs;
+﻿namespace NotificationService.API.Hubs;
 
 public interface IPlayerNotificationsClient
 {

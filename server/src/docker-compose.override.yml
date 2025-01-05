@@ -52,6 +52,19 @@ services:
       - postgres_media:/var/lib/postgresql/data/
 
 
+  notificationdb:
+    container_name: notificationdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=NotificationDb
+    restart: always
+    ports:
+      - "5405:5432"
+    volumes:
+      - postgres_notification:/var/lib/postgresql/data/
+
+
   userdb:
     container_name: userdb
     environment:
@@ -161,7 +174,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=notificationdb;Port=5432;Database=NotificationDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
+    depends_on:
+      - notificationdb
+      - messagebroker
     ports:
       - "6005:8080"
 

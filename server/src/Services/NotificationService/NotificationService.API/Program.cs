@@ -1,4 +1,7 @@
+using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
+using NotificationService.API.Entities;
+using NotificationService.API.Hubs;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +22,17 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+// Add SignalR
+builder.Services.AddSignalR();
+
 // Add database and message broker
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
     options.UseNewtonsoftForSerialization(enumStorage: EnumStorage.AsString);
     options.DisableNpgsqlLogging = true;
+
+    options.Schema.For<Notification>();
 }).UseLightweightSessions();
 
 // Add authentication and authorization
@@ -38,11 +46,15 @@ builder.Services
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimService, ClaimService>();
+
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
 
 // Add CORS
 builder.Services.AddAllowAllCors();
+
 
 
 var app = builder.Build();
@@ -58,5 +70,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
+
+// Configure signalR hubs
+app.MapHub<PlayerNotificationsHub>("/hub/notifications/player");
+app.MapHub<BrandNotificationsHub>("/hub/notifications/brand");
+app.MapHub<AdminNotificationsHub>("/hub/notifications/admin");
 
 app.Run();
