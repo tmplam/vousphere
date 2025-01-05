@@ -3,6 +3,7 @@ using BuildingBlocks.Auth.Policies;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
 using Microsoft.AspNetCore.Authentication;
+using System.Text.Json.Serialization;
 
 namespace UserService.API;
 
@@ -12,6 +13,10 @@ public static class DependencyInjection
     {
         services.AddHttpContextAccessor();
         services.AddCarter();
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
         services
             .AddAuthentication(options =>
             {
