@@ -14,7 +14,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ApiGateways/YarpApiGateway/YarpApiGateway.csproj", "ApiGateways/YarpApiGateway/"]
 COPY ["BuildingBlocks/BuildingBlocks.Auth/BuildingBlocks.Auth.csproj", "BuildingBlocks/BuildingBlocks.Auth/"]
-COPY ["BuildingBlocks/BuildingBlocks.Auth.Abstractions/BuildingBlocks.Auth.Abstractions.csproj", "BuildingBlocks/BuildingBlocks.Auth.Abstractions/"]
 RUN dotnet restore "./ApiGateways/YarpApiGateway/YarpApiGateway.csproj"
 COPY . .
 WORKDIR "/src/ApiGateways/YarpApiGateway"
