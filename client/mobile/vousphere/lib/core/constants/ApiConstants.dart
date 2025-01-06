@@ -6,4 +6,6 @@ class ApiConstants {
   static const String updateProfile = "/user-service/api/users/player-info";
   static const String uploadImage = "/media-service/api/medias/upload-image";
   static const String updateAvatar = "/user-service/api/users/image";
+  static const String verifyEmail = "/user-service/api/users/verify-email";
+  static const String resendOtp = "/user-service/api/users/resend-otp";
 }

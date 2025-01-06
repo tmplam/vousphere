@@ -127,7 +127,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 contentType: MediaType('image', file.extension!)
             );
           }
-          
+
           // create form data
           final formData = FormData.fromMap({
             'file': multipartFile,
