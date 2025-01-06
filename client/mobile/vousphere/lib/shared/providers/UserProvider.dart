@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/data/models/User.dart';
 
@@ -15,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   bool isAuthenticated = false;
-  User user = User('id', 'username', 'name', 'phone', 'email', 'status', 'role');
+  User user = User('id', 'name', 'email', 'phone', 'status', 'role', 'image', 'imageId', {});
 
 
   void setIsAuthenticated(bool value) {
@@ -26,18 +27,20 @@ class UserProvider extends ChangeNotifier {
     await _apiService.loadTokens();
     try {
       // call api to get info of authenticated user
-      // final response = await _apiService.dio.get(
-      //     ApiConstants.getUser,
-      //     options: Options(
-      //       extra: {'requireToken': true},
-      //     )
-      // );
-      // if (response.statusCode == 200) {
-      //   user = User.fromJson(response.data);
-      // }
+      final response = await _apiService.dio.get(
+          ApiConstants.getProfile,
+          options: Options(
+            extra: {'requireToken': true},
+          )
+      );
 
-      await Future.delayed(const Duration(milliseconds: 200));
-      user = User('id', 'vhkhai', 'Vuong Huynh Khai', '01919239459', 'khai@gmail.com', 'active', 'user');
+      if (response.statusCode == 200) {
+        user = User.fromJson(response.data['data']);
+        print(user);
+      }
+
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // user = User('id', 'vhkhai', 'Vuong Huynh Khai', '01919239459', 'khai@gmail.com', 'active', 'user');
       notifyListeners();
     } catch (e) {
       if (e is DioException) {
@@ -47,6 +50,9 @@ class UserProvider extends ChangeNotifier {
         } else {
           print("Error message: ${e.message}");
         }
+      }
+      else {
+        print(e);
       }
     }
   }

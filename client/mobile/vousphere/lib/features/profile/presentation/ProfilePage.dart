@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vousphere/data/models/User.dart';
+import 'package:vousphere/features/profile-edit/presentation/ProfileEditPage.dart';
 import 'package:vousphere/features/profile/presentation/dialogs/LogoutDialog.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
@@ -25,6 +27,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    User user = userProvider.user;
+
     return Container(
       height: MediaQuery.of(context).size.height,
       color: Colors.white,
@@ -36,26 +42,40 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             ClipOval(
               child: Image.network(
-                'https://static.vecteezy.com/system/resources/thumbnails/022/385/025/small_2x/a-cute-surprised-black-haired-anime-girl-under-the-blooming-sakura-ai-generated-photo.jpg',
+                user.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/022/385/025/small_2x/a-cute-surprised-black-haired-anime-girl-under-the-blooming-sakura-ai-generated-photo.jpg',
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Em Gai Xinh Dep',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user.name,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const ProfileEditPage(),));
+                    },
+                    icon: const Icon(Icons.edit),
+                    tooltip: "Edit your profile",
+                ),
+              ],
             ),
             const SizedBox(height: 15),
             Row(
               children: [
                 const SizedBox(width: 10,),
-                Icon(Icons.location_on, color: Colors.black.withOpacity(0.6),),
+                Icon(Icons.date_range, color: Colors.black.withOpacity(0.6),),
                 const SizedBox(width: 6,),
-                const Text(
-                  'Ho Chi Minh City, Vietnam',
-                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                Text(
+                  user.player?['dateOfBirth'] ?? 'Date of birth',
+                  style: const TextStyle(color: Colors.black54, fontSize: 16),
                 ),
               ],
             ),
@@ -65,9 +85,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(width: 10,),
                 Icon(Icons.phone, color: Colors.black.withOpacity(0.6),),
                 const SizedBox(width: 6,),
-                const Text(
-                  '0919239459',
-                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                Text(
+                  user.phoneNumber.isNotEmpty ? user.phoneNumber : 'Phone',
+                  style: const TextStyle(color: Colors.black54, fontSize: 16),
                 ),
               ],
             ),
@@ -77,9 +97,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(width: 10,),
                 Icon(Icons.mail, color: Colors.black.withOpacity(0.6),),
                 const SizedBox(width: 6,),
-                const Text(
-                  'emgaixinhdep@gmail.com',
-                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                Text(
+                  user.email,
+                  style: const TextStyle(color: Colors.black54, fontSize: 16),
                 ),
               ],
             ),
