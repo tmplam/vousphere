@@ -334,7 +334,33 @@
 							"response": []
 						},
 						{
-							"name": "Update brand info",
+							"name": "Get user by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/users/:userId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1405B4DB-78DB-43CD-91D2-A29F01A416F1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update profile (brand)",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -363,7 +389,7 @@
 							"response": []
 						},
 						{
-							"name": "Update player info",
+							"name": "Update profile (player)",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -440,6 +466,67 @@
 										"game-service",
 										"api",
 										"games"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get game by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/games/:gameId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"games",
+										":gameId"
+									],
+									"variable": [
+										{
+											"key": "gameId",
+											"value": "5334c996-8457-4cf0-815c-ed2b77c4ff61"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update game",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Shake It Up\",\r\n    \"description\": \"Shake your phone to unlock exciting rewards! The faster and harder you shake, the closer you get to amazing vouchers.\",\r\n    \"imageId\": \"44a04ff0-e1b3-4e2e-94e8-8ee4c8bb5c11\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/games/:gameId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"games",
+										":gameId"
+									],
+									"variable": [
+										{
+											"key": "gameId",
+											"value": "5334c996-8457-4cf0-815c-ed2b77c4ff61"
+										}
 									]
 								}
 							},
@@ -1080,7 +1167,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjFkODZjZDU2LTE1YmYtNGNjNy05NDY0LTJkMDA1NDc0MDUwZiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkJyYW5kIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoicGh1bGFtLmRldkBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9tb2JpbGVwaG9uZSI6IjA5ODE5MjkxMjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTG9ja2lrZXQiLCJleHAiOjE3MzYwOTk3OTgsImlzcyI6IlZvdVNwaGVyZSIsImF1ZCI6IlZvdVNwaGVyZSJ9.TeA4hQdD_BPFYlUL-wDVV_NfvsX26o9eQWJEBjD50ik",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE0MDViNGRiLTc4ZGItNDNjZC05MWQyLWEyOWYwMWE0MTZmMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMDAwMDAwMDAwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IiIsImV4cCI6MTczNjE0ODk0NywiaXNzIjoiVm91U3BoZXJlIiwiYXVkIjoiVm91U3BoZXJlIn0.bT0PxkXjlB4tRWPmAitBatiH07PRkq0idujjTSLAgkE",
 						"type": "string"
 					}
 				]

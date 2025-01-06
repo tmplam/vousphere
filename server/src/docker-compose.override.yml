@@ -145,9 +145,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=gamedb;Port=5432;Database=GameDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - MessageBroker__Host=amqp://vousphere-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
     restart: on-failure:3
     depends_on:
       - gamedb
+      - messagebroker
     ports:
       - "6003:8080"
 

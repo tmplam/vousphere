@@ -3,9 +3,9 @@
 public record UpdateQuizCommand(Guid QuizId, string Name, string Description) : ICommand<UpdateQuizResult>;
 public record UpdateQuizResult(Guid QuizId);
 
-public class CreateQuizCommandValidator : AbstractValidator<UpdateQuizCommand>
+public class UpdateQuizCommandValidator : AbstractValidator<UpdateQuizCommand>
 {
-    public CreateQuizCommandValidator()
+    public UpdateQuizCommandValidator()
     {
         RuleFor(q => q.Name)
             .NotEmpty().WithMessage("Quiz name is requied");

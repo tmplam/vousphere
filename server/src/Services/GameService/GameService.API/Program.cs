@@ -1,5 +1,7 @@
 using BuildingBlocks.Cors;
 using BuildingBlocks.Http.OptionsSetup;
+using BuildingBlocks.Messaging.MassTransit;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,8 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Game>();
     options.Schema.For<Quiz>();
 }).UseLightweightSessions();
+
+builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
 builder.Services
