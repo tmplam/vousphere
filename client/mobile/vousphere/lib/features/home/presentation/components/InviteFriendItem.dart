@@ -12,7 +12,7 @@ class InviteFriendItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const SizedBox(width: 50,),
+          const SizedBox(width: 20,),
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,8 +26,8 @@ class InviteFriendItem extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(width: 80,),
-          Image.asset('assets/icons/giftbox.png', width: 150, height: 150, fit: BoxFit.cover,),
+          const SizedBox(width: 20,),
+          Image.asset('assets/icons/giftbox.png', width: 120, height: 120, fit: BoxFit.cover,),
         ],
       ),
     );
