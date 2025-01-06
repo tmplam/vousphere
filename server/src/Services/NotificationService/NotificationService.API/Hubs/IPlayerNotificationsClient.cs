@@ -2,4 +2,5 @@
 
 public interface IPlayerNotificationsClient
 {
+    Task ReceivePlayerNotification(Notification notification);
 }
