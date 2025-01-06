@@ -7,7 +7,7 @@ public class Notification
     public NotificationType Type { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
-    public object? Data { get; set; }
+    public Dictionary<string, object>? Data { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public bool IsSeen { get; set; } = false;
 }

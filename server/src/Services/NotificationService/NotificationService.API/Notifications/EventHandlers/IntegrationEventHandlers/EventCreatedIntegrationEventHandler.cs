@@ -17,12 +17,12 @@ public class EventCreatedIntegrationEventHandler(
             Type = NotificationType.EventCreated,
             Title = "New event created",
             Message = $"Brand '{context.Message.BrandName}' created event '{context.Message.EventName}'",
-            Data = new
+            Data = new Dictionary<string, object>
             {
-                context.Message.EventId,
-                context.Message.EventName,
-                context.Message.BrandId,
-                context.Message.BrandName
+                { "eventId", context.Message.EventId },
+                { "eventName", context.Message.EventName },
+                { "brandId", context.Message.BrandId },
+                { "brandName", context.Message.BrandName }
             }
         };
 

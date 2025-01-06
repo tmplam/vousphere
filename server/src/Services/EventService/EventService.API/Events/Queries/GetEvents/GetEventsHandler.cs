@@ -8,13 +8,13 @@ public record GetEventsResult(PaginationResult<EventDto> Events);
 
 
 public class GetEventsHandler(
-    IDocumentSession session,
-    IMediaApi mediaService,
-    IUserApi userService) : IQueryHandler<GetEventsQuery, GetEventsResult>
+    IDocumentSession _session,
+    IMediaApi _mediaService,
+    IUserApi _userService) : IQueryHandler<GetEventsQuery, GetEventsResult>
 {
     public async Task<GetEventsResult> Handle(GetEventsQuery query, CancellationToken cancellationToken)
     {
-        var eventsQuery = session.Query<Event>()
+        var eventsQuery = _session.Query<Event>()
             .Where(e => 
                 e.Status != EventStatus.Created && 
                 e.Status != EventStatus.Rejected && 
@@ -36,8 +36,8 @@ public class GetEventsHandler(
         });
         var brandIds = eventDtos.Select(e => e.BrandId);
 
-        var imageUrlsTask = mediaService.GetImageUrlsAsync(imageIds);
-        var brandsInfoTask = userService.GetBrandsInfoAsync(brandIds);
+        var imageUrlsTask = _mediaService.GetImageUrlsAsync(imageIds);
+        var brandsInfoTask = _userService.GetBrandsInfoAsync(brandIds);
 
         await Task.WhenAll(imageUrlsTask, brandsInfoTask);
 

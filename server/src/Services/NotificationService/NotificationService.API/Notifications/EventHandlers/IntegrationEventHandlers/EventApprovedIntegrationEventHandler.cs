@@ -16,11 +16,11 @@ public class EventApprovedIntegrationEventHandler(
             Type = NotificationType.EventApproved,
             Title = "Your event was approved",
             Message = $"Your event '{context.Message.EventName}' was approved by admin",
-            Data = new
+            Data = new Dictionary<string, object>
             {
-                context.Message.BrandId,
-                context.Message.EventId,
-                context.Message.EventName,
+                { "brandId", context.Message.BrandId },
+                { "eventId", context.Message.EventId },
+                { "eventName", context.Message.EventName }
             }
         };
 

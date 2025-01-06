@@ -24,9 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Notifications\Commands\" />
     <Folder Include="Notifications\EventHandlers\DomainEventHandlers\" />
-    <Folder Include="Notifications\Queries\" />
   </ItemGroup>
 
 </Project>

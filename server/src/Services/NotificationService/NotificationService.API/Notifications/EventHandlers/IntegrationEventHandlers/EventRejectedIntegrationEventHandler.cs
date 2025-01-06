@@ -16,12 +16,12 @@ public class EventRejectedIntegrationEventHandler(
             Type = NotificationType.EventRejected,
             Title = "Your event was rejected",
             Message = $"Your event '{context.Message.EventName}' was rejected by admin",
-            Data = new
+            Data = new Dictionary<string, object>
             {
-                context.Message.BrandId,
-                context.Message.EventId,
-                context.Message.EventName,
-                context.Message.Comment
+                { "brandId", context.Message.BrandId },
+                { "eventId", context.Message.EventId },
+                { "eventName", context.Message.EventName },
+                { "comment", context.Message.Comment }
             }
         };
 
