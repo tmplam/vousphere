@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
+import 'package:vousphere/features/auth/presentation/OtpPage.dart';
 import 'package:vousphere/features/auth/presentation/components/AppLogo.dart';
 import 'package:vousphere/features/auth/presentation/components/Field.dart';
 import 'package:vousphere/features/auth/presentation/components/HorizontalLine.dart';
@@ -11,6 +14,7 @@ import 'package:vousphere/features/auth/presentation/components/PasswordField.da
 import 'package:vousphere/features/auth/presentation/components/RegisterButton.dart';
 import 'package:vousphere/features/auth/presentation/components/SignInWithGoogleButton.dart';
 import 'package:vousphere/features/auth/presentation/components/SwitchLoginButton.dart';
+import 'package:vousphere/features/auth/presentation/dialog/InputEmailDialog.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,15 +26,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final ApiService apiService = ApiService();
   late String currentState;
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-
-  final FocusNode usernameFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
   final FocusNode emailFocusNode = FocusNode();
-  final FocusNode confirmPasswordFocusNode = FocusNode();
+  final FocusNode nameFocusNode = FocusNode();
+  final FocusNode confirmedPasswordFocusNode = FocusNode();
   String? errorMessage;
   String? successMessage;
   bool isLoading = false;
@@ -39,11 +42,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     currentState = 'Login';
-    usernameFocusNode.addListener(() {
-      if (usernameFocusNode.hasFocus) {
-        _scrollToFocusedField(usernameFocusNode);
-      }
-    });
     passwordFocusNode.addListener(() {
       if (passwordFocusNode.hasFocus) {
         _scrollToFocusedField(passwordFocusNode);
@@ -54,9 +52,14 @@ class _LoginPageState extends State<LoginPage> {
         _scrollToFocusedField(emailFocusNode);
       }
     });
-    confirmPasswordFocusNode.addListener(() {
-      if (confirmPasswordFocusNode.hasFocus) {
-        _scrollToFocusedField(confirmPasswordFocusNode);
+    nameFocusNode.addListener(() {
+      if (nameFocusNode.hasFocus) {
+        _scrollToFocusedField(nameFocusNode);
+      }
+    });
+    confirmedPasswordFocusNode.addListener(() {
+      if (confirmedPasswordFocusNode.hasFocus) {
+        _scrollToFocusedField(confirmedPasswordFocusNode);
       }
     });
   }
@@ -135,16 +138,111 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void register() async {
+    setState(() {
+      errorMessage = null;
+    });
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+    final name = nameController.text.trim();
+    final confirmedPassword = confirmPasswordController.text;
+
+    final emailRegex = RegExp(r'^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.][a-zA-Z]{2,3})+$');
+
+    if (email.isEmpty) {
+      setState(() {
+        errorMessage = "Email cannot be empty.";
+      });
+      return;
+    }
+    if (password.length < 6) {
+      setState(() {
+        errorMessage = "Password must be at least 6 characters";
+      });
+      return;
+    }
+    if(confirmedPassword != password) {
+      setState(() {
+        errorMessage = "Confirmed password does not match";
+      });
+      return;
+    }
+    if(name.isEmpty) {
+      setState(() {
+        errorMessage = "Name cannot be empty";
+      });
+      return;
+    }
+    if (!emailRegex.hasMatch(email)) {
+      setState(() {
+        errorMessage = "Email is not in correct format.";
+      });
+      return;
+    }
+
+    print({
+      "email": email,
+      "name": name,
+      "password": password,
+      "isBrand": false,
+    });
+
+    setState(() {
+      isLoading = true;
+    });
+    // using apiService to call login api here
+    try {
+      final response = await apiService.dio.post(
+          ApiConstants.register,
+          data: {
+            "email": email,
+            "name": name,
+            "password": password,
+            "isBrand": false,
+          }
+      );
+      if(response.statusCode == 200) {
+        await Navigator.push(
+            context,
+            PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => OtpPage(email: email,),));
+
+      }
+    }
+    catch (e) {
+      if(e is DioException) {
+        if (e.response != null) {
+          print("Status code: ${e.response?.statusCode}");
+          print("Response data: ${e.response?.data}");
+          setState(() {
+            errorMessage = e.response?.data["message"];
+          });
+        } else {
+          print("Error message: ${e.message}");
+        }
+
+
+      }
+      else {
+        print("Something went wrong");
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+
+  }
+
   @override
   void dispose() {
-    usernameController.dispose();
     passwordController.dispose();
     emailController.dispose();
+    nameController.dispose();
     confirmPasswordController.dispose();
-    usernameFocusNode.dispose();
     passwordFocusNode.dispose();
     emailFocusNode.dispose();
-    confirmPasswordFocusNode.dispose();
+    nameFocusNode.dispose();
+    confirmedPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -177,9 +275,9 @@ class _LoginPageState extends State<LoginPage> {
       errorMessage = null;
       successMessage = null;
     });
-    usernameController.clear();
     passwordController.clear();
     emailController.clear();
+    nameController.clear();
     confirmPasswordController.clear();
   }
 
@@ -216,12 +314,6 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 15),
                         if (currentState == "Register") ...[
                             Field(
-                                fieldName: 'Username',
-                                controller: usernameController,
-                                focusNode: usernameFocusNode,
-                                focusNodeNext: currentState == "Register" ? emailFocusNode : passwordFocusNode),
-                            const SizedBox(height: 15),
-                            Field(
                                 fieldName: 'Email',
                                 controller: emailController,
                                 focusNode: emailFocusNode,
@@ -230,8 +322,91 @@ class _LoginPageState extends State<LoginPage> {
                             PasswordField(
                                 controller: passwordController,
                                 focusNode: passwordFocusNode,
-                                focusNodeNext: confirmPasswordFocusNode,
+                                focusNodeNext: confirmedPasswordFocusNode,
                                 isConfirmPassword: false,
+                            ),
+                            const SizedBox(height: 15),
+                            PasswordField(
+                            controller: confirmPasswordController,
+                            focusNode: confirmedPasswordFocusNode,
+                            focusNodeNext: nameFocusNode,
+                            isConfirmPassword: true,
+                          ),
+                            const SizedBox(height: 15),
+                            Field(
+                              fieldName: 'Name',
+                              controller: nameController,
+                              focusNode: nameFocusNode,
+                              focusNodeNext: null),
+                            const SizedBox(height: 30),
+                            if (errorMessage != null) ...[
+                              const SizedBox(height: 20),
+                              Text(errorMessage!, style: const TextStyle(color: Colors.red, fontSize: 15),),
+                            ],
+                            if (isLoading) ...[
+                              const SizedBox(height: 15),
+                              const Center(
+                                  child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator()
+                                  )
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                            RegisterButton(onPressed: register,),
+                            const SizedBox(height: 15,),
+                            RichText(
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  const TextSpan(
+                                    text: 'Your have already registered?  ',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    )
+                                  ),
+                                  TextSpan(
+                                      text: "Verify account",
+                                      style: const TextStyle(
+                                          color: Colors.indigo,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline
+                                      ),
+                                      recognizer: TapGestureRecognizer()..onTap = () async {
+                                        String? email = await showDialog(context: context, builder: (context) {
+                                          return InputEmailDialog();
+                                        });
+                                        if(email != null) {
+                                          try {
+                                            final response = await apiService.dio.post(
+                                                ApiConstants.resendOtp,
+                                                data: {
+                                                  "email": email,
+                                                }
+                                            );
+                                            await Navigator.push(
+                                                context,
+                                                PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => OtpPage(email: email,),));
+                                          }
+                                          catch (e) {
+                                            if(e is DioException) {
+                                              if (e.response != null) {
+                                                print("Status code: ${e.response?.statusCode}");
+                                                print("Response data: ${e.response?.data}");
+                                                Fluttertoast.showToast(msg: 'Invalid email');
+                                              } else {
+                                                print("Error message: ${e.message}");
+                                              }
+                                            }
+                                            else {
+                                              print("Something went wrong");
+                                            }
+                                          }
+                                        }
+                                      }
+                                  ),
+                                ]
+                              )
                             ),
                             const SizedBox(height: 15),
                           ],
@@ -267,37 +442,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                             LoginButton(onPressed: login),
                             const SizedBox(height: 15),
-                          ] else if (currentState == "Register") ...[
-                            PasswordField(
-                              controller: confirmPasswordController,
-                              focusNode: confirmPasswordFocusNode,
-                              focusNodeNext: null,
-                              isConfirmPassword: true,
-                            ),
-                            if (errorMessage != null) ...[
-                              const SizedBox(height: 20),
-                              Text(errorMessage!, style: const TextStyle(color: Colors.red, fontSize: 15),),
-                            ],
-                            if (isLoading) ...[
-                              const SizedBox(height: 15),
-                              const Center(
-                                  child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator()
-                                  )
-                              ),
-                            ],
-                            if (successMessage != null) ...[
-                              const SizedBox(height: 20),
-                              Text(
-                                successMessage!,
-                                style: const TextStyle(color: Colors.green, fontSize: 15),
-                              ),
-                            ],
-                            const SizedBox(height: 15),
-                            RegisterButton(onPressed: () {},),
-                          ]
+                          ],
                         ]
                     ),
                   ),
