@@ -62,6 +62,8 @@ internal sealed class UpdateGameHandler(
 
         game.ImageId = command.ImageId;
 
+       _session.Update(game);
+
         await Task.WhenAll(
             _session.SaveChangesAsync(),
             tasks
