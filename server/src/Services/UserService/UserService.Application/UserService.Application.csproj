@@ -14,4 +14,9 @@
     <ProjectReference Include="..\UserService.Domain\UserService.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Users\EventHandlers\IntegrationEventHandlers\" />
+    <Folder Include="Features\Users\EventHandlers\DomainEventHandlers\" />
+  </ItemGroup>
+
 </Project>

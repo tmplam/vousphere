@@ -15,8 +15,8 @@ public class EventCreatedIntegrationEventHandler(
         var notification = new Notification
         {
             Type = NotificationType.EventCreated,
-            Title = "New Event Created",
-            Message = $"New event '{context.Message.EventName}' has been created.",
+            Title = "New event created",
+            Message = $"Brand '{context.Message.BrandName}' created event '{context.Message.EventName}'",
             Data = new
             {
                 context.Message.EventId,
@@ -30,11 +30,6 @@ public class EventCreatedIntegrationEventHandler(
 
         await Task.WhenAll(
             _session.SaveChangesAsync(),
-            _hubContext.Clients.Group(AuthPolicy.Admin).ReceiveAdminNotification(
-                notification.Type.ToString(),
-                notification.Title,
-                notification.Message,
-                notification.CreatedAt,
-                notification.Data));
+            _hubContext.Clients.Group(AuthPolicy.Admin).ReceiveAdminNotification(notification));
     }
 }

@@ -1,6 +1,4 @@
-﻿using NotificationService.API.Enums;
-
-namespace NotificationService.API.Entities;
+﻿namespace NotificationService.API.Entities;
 
 public class Notification
 {

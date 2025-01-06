@@ -1,5 +1,7 @@
 ﻿using BuildingBlocks.Auth.Enums;
 using BuildingBlocks.Auth.Services;
+using BuildingBlocks.Messaging.IntegrationEvents;
+using MassTransit;
 using UserService.Application.Services;
 using UserService.Domain.Enums;
 
@@ -9,7 +11,8 @@ internal sealed class VerifyEmailHandler(
     IUserRepository _userRepository,
     IOtpService _otpService,
     IJwtProvider _jwtProvider,
-    IUnitOfWork _unitOfWork)
+    IUnitOfWork _unitOfWork,
+    IPublishEndpoint _publishEndpoint)
     : ICommandHandler<VerifyEmailCommand, VerifyEmailResult>
 {
     public async Task<VerifyEmailResult> Handle(VerifyEmailCommand command, CancellationToken cancellationToken)
@@ -25,13 +28,22 @@ internal sealed class VerifyEmailHandler(
         if (!await _otpService.VerifyOtpAsync(user.Id, command.OtpCode))
             throw new BadRequestException("Invalid OTP code");
 
+        var tasks = Task.CompletedTask;
         if (user.Role == UserRole.Brand)
+        {
             user.Status = UserStatus.UpdateInfoRequired;
+            var brandRegisteredEvent = new BrandRegisteredIntegrationEvent
+            {
+                BrandId = user.Id,
+                BrandName = user.Name
+            };
+            tasks = _publishEndpoint.Publish(brandRegisteredEvent);
+        }
         else
             user.Status = UserStatus.Verified;
 
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await Task.WhenAll(tasks, _unitOfWork.SaveChangesAsync());
 
         var token = _jwtProvider.GenerateToken(user);
 
