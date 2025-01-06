@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/components/AppLogo.dart';
 import 'package:vousphere/features/auth/presentation/components/Field.dart';
@@ -92,15 +94,45 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
     // using apiService to call login api here
-    // ...
+    try {
+      final response = await apiService.dio.post(
+          ApiConstants.login,
+          data: {
+            "email": email,
+            "password": password,
+          }
+      );
+      if(response.statusCode == 200) {
+        final accessToken = response.data['data']['accessToken'];
+        await apiService.saveTokens(accessToken);
 
-
+      }
+    }
+    catch (e) {
+      if(e is DioException) {
+        if (e.response != null) {
+          print("Status code: ${e.response?.statusCode}");
+          print("Response data: ${e.response?.data}");
+          setState(() {
+            errorMessage = "Invalid email or password";
+          });
+        } else {
+          print("Error message: ${e.message}");
+        }
+      }
+      else {
+        print("Something went wrong");
+      }
+    }
     // fake call api, fake token
-    await Future.delayed(const Duration(milliseconds: 2000));
-    await apiService.saveTokens('accessToken', 'refreshToken');
+    // await Future.delayed(const Duration(milliseconds: 2000));
+    // await apiService.saveTokens('accessToken', 'refreshToken');
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.setIsAuthenticated(true);
     await userProvider.getUser();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
