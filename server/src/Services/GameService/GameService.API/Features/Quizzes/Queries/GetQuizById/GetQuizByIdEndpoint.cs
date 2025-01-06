@@ -8,7 +8,7 @@ public class GetQuizByIdEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/quizzes/{id:guid}", async ([FromRoute] Guid id, [FromServices] ISender sender) =>
+        app.MapGet("/api/quizzes/{id:guid}", async ([FromRoute] Guid id, [FromServices] ISender sender) =>
         {
             var request = new GetQuizByIdRequest(id);
             var query = request.Adapt<GetQuizByIdQuery>();
