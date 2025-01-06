@@ -1,4 +1,7 @@
-﻿namespace EventService.API.Events.Commands.RejectEvent;
+﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using MassTransit;
+
+namespace EventService.API.Events.Commands.RejectEvent;
 
 public record RejectEventCommand(Guid EventId, string Comment) : ICommand<RejectEventResult>;
 public record RejectEventResult();
@@ -13,23 +16,41 @@ public class RejectEventCommandValidator : AbstractValidator<RejectEventCommand>
 }
 
 public class RejectEventHandler(
-    IDocumentSession session)
+    IDocumentSession _session,
+    IPublishEndpoint _publishEndpoint)
     : ICommandHandler<RejectEventCommand, RejectEventResult>
 {
     public async Task<RejectEventResult> Handle(RejectEventCommand command, CancellationToken cancellationToken)
     {
-        var existingEvent = await session.LoadAsync<Event>(command.EventId);
+        var existingEvent = await _session.LoadAsync<Entities.Event>(command.EventId);
 
         if (existingEvent == null) throw new NotFoundException("Event not found");
 
-        if (existingEvent.Status == EventStatus.Happening || existingEvent.Status == EventStatus.Ended)
-            throw new BadRequestException("Event is already happening or ended");
+        if (existingEvent.Status == EventStatus.Happening)
+            throw new BadRequestException("Event is already happening");
+
+        if (existingEvent.Status == EventStatus.Ended)
+            throw new BadRequestException("Event is already ended");
+
+        if (existingEvent.Status == EventStatus.Rejected)
+            throw new BadRequestException("Event is already rejected");
 
         existingEvent.Status = EventStatus.Rejected;
         existingEvent.Comment = command.Comment;
 
-        session.Update(existingEvent);
-        await session.SaveChangesAsync();
+        _session.Update(existingEvent);
+
+        // Send notification to the brand
+        var eventApprovedEvent = new EventApprovedIntegrationEvent
+        {
+            EventId = existingEvent.Id,
+            BrandId = existingEvent.BrandId,
+            EventName = existingEvent.Name,
+        };
+
+        await Task.WhenAll(
+            _session.SaveChangesAsync(),
+            _publishEndpoint.Publish(eventApprovedEvent));
 
         return new RejectEventResult();
     }

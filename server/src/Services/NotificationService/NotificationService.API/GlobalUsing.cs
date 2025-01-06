@@ -1,7 +1,11 @@
 ﻿global using BuildingBlocks.Auth;
+global using BuildingBlocks.Auth.Enums;
+global using BuildingBlocks.Auth.Services;
 global using BuildingBlocks.Auth.PayloadAuth;
 global using BuildingBlocks.Auth.Policies;
 global using BuildingBlocks.Behaviors;
+global using BuildingBlocks.CQRS;
+global using BuildingBlocks.Exceptions;
 global using BuildingBlocks.Exceptions.Handlers;
 global using BuildingBlocks.Messaging.IntegrationEvents;
 global using Carter;
@@ -16,4 +20,5 @@ global using NotificationService.API;
 global using NotificationService.API.Entities;
 global using NotificationService.API.Enums;
 global using NotificationService.API.Hubs;
+global using System.Security.Claims;
 global using Weasel.Core;

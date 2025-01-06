@@ -18,10 +18,10 @@ public class BrandRegisteredIntegrationEventHandler(
             Type = NotificationType.BrandRegistered,
             Title = "New brand registered",
             Message = $"New brand '{context.Message.BrandName}' registered",
-            Data = new
+            Data = new Dictionary<string, object>
             {
-                context.Message.BrandId,
-                context.Message.BrandName
+                { "brandId", context.Message.BrandId },
+                { "brandName", context.Message.BrandName }
             }
         };
 

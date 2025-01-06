@@ -3,7 +3,8 @@
 		"_postman_id": "04fb1ffe-9db5-42fe-9c2a-ef84019ce3a2",
 		"name": "Vousphere",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39526978"
+		"_exporter_id": "39526978",
+		"_collection_link": "https://www.postman.com/material-explorer-26901662/workspace/vousphere/collection/39526978-04fb1ffe-9db5-42fe-9c2a-ef84019ce3a2?action=share&source=collection_link&creator=39526978"
 	},
 	"item": [
 		{
@@ -504,7 +505,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Shake It Up\",\r\n    \"description\": \"Shake your phone to unlock exciting rewards! The faster and harder you shake, the closer you get to amazing vouchers.\",\r\n    \"imageId\": \"44a04ff0-e1b3-4e2e-94e8-8ee4c8bb5c11\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Shake It Up\",\r\n    \"description\": \"Shake your phone to unlock exciting rewards! The faster and harder you shake, the closer you get to amazing vouchers.\",\r\n    \"imageId\": \"1e71adbd-7622-4fb1-94f7-54c6133a7962\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -525,7 +526,7 @@
 									"variable": [
 										{
 											"key": "gameId",
-											"value": "5334c996-8457-4cf0-815c-ed2b77c4ff61"
+											"value": "c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914"
 										}
 									]
 								}
@@ -991,7 +992,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales Winter 2024\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-03T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"c1b2574d-70fd-4b4b-b6db-ffcff02564c7\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales Winter 2024\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"e45c81d5-dd13-4338-bc85-2c8d547ad823\",\r\n    \"startTime\": \"2025-01-07T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1067,7 +1068,7 @@
 									"variable": [
 										{
 											"key": "eventId",
-											"value": "01942224-6cd5-42e7-9a4d-c588248a6352"
+											"value": "019439ae-a665-4847-b0fe-fe3064ff408c"
 										}
 									]
 								}
@@ -1103,7 +1104,7 @@
 									"variable": [
 										{
 											"key": "eventId",
-											"value": "0193f1ce-d062-4890-9095-92e32d0072be"
+											"value": "019439ae-a665-4847-b0fe-fe3064ff408c"
 										}
 									]
 								}
@@ -1119,7 +1120,136 @@
 				},
 				{
 					"name": "Notification",
-					"item": []
+					"item": [
+						{
+							"name": "Get notifications",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/notification-service/api/notifications?page=1&perPage=5",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"api",
+										"notifications"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get notification by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/notification-service/api/notifications/:notificationId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"api",
+										"notifications",
+										":notificationId"
+									],
+									"variable": [
+										{
+											"key": "notificationId",
+											"value": "01943a97-7780-4eb0-9af0-a15d8106b5d9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Toggle seen notification",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/notification-service/api/notifications/:notificationId/toggle-seen",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"api",
+										"notifications",
+										":notificationId",
+										"toggle-seen"
+									],
+									"variable": [
+										{
+											"key": "notificationId",
+											"value": "01943a97-7780-4eb0-9af0-a15d8106b5d9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Seen all notifications",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/notification-service/api/notifications/seen-all",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"api",
+										"notifications",
+										"seen-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete notification",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/notification-service/api/notifications/:notificationId",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"api",
+										"notifications",
+										":notificationId"
+									],
+									"variable": [
+										{
+											"key": "notificationId",
+											"value": "01943a97-7780-4eb0-9af0-a15d8106b5d9"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Payment",
@@ -1139,7 +1269,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/Users/PhuLam/Downloads/toji.jpg"
+											"src": "/C:/Users/PhuLam/Downloads/quiz.jpg"
 										}
 									]
 								},
@@ -1167,7 +1297,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE0MDViNGRiLTc4ZGItNDNjZC05MWQyLWEyOWYwMWE0MTZmMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMDAwMDAwMDAwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IiIsImV4cCI6MTczNjE0ODk0NywiaXNzIjoiVm91U3BoZXJlIiwiYXVkIjoiVm91U3BoZXJlIn0.bT0PxkXjlB4tRWPmAitBatiH07PRkq0idujjTSLAgkE",
+						"value": "{{vault:brand-authorization-secret}}",
 						"type": "string"
 					}
 				]
