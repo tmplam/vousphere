@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
@@ -27,6 +30,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   String selectedGender = '';
   bool isLoading = false;
+  bool isUpdateAvatar = false;
   final ApiService apiService = ApiService();
 
   Future<void> updateProfile() async {
@@ -90,6 +94,98 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     });
   }
 
+  Future<void> updateAvatar() async {
+      if(isUpdateAvatar) {
+        return;
+      }
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+
+      if (result != null) {
+
+        setState(() {
+          isUpdateAvatar = true;
+        });
+
+        PlatformFile file = result.files.single;
+        try {
+          MultipartFile multipartFile;
+          if (!kIsWeb) {
+            // handle in mobile or desktop
+            if (file.path == null) throw Exception('File path is null');
+            multipartFile = await MultipartFile.fromFile(
+                file.path!,
+                filename: file.name,
+                contentType: MediaType('image', file.extension!)
+            );
+          } else {
+            // handle in web
+            multipartFile = MultipartFile.fromBytes(
+                file.bytes!,
+                filename: file.name,
+                contentType: MediaType('image', file.extension!)
+            );
+          }
+          
+          // create form data
+          final formData = FormData.fromMap({
+            'file': multipartFile,
+          });
+
+          // call api
+          final response = await apiService.dio.post(
+              ApiConstants.uploadImage,
+              data: formData,
+              options: Options(
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  }
+              )
+          );
+
+          if(response.statusCode == 200) {
+            // upload success
+            String imageId = response.data['data']['imageId'];
+            final updateAvatarResponse = await apiService.dio.patch(
+              ApiConstants.updateAvatar,
+              data: {
+                "imageId": imageId,
+              },
+              options: Options(
+                  extra: {
+                    "requireToken": true,
+                  }
+              ),
+            );
+
+            // update avatar success
+            Fluttertoast.showToast(msg: 'Update avatar successfully');
+            UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+            await userProvider.getUser();
+          }
+        }
+        catch(e) {
+          if(e is DioException) {
+            if (e.response != null) {
+              print("Status code: ${e.response?.statusCode}");
+              print("Response data: ${e.response?.data}");
+            } else {
+              print("Error message: ${e.message}");
+            }
+          }
+          else {
+            print("Something went wrong");
+          }
+        }
+
+        setState(() {
+          isUpdateAvatar = false;
+        });
+      }
+
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -131,13 +227,35 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            ClipOval(
-              child: Image.network(
-                user.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/022/385/025/small_2x/a-cute-surprised-black-haired-anime-girl-under-the-blooming-sakura-ai-generated-photo.jpg',
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
+            Row(
+              children: [
+                ClipOval(
+                  child: Image.network(
+                    user.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/022/385/025/small_2x/a-cute-surprised-black-haired-anime-girl-under-the-blooming-sakura-ai-generated-photo.jpg',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 20,),
+                FilledButton(
+                    onPressed: updateAvatar,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        isUpdateAvatar ? const SizedBox(
+                          width: 10,
+                          height: 10,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
+                        ) : const SizedBox.shrink(),
+                        const SizedBox(width: 4,),
+                        const Icon(Icons.upload),
+                        const SizedBox(width: 4,),
+                        const Text('Upload Image'),
+                      ],
+                    )
+                )
+              ],
             ),
             const SizedBox(height: 10),
             Container(
