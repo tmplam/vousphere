@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // home: userProvider.isAuthenticated ? const MyMainPage() : LoginPage(),
-      home: MyMainPage(),
+      home: userProvider.isAuthenticated ? const MyMainPage() : LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
