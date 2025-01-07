@@ -1,6 +1,7 @@
 using BuildingBlocks.Cors;
 using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
+using GameService.API.Hubs;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,14 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+// Add SignalR
+builder.Services
+    .AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 // Add database and message broker
 builder.Services.AddMarten(options =>
@@ -79,5 +88,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
+
+// Configure signalR hubs
+app.MapHub<QuizGameHub>("/hub/games/quiz");
 
 app.Run();

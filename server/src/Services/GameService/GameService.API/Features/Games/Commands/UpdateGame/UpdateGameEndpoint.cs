@@ -9,8 +9,8 @@ public class UpdateGameEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/games/{gameId:guid}", async (
-            [FromRoute] Guid gameId,
+        app.MapPut("/api/games/{gameId:required}", async (
+            [FromRoute] string gameId,
             [FromBody] UpdateGameRequest request,
             [FromServices] ISender sender) =>
         {

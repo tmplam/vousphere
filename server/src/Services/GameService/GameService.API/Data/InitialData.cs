@@ -1,4 +1,5 @@
-﻿using GameService.API.Enums;
+﻿using GameService.API.Constants;
+using GameService.API.Enums;
 using Marten.Schema;
 
 namespace GameService.API.Data;
@@ -20,7 +21,7 @@ public class InitialData : IInitialData
         {
             new Game()
             {
-                Id = Guid.Parse("5334c996-8457-4cf0-815c-ed2b77c4ff61"),
+                Id = GameIdentifiers.ShakingGameId,
                 Name = "Shake It Up",
                 Description = "Shake your phone to unlock exciting rewards! The faster and harder you shake, the closer you get to amazing vouchers.",
                 Type = GameType.Shaking,
@@ -28,7 +29,7 @@ public class InitialData : IInitialData
             },
             new Game()
             {
-                Id = Guid.Parse("c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914"),
+                Id = GameIdentifiers.QuizGameId,
                 Name = "Trivia Challenge",
                 Description = "Put your knowledge to the test in this live, interactive trivia game! Compete with others in real time and win exclusive vouchers.",
                 Type = GameType.Quiz,

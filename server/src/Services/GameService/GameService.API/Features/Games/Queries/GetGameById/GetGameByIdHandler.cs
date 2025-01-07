@@ -1,6 +1,6 @@
 ﻿namespace GameService.API.Features.Games.Queries.GetGameById;
 
-public record GetGameByIdQuery(Guid GameId) : IQuery<GetGameByIdResult>;
+public record GetGameByIdQuery(string GameId) : IQuery<GetGameByIdResult>;
 public record GetGameByIdResult(GameDto Game);
 
 

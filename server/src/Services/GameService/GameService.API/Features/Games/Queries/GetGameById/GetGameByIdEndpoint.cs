@@ -4,7 +4,7 @@ public class GetGameByIdEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/games/{gameId:guid}", async (Guid gameId, ISender sender) =>
+        app.MapGet("/api/games/{gameId:required}", async (string gameId, ISender sender) =>
         {
             var query = new GetGameByIdQuery(gameId);
             var result = await sender.Send(query);

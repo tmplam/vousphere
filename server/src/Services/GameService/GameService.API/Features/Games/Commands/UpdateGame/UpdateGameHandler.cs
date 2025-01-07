@@ -4,7 +4,7 @@ using MassTransit;
 namespace GameService.API.Features.Games.Commands.UpdateGame;
 
 public record UpdateGameCommand(
-    Guid GameId,
+    string GameId,
     string Name,
     string Description,
     Guid ImageId) : ICommand<UpdateGameResult>;
