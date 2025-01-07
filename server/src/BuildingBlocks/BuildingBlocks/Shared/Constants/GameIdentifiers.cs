@@ -1,4 +1,4 @@
-﻿namespace GameService.API.Constants;
+﻿namespace BuildingBlocks.Shared.Constants;
 
 public static class GameIdentifiers
 {

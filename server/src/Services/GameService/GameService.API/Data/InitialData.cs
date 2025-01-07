@@ -1,4 +1,4 @@
-﻿using GameService.API.Constants;
+﻿using BuildingBlocks.Shared.Constants;
 using GameService.API.Enums;
 using Marten.Schema;
 
