@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using BuildingBlocks.Shared.Constants;
 using MassTransit;
 using System.Security.Claims;
 
@@ -53,19 +54,44 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
         RuleFor(e => e.Games)
             .NotEmpty().WithMessage("Event must have at least one game");
 
-        RuleForEach(e => e.Games).ChildRules(game =>
+        RuleFor(e => e.Games)
+            .Must(games => games.Select(g => g.GameId).Distinct().Count() == games.Count)
+            .WithMessage("Event games must have unique Game Ids");
+
+        RuleForEach(e => e.Games)
+            .SetValidator(e => new EventGameDtoValidator(e));
+
+        When(x => x.Games.Any(g => g.PopUpItemsEnabled), () =>
         {
-            game.RuleFor(g => g.GameId)
-                .NotEmpty().WithMessage("Game Id is required");
+            RuleFor(x => x.Item)
+                .NotNull().WithMessage("Item is required when pop up items are enabled")
+                .DependentRules(() =>
+                {
+                    RuleFor(x => x.Item!.ImageId)
+                        .NotEmpty().WithMessage("Item imageId is required");
+                    RuleFor(x => x.Item!.NumberPieces)
+                        .GreaterThan(0).WithMessage("Item number of pieces must be greater than 0");
+                });
         });
+    }
+}
 
-        When(x => x.Item is not null, () =>
+public class EventGameDtoValidator : AbstractValidator<EventGameDto>
+{
+    public EventGameDtoValidator(CreateEventCommand createEventCommand)
+    {
+        RuleFor(g => g.GameId)
+            .NotEmpty().WithMessage("Game Id is required");
+
+        When(g => g.GameId == GameIdentifiers.QuizGameId, () =>
         {
-            RuleFor(x => x.Item!.ImageId)
-                .NotEmpty().WithMessage("Item imageId is required");
+            RuleFor(g => g.StartTime)
+                .NotEmpty().WithMessage("Start time is required for quiz-game")
+                .GreaterThan(createEventCommand.StartTime).WithMessage("Quiz game start time must be greater than event start time")
+                .LessThan(createEventCommand.EndTime).WithMessage("Quiz game start time must be less than event end time");
 
-            RuleFor(x => x.Item!.NumberPieces)
-                .GreaterThan(0).WithMessage("Item number of pieces must be greater than 0");
+            RuleFor(g => g.QuizzCollectionId)
+                .NotEmpty().WithMessage("Quiz collection id is required for quiz-game");
         });
     }
 }
