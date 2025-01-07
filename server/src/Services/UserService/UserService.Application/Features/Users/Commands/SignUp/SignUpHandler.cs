@@ -44,6 +44,7 @@ internal sealed class SignUpHandler(
             user.Player = new Player
             {
                 UserId = user.Id,
+                NumberOfPlays = 10,
             };
         }
 
