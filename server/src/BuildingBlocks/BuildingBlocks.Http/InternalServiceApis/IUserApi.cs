@@ -10,4 +10,7 @@ public interface IUserApi
 
     [Get("/api/users/{brandId}/brand-info")]
     Task<BrandDto> GetBrandInfoAsync(Guid brandId);
+
+    [Get("/api/users/favorites/{eventId}/user-ids")]
+    Task<List<Guid>> GetFavoriteUserIdsAsync(Guid eventId);
 }

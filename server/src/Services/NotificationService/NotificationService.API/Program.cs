@@ -1,5 +1,7 @@
 using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
+using BuildingBlocks.Http.InternalServiceApis;
+using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -23,7 +25,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 // Add SignalR
-builder.Services.AddSignalR();
+builder.Services
+    .AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 // Add database and message broker
 builder.Services.AddMarten(options =>
@@ -50,6 +57,12 @@ builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+
+
+// Internal servives call configuration
+builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
+
+builder.Services.AddUserServiceClient();
 
 
 // Add exception handling

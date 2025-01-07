@@ -12,6 +12,7 @@ public class EventRejectedIntegrationEventHandler(
 
         var notification = new Notification
         {
+            Id = Guid.NewGuid(),
             UserId = context.Message.BrandId,
             Type = NotificationType.EventRejected,
             Title = "Your event was rejected",

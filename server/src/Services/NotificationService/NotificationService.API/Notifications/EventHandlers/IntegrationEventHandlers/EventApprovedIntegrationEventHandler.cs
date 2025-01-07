@@ -12,6 +12,7 @@ public class EventApprovedIntegrationEventHandler(
 
         var notification = new Notification
         {
+            Id = Guid.NewGuid(),
             UserId = context.Message.BrandId,
             Type = NotificationType.EventApproved,
             Title = "Your event was approved",

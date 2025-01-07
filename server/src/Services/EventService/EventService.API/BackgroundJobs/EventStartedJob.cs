@@ -11,9 +11,9 @@ public class EventStartedJob(
 {
     public async Task Execute(IJobExecutionContext context)
     {
-        if (context.MergedJobDataMap.TryGetGuid("eventId", out var eventId))
+        if (!context.MergedJobDataMap.TryGetGuidValueFromString("eventId", out var eventId))
         {
-            _logger.LogError("Event ID is missing in job data.");
+            _logger.LogError("Event ID is missing in EventStartJob data.");
             return;
         }
 
@@ -21,20 +21,22 @@ public class EventStartedJob(
 
         if (eventData == null)
         {
-            _logger.LogError($"Event with ID {eventId} not found in EventStartJob.");
+            _logger.LogError($"Event with ID {eventId} not found in EventStartedJob");
             return;
         }
 
-        _logger.LogInformation($"Processing event with ID {eventId} in EventStartJob.");
+        _logger.LogInformation($"Processing event with ID {eventId} in EventStartJob");
 
         eventData.Status = EventStatus.Happening;
+        _session.Store(eventData);
 
         var eventStartedMessage = new EventStartedIntegrationEvent
         {
             EventId = eventId,
-            Name = eventData.Name,
+            EventName = eventData.Name,
             Description = eventData.Description,
-            ImageId = eventData.ImageId
+            ImageId = eventData.ImageId,
+            BrandId = eventData.BrandId
         };
 
         await Task.WhenAll(

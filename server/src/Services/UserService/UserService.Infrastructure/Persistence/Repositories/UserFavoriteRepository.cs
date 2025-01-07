@@ -24,6 +24,11 @@ public class UserFavoriteRepository(ApplicationDbContext _dbContext) : IUserFavo
         return await _dbContext.Set<UserFavorite>().FirstOrDefaultAsync(predicate);
     }
 
+    public async Task<List<UserFavorite>> GetAllUserFavoritesAsync(Expression<Func<UserFavorite, bool>> predicate)
+    {
+        return await _dbContext.Set<UserFavorite>().Where(predicate).ToListAsync();
+    }
+
     public async Task<PaginationResult<UserFavorite>> GetUserFavoritesAsync(Expression<Func<UserFavorite, bool>> predicate, int page = 1, int perPage = 5)
     {
         var query = _dbContext.Set<UserFavorite>().Where(predicate);

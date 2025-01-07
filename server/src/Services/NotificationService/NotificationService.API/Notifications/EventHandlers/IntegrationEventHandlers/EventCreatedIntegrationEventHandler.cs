@@ -14,6 +14,7 @@ public class EventCreatedIntegrationEventHandler(
 
         var notification = new Notification
         {
+            Id = Guid.NewGuid(),
             Type = NotificationType.EventCreated,
             Title = "New event created",
             Message = $"Brand '{context.Message.BrandName}' created event '{context.Message.EventName}'",

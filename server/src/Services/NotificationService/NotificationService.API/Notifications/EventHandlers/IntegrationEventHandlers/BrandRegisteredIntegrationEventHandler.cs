@@ -15,6 +15,7 @@ public class BrandRegisteredIntegrationEventHandler(
 
         var notification = new Notification
         {
+            Id = Guid.NewGuid(),
             Type = NotificationType.BrandRegistered,
             Title = "New brand registered",
             Message = $"New brand '{context.Message.BrandName}' registered",

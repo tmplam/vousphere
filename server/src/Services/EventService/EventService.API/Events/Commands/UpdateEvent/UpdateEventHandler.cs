@@ -139,6 +139,8 @@ public class UpdateEventHandler(
                 publishEndpoint.Publish(removeItemImageMessage, cancellationToken));
         }
 
+        if (existingEvent.Status == EventStatus.Rejected)
+            existingEvent.Status = EventStatus.Created;
         existingEvent.Name = command.Name;
         existingEvent.Description = command.Description;
         existingEvent.ImageId = command.ImageId;

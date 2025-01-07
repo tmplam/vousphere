@@ -39,16 +39,16 @@ public class ApproveEventHandler(
 
         var jobData = new JobDataMap
         {
-            { "eventId", existingEvent.Id.ToString() },
+            { "eventId", existingEvent.Id.ToString() }
         };
 
         var job = JobBuilder.Create<EventStartedJob>()
-            .WithIdentity($"evennt-started-{Guid.NewGuid()}", "events-started")
+            .WithIdentity($"event-started-{existingEvent.Id}", "events-started")
             .SetJobData(jobData)
             .Build();
 
         var trigger = TriggerBuilder.Create()
-            .WithIdentity($"trigger-{Guid.NewGuid()}", "events-started")
+            .WithIdentity($"trigger-event-started-{existingEvent.Id}", "events-started")
             .StartAt(existingEvent.StartTime)
             .Build();
 
@@ -57,7 +57,7 @@ public class ApproveEventHandler(
         {
             EventId = existingEvent.Id,
             BrandId = existingEvent.BrandId,
-            EventName = existingEvent.Name,
+            EventName = existingEvent.Name!,
         };
 
 

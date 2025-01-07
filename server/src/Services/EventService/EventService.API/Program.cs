@@ -73,7 +73,7 @@ builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 
-// Servives configuration
+// Internal servives call configuration
 builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 
 builder.Services.AddMediaServiceClient();
