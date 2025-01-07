@@ -183,7 +183,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": \"019427e1-022e-41df-9fee-1f61f96c94e4\"\r\n}",
+									"raw": "{\r\n    \"eventId\": \"019439ae-a665-4847-b0fe-fe3064ff408c\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -992,7 +992,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales Winter 2024\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"e45c81d5-dd13-4338-bc85-2c8d547ad823\",\r\n    \"startTime\": \"2025-01-07T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": null\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales Winter 2024\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"e45c81d5-dd13-4338-bc85-2c8d547ad823\",\r\n    \"startTime\": \"2025-01-07T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"shaking-game\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"startTime\": null,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1020,7 +1020,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Flash sales new year 2025\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-01T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"933bd33a-121e-41d4-ba44-23e3f3675706\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
+									"raw": "{\r\n    \"name\": \"Flash sales new year 2025\",\r\n    \"description\": \"The biggest flash salessss\",\r\n    \"imageId\": \"8ad4b8c0-0326-4cec-b8d0-9e7e285745b6\",\r\n    \"startTime\": \"2025-01-01T21:21:34.544Z\",\r\n    \"endTime\": \"2025-01-20T04:21:34.544Z\",\r\n    \"voucherTypes\": [\r\n        {\r\n            \"discount\": 10,\r\n            \"total\": 50\r\n        },\r\n        {\r\n            \"discount\": 20,\r\n            \"total\": 20\r\n        }\r\n    ],\r\n    \"games\": [\r\n        {\r\n            \"gameId\": \"shaking-game\",\r\n            \"popUpItemsEnabled\": false,\r\n            \"startTime\": null,\r\n            \"quizzCollectionId\": null\r\n        }\r\n    ],\r\n    // leave item null if event doesn't pop up items\r\n    \"item\": {\r\n        \"imageId\": \"933bd33a-121e-41d4-ba44-23e3f3675706\",\r\n        \"numberPieces\": 4\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1297,7 +1297,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "{{vault:brand-authorization-secret}}",
+						"value": "{{vault:admin-authorization-secret}}",
 						"type": "string"
 					}
 				]
