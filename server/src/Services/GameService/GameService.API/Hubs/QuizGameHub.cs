@@ -18,24 +18,8 @@ public class QuizGameHub : Hub<IQuizGameClient>
             Context.Abort();
     }
 
-
-    public async Task SendQuestion(Guid quizId, string question)
-    {
-        //await Clients.Group(quizId.ToString()).SendAsync("ReceiveQuestion", question);
-    }
-
-    public async Task SubmitAnswer(Guid quizId, Guid userId, string answer)
+    public async Task SubmitAnswerAsync(string answer)
     {
         //await Clients.Group(quizId.ToString()).SendAsync("ReceiveAnswer", userId, answer);
-    }
-
-    public async Task JoinQuiz(Guid eventId, Guid quizId)
-    {
-        await Groups.AddToGroupAsync(Context.ConnectionId, quizId.ToString());
-    }
-
-    public async Task LeaveQuiz(Guid quizId)
-    {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizId.ToString());
     }
 }
