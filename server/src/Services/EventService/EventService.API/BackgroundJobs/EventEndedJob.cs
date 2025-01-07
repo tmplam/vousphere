@@ -4,8 +4,8 @@ using Quartz;
 
 namespace EventService.API.BackgroundJobs;
 
-public class EventStartedJob(
-    ILogger<EventStartedJob> _logger,
+public class EventEndedJob(
+    ILogger<EventEndedJob> _logger,
     IDocumentSession _session,
     IPublishEndpoint _publishEndpoint) : IJob
 {
@@ -13,7 +13,7 @@ public class EventStartedJob(
     {
         if (!context.MergedJobDataMap.TryGetGuidValueFromString("eventId", out var eventId))
         {
-            _logger.LogError("Event ID is missing in EventStartedJob data.");
+            _logger.LogError("Event ID is missing in EventEndedJob data.");
             return;
         }
 
@@ -21,27 +21,23 @@ public class EventStartedJob(
 
         if (eventData == null)
         {
-            _logger.LogError($"Event with ID {eventId} not found in EventStartedJob");
+            _logger.LogError($"Event with ID {eventId} not found in EventEndedJob");
             return;
         }
 
-        _logger.LogInformation($"Processing event with ID {eventId} in EventStartedJob");
+        _logger.LogInformation($"Processing event with ID {eventId} in EventEndedJob");
 
-        eventData.Status = EventStatus.Happening;
+        eventData.Status = EventStatus.Ended;
         _session.Store(eventData);
 
-        var eventStartedMessage = new EventStartedIntegrationEvent
+        var eventEndedMessage = new EventEndedIntegrationEvent
         {
-            EventId = eventId,
-            EventName = eventData.Name,
-            Description = eventData.Description,
-            ImageId = eventData.ImageId,
-            BrandId = eventData.BrandId
+            EventId = eventId
         };
 
         await Task.WhenAll(
             _session.SaveChangesAsync(),
-            _publishEndpoint.Publish(eventStartedMessage)
+            _publishEndpoint.Publish(eventEndedMessage)
         );
     }
 }

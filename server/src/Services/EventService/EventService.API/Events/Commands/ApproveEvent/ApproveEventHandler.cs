@@ -37,19 +37,35 @@ public class ApproveEventHandler(
         // Schedule a job to start the event
         var scheduler = await _schedulerFactory.GetScheduler();
 
-        var jobData = new JobDataMap
+        var startJobData = new JobDataMap
         {
             { "eventId", existingEvent.Id.ToString() }
         };
 
-        var job = JobBuilder.Create<EventStartedJob>()
+        var startJob = JobBuilder.Create<EventStartedJob>()
             .WithIdentity($"event-started-{existingEvent.Id}", "events-started")
-            .SetJobData(jobData)
+            .SetJobData(startJobData)
             .Build();
 
-        var trigger = TriggerBuilder.Create()
+        var startTrigger = TriggerBuilder.Create()
             .WithIdentity($"trigger-event-started-{existingEvent.Id}", "events-started")
             .StartAt(existingEvent.StartTime)
+            .Build();
+
+        // Schedule a job to end the event
+        var endJobData = new JobDataMap
+        {
+            { "eventId", existingEvent.Id.ToString() }
+        };
+
+        var endJob = JobBuilder.Create<EventEndedJob>()
+            .WithIdentity($"event-ended-{existingEvent.Id}", "events-ended")
+            .SetJobData(endJobData)
+            .Build();
+
+        var endTrigger = TriggerBuilder.Create()
+            .WithIdentity($"trigger-event-ended-{existingEvent.Id}", "events-ended")
+            .StartAt(existingEvent.EndTime)
             .Build();
 
         // Send notification to the brand
@@ -63,7 +79,8 @@ public class ApproveEventHandler(
 
         await Task.WhenAll(
             _session.SaveChangesAsync(),
-            scheduler.ScheduleJob(job, trigger),
+            scheduler.ScheduleJob(startJob, startTrigger),
+            scheduler.ScheduleJob(endJob, endTrigger),
             _publishEndpoint.Publish(eventApprovedEvent, cancellationToken)
         );
 
