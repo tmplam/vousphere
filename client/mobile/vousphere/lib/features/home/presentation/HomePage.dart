@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vousphere/features/event/presentation/EventPage.dart';
 import 'package:vousphere/features/home/presentation/components/EventList.dart';
 import 'package:vousphere/features/home/presentation/components/HomeFilter.dart';
 import 'package:vousphere/features/home/presentation/components/HomeSearchBox.dart';
@@ -32,7 +33,14 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text('See all', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_forward,))
+                    IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => EventPage(),));
+                        },
+                        icon: const Icon(Icons.arrow_forward,)
+                    )
                   ],
                 )
               ],
