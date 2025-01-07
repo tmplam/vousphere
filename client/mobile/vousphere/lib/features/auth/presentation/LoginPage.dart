@@ -219,8 +219,6 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           print("Error message: ${e.message}");
         }
-
-
       }
       else {
         print("Something went wrong");
