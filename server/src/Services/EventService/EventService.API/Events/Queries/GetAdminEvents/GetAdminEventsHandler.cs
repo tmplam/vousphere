@@ -18,6 +18,9 @@ public class GetAdminEventsHandler(
     {
         var eventsQuery = session.Query<Event>().AsQueryable();
 
+        if (query.Status.HasValue)
+            eventsQuery = eventsQuery.Where(e => e.Status == query.Status.Value);
+
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));
 

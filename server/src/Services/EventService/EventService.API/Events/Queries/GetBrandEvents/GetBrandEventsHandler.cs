@@ -22,6 +22,9 @@ public class GetBrandEventsHandler(
 
         var eventsQuery = session.Query<Event>().Where(e => e.BrandId == brandId);
 
+        if (query.Status.HasValue)
+            eventsQuery = eventsQuery.Where(e => e.Status == query.Status.Value);
+
         if (!string.IsNullOrWhiteSpace(query.Keyword))
             eventsQuery = eventsQuery.Where(e => e.Name.NgramSearch(query.Keyword) || e.Description.NgramSearch(query.Keyword));
 
