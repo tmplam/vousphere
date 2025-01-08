@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vousphere/data/models/Event.dart';
+import 'package:vousphere/features/game/ShakeGame.dart';
 import 'package:vousphere/shared/widgets/VerticalSpacing.dart';
 
 class EventDetailPage extends StatelessWidget {
@@ -287,14 +288,14 @@ class EventDetailPage extends StatelessWidget {
                                 iconColor: Colors.blue,
                                 title: 'Shaking Game',
                                 subtitle: 'Test your device shaking skills',
-                                // onTap: () {
-                                //   Navigator.pop(context);
-                                //   Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => ShakeGame()),
-                                //   );
-                                // },
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ShakeGame()),
+                                  );
+                                },
                               ),
                               const Divider(height: 1),
                               _buildGameOption(
@@ -303,14 +304,14 @@ class EventDetailPage extends StatelessWidget {
                                 iconColor: Colors.green,
                                 title: 'Quiz Game',
                                 subtitle: 'Challenge your knowledge',
-                                // onTap: () {
-                                //   Navigator.pop(context);
-                                //   Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => QuizGame()),
-                                //   );
-                                // },
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ShakeGame()),
+                                  );
+                                },
                               ),
                               const SizedBox(
                                   height: 16), // Bottom padding for safety area
@@ -377,10 +378,10 @@ class EventDetailPage extends StatelessWidget {
     required Color iconColor,
     required String title,
     required String subtitle,
-    // required VoidCallback onTap,
+    required VoidCallback onTap,
   }) {
     return InkWell(
-      // onTap: onTap,
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Row(
