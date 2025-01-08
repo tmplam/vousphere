@@ -2,7 +2,7 @@ name: vousphere
 description: "This is the mobile application of the final project in Software architecture course"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -26,6 +26,8 @@ dependencies:
   fluttertoast: ^8.2.8
   google_sign_in: ^6.2.2
   http_parser: ^4.0.0
+  just_audio: ^0.9.18
+  video_player: ^2.2.19
 
 dev_dependencies:
   flutter_test:
@@ -33,11 +35,8 @@ dev_dependencies:
 
   flutter_lints: ^4.0.0
 
-
-
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -48,6 +47,8 @@ flutter:
     - assets/icons/google-icon.png
     - assets/icons/flutter.png
     - assets/icons/giftbox.png
+    - assets/start.mp4
+    - assets/end.mp4
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

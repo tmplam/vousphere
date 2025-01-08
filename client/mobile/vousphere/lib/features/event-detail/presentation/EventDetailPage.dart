@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vousphere/data/models/Event.dart';
+import 'package:vousphere/features/game/QuizGame.dart';
 import 'package:vousphere/features/game/ShakeGame.dart';
 import 'package:vousphere/shared/widgets/VerticalSpacing.dart';
 
@@ -309,7 +310,7 @@ class EventDetailPage extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ShakeGame()),
+                                        builder: (context) => QuizGame()),
                                   );
                                 },
                               ),
