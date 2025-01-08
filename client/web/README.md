@@ -103,8 +103,6 @@ Ensure you have the following installed on your machine:
 
     ```bash
     npm install
-    # or
-    yarn install
     ```
 
 3. Set up environment variables:
@@ -112,7 +110,7 @@ Ensure you have the following installed on your machine:
     Create a `.env.local` file in the root of your project and add the necessary environment variables. For example:
 
     ```env
-    NEXT_PUBLIC_BASE_URL=http://localhost:8000
+    NEXT_PUBLIC_BASE_URL=http://localhost:6000
     ```
 
 ### Run the Development Server
