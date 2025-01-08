@@ -2,10 +2,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { commonOptions } from "@/lib/react-query/options";
 import { UserType } from "@/schema/auth.schema";
+import { UserInfoRequestDTO } from "@/schema/user.schema";
+import { getUserById, getUserInfo, getUserList } from "@/apis/user-api";
 
 export function useCachedUserQuery(id: string) {
     return useQuery({
-        queryKey: ["user", id],
+        queryKey: ["user-info", id],
         queryFn: () => {
             return getUserById(id);
         },
@@ -14,97 +16,25 @@ export function useCachedUserQuery(id: string) {
     });
 }
 
-export function useCachedUserList(currentPage: number, totalPage: number = 10) {
+export function useCachedUserInfo() {
     return useQuery({
-        queryKey: ["user", currentPage, totalPage],
+        queryKey: ["user-profile"],
         queryFn: () => {
-            return getUserList(currentPage, totalPage);
+            return getUserInfo();
+        },
+        throwOnError: true,
+        gcTime: 0,
+        ...commonOptions,
+    });
+}
+
+export function useCachedUserList(currentPage: number, perPage: number = 5, keyword: string = "", role: string = "") {
+    return useQuery({
+        queryKey: ["user-list", currentPage, perPage, keyword, role],
+        queryFn: () => {
+            return getUserList(currentPage, perPage, keyword, role);
         },
         throwOnError: true,
         ...commonOptions,
     });
-}
-async function getUserById(id: string): Promise<UserType> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return {
-        id: "UUDI-123D",
-        name: "John Doe dsfsd",
-        username: "johndoe",
-        email: "johndoe@example.com",
-        image: "",
-        phone: "1234567890",
-        roles: [
-            {
-                id: 1,
-                name: "admin",
-                description: "Admin",
-            },
-            {
-                id: 1,
-                name: "user",
-                description: "Admin",
-            },
-        ],
-        status: true,
-    };
-}
-
-async function getUserList(currentPage: number, totalPage: number): Promise<UserType[]> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return [
-        {
-            id: "UUDI-123D",
-            name: "John Doe",
-            username: "johndoe",
-            email: "johndoe@example.com",
-            image: "",
-            phone: "1234567890",
-            roles: [
-                {
-                    id: 1,
-                    name: "admin",
-                    description: "Admin",
-                },
-                {
-                    id: 2,
-                    name: "counterpart",
-                    description: "Admin",
-                },
-            ],
-            status: true,
-        },
-        {
-            id: "UUDI-125D",
-            name: "Jane Smith",
-            username: "janesmith",
-            email: "janesmith@example.com",
-            image: "",
-            roles: [
-                {
-                    id: 2,
-                    name: "user",
-                    description: "User",
-                },
-            ],
-            phone: "9876543210",
-            status: false,
-        },
-        {
-            id: "UUDI-126D",
-            name: "Bob Wilson",
-            username: "bobwilson",
-            email: "bobwilson@example.com",
-            image: "",
-            roles: [
-                {
-                    id: 3,
-                    name: "counterpart",
-                    description: "Counterpart",
-                },
-            ],
-
-            phone: "5555555555",
-            status: true,
-        },
-    ];
 }

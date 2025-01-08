@@ -13,9 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useDispatch } from "react-redux";
-import { updateUser, updateUserId } from "@/lib/redux/slices/userSlice";
-import { UserType } from "@/schema/user.schema";
-import { includeRole, ROLE_ADMIN, ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
+import { hasRole, ROLE_ADMIN, ROLE_COUNTERPART, ROLE_PLAYER } from "@/components/shared/authenticatedRoutes";
 import { callLoginRequest } from "@/apis/user-api";
 
 export function LoginForm() {
@@ -27,7 +25,7 @@ export function LoginForm() {
         resolver: zodResolver(LoginRequestSchema),
         defaultValues: {
             email: "admin@gmail.com",
-            password: "adminpass",
+            password: "admin123@",
         },
     });
     async function onSubmit(values: LoginRequestDTO) {
@@ -35,21 +33,29 @@ export function LoginForm() {
         setLoading(true);
         try {
             const result = await callLoginRequest(values);
-            const user = result.data.user;
-            localStorage.setItem("refreshToken", result.data.refreshToken);
-            localStorage.setItem("accessToken", result.data.accessToken);
-            localStorage.setItem("userId", user.id);
-            dispatch(updateUser(user));
-            toast({
-                description: "Login successfully",
-                duration: 2000,
-                className: "bg-lime-500 text-white",
-            });
-            if (includeRole(user.roles, ROLE_ADMIN)) {
-                router.push("/admin");
-            } else if (includeRole(user.roles, ROLE_COUNTERPART)) {
-                router.push("/counterpart");
+            console.log(result);
+            if (result.statusCode == 200 && result.isSuccess) {
+                localStorage.setItem("accessToken", result.data.accessToken);
+                toast({
+                    description: result.message,
+                    duration: 2000,
+                    className: "bg-lime-500 text-white",
+                });
+                const userRole = result.data.role.toLowerCase();
+                if (hasRole(userRole, ROLE_ADMIN)) {
+                    router.push("/admin");
+                } else if (hasRole(userRole, ROLE_COUNTERPART)) {
+                    router.push("/counterpart");
+                } else if (hasRole(userRole, ROLE_PLAYER)) {
+                    router.push("/player");
+                }
             } else {
+                toast({
+                    description: result.message,
+                    variant: "destructive",
+                    duration: 2000,
+                    className: "bg-red-500 text-white",
+                });
                 router.refresh();
             }
         } catch (error: any) {

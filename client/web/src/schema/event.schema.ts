@@ -1,64 +1,67 @@
-import { GameType } from "@/schema/game.schema";
+import { BrandType, GameType } from "@/schema/game.schema";
 import z, { string } from "zod";
 
-export const CreateVoucherRequestSchema = z
-    .object({
-        image: z.any().default(null),
-        value: z.coerce
-            .number()
-            .min(1, {
-                message: "Value must be at least 1",
-            })
-            .max(100, {
-                message: "Value must not exceed 100",
-            }),
-        description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
-        expiryDate: z.string({
-            required_error: "Expiry date is required",
+export const CreateVoucherRequestSchema = z.object({
+    // image: z.any().default(null),
+    total: z.coerce.number().min(1, {
+        message: "The amount of vouchers must be at least 1",
+    }),
+    discount: z.coerce
+        .number()
+        .min(1, {
+            message: "Value must be at least 1",
+        })
+        .max(100, {
+            message: "Value must not exceed 100",
         }),
-    })
-    .superRefine(({ expiryDate }, ctx) => {
-        if (new Date(expiryDate) < new Date()) {
-            ctx.addIssue({
-                code: "custom",
-                message: "Expiry date must be in the future",
-                path: ["expiryDate"],
-            });
-        }
-    });
+    // description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
+    // expiryDate: z.string({
+    //     required_error: "Expiry date is required",
+    // }),
+});
+// .superRefine(({ expiryDate }, ctx) => {
+//     if (new Date(expiryDate) < new Date()) {
+//         ctx.addIssue({
+//             code: "custom",
+//             message: "Expiry date must be in the future",
+//             path: ["expiryDate"],
+//         });
+//     }
+// });
 export type VoucherRequest = z.infer<typeof CreateVoucherRequestSchema>;
+export type VoucherAmount = VoucherRequest;
+
 export type CreateVoucherRequestDTO = VoucherRequest & {
     amount: number;
 };
 
-export const UpdateVoucherRequestSchema = z
-    .object({
-        image: z.any().default(null),
-        value: z.coerce
-            .number()
-            .min(1, {
-                message: "Value must be at least 1",
-            })
-            .max(100, {
-                message: "Value must not exceed 100",
-            }),
-        description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
-        expiryDate: z.string({
-            required_error: "Expiry date is required",
+export const UpdateVoucherRequestSchema = z.object({
+    // image: z.any().default(null),
+    discount: z.coerce
+        .number()
+        .min(1, {
+            message: "Value must be at least 1",
+        })
+        .max(100, {
+            message: "Value must not exceed 100",
         }),
-        amount: z.coerce
-            .number({ required_error: "The amount of vouchers is required" })
-            .min(1, { message: "The amount of vouchers must be at least 1" }),
-    })
-    .superRefine(({ expiryDate }, ctx) => {
-        if (new Date(expiryDate) < new Date()) {
-            ctx.addIssue({
-                code: "custom",
-                message: "Expiry date must be in the future",
-                path: ["expiryDate"],
-            });
-        }
-    });
+    // description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
+    // expiryDate: z.string({
+    //     required_error: "Expiry date is required",
+    // }),
+    total: z.coerce
+        .number({ required_error: "The amount of vouchers is required" })
+        .min(1, { message: "The amount of vouchers must be at least 1" }),
+});
+// .superRefine(({ expiryDate }, ctx) => {
+//     if (new Date(expiryDate) < new Date()) {
+//         ctx.addIssue({
+//             code: "custom",
+//             message: "Expiry date must be in the future",
+//             path: ["expiryDate"],
+//         });
+//     }
+// });
 export type UpdateVoucherRequestDTO = z.infer<typeof UpdateVoucherRequestSchema>;
 
 export type VoucherType = z.infer<typeof CreateVoucherRequestSchema> & {
@@ -80,14 +83,50 @@ export type VoucherEventType = {
     };
 };
 
-export type EventGameType = {
-    id: number;
+export type VoucherEventItemType = {
+    id: string;
+    discount: number;
+    total: number;
+    remaining: number;
+};
+export type GameQuizItemType = {
+    gameId: string;
+    popUpItemsEnabled: boolean;
+    quizzCollectionId: string | null;
+};
+
+export type CollectionItemType = {
+    imageId: string;
     image: string;
+    numberPieces: number;
+};
+
+export type EventGameType = {
+    id: string;
     name: string;
+    description: string;
+    imageId: string;
+    image: string;
+    status: string;
+    comment: string | null;
+    createdAt: string;
     startTime: string;
     endTime: string;
-    vouchers: VoucherEventType[];
-    games: GameType[];
+    brandId: string;
+    brand: BrandType | null;
+    voucherTypes: VoucherEventItemType[];
+    totalVouchers: number;
+    totalPublishedVouchers: number;
+    games: GameQuizItemType[];
+    item: CollectionItemType | null;
+};
+
+export type EventGameListType = {
+    page: number;
+    perPage: number;
+    total: number;
+    totalPage: number;
+    data: EventGameType[];
 };
 
 export const RegisterEventSchema = z
@@ -192,8 +231,9 @@ export const SubscriptionRequestSchema = z.object({
             message: "Name must not exceed 200 characters",
         })
         .regex(/\w+\s\w+/, { message: "Name is too short" }),
-    areaId: z.string({
-        required_error: "Area is required",
+    phoneNumber: z.string().regex(/^\d{10}$/, { message: "Phone number is invalid" }),
+    domain: z.string({
+        required_error: "Domain is required",
     }),
     address: z.string({
         required_error: "Address is required",
@@ -201,7 +241,6 @@ export const SubscriptionRequestSchema = z.object({
     location: z.array(z.number(), { required_error: "Location is required" }).length(2, {
         message: "Location is required",
     }),
-    status: z.boolean().default(true),
 });
 
 export type SubscriptionRequestDTO = z.infer<typeof SubscriptionRequestSchema>;
@@ -228,16 +267,21 @@ export const UpdateSubscriptionRequestSchema = z.object({
             message: "Name must not exceed 200 characters",
         })
         .regex(/\w+\s\w+/, { message: "Name is too short" }),
-    areaId: z.string({
-        required_error: "Area is required",
+    domain: z.string({
+        required_error: "Domain is required",
     }),
+    phoneNumber: z.string().regex(/^\d{10}$/, { message: "Phone number is invalid" }),
     address: z.string({
         required_error: "Address is required",
     }),
     location: z.array(z.number(), { required_error: "Location is required" }).length(2, {
         message: "Location is required",
     }),
-    status: z.boolean().default(true),
 });
 
 export type UpdateSubscriptionRequestDTO = z.infer<typeof UpdateSubscriptionRequestSchema>;
+
+export type SubscriptionEventType = Omit<SubscriptionType, "location"> & {
+    latitude: number;
+    longitude: number;
+};

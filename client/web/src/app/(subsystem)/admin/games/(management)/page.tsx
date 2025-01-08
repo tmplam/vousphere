@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import ErrorPage from "@/app/error";
-import { GameListSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { GameListSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import { useCachedGameListQuery } from "@/lib/react-query/gameCache";
 import AnimationColorfulButton from "@/components/shared/custom-button";
+import { defaultGameImage } from "@/lib/utils";
 
 export default function GameCard() {
     const { data: gameList, isLoading, isError, isPaused } = useCachedGameListQuery();
@@ -17,7 +18,7 @@ export default function GameCard() {
                 <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Management</h1>
                 <GameListSkeleton total={2} />
             </>
-        ); // isLoading is true when api in queryFn was calling and data doesn't exist in cache
+        );
     return (
         <>
             <h1 className="text-2xl md:text-4xl font-bold text-gradient">Game Management</h1>
@@ -28,7 +29,11 @@ export default function GameCard() {
                         key={index}
                     >
                         <CardHeader className="relative !p-0">
-                            <img src={game.image} alt="Game" className="h-48 w-full object-cover rounded-t" />
+                            <img
+                                src={game.image || defaultGameImage}
+                                alt="Game"
+                                className="h-48 w-full object-cover rounded-t"
+                            />
                             <div className="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white p-2 text-lg font-bold w-full">
                                 <span className="line-clamp-1 text-center">{game.name}</span>
                             </div>
@@ -39,17 +44,17 @@ export default function GameCard() {
                                 <span className="font-semibold">Game type:</span>
                                 <span className={`${getBadge()} capitalize`}>{game.type}</span>
                             </div>
-                            <div className="text-sm flex items-center gap-3">
+                            {/* <div className="text-sm flex items-center gap-3">
                                 <span className="font-semibold">Allow trading: </span>
                                 {game.allowTrading ? (
                                     <Badge className="bg-green-500 text-white">Allow</Badge>
                                 ) : (
                                     <Badge className="bg-red-500 text-white">Not allow</Badge>
                                 )}
-                            </div>
+                            </div> */}
                             <div className="text-sm h-12">
                                 <span className="font-semibold">Guide:</span>{" "}
-                                <span className=" line-clamp-2">{game.guide}</span>
+                                <p dangerouslySetInnerHTML={{ __html: game.description }} className=" line-clamp-2"></p>
                             </div>
                         </CardContent>
 

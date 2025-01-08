@@ -26,21 +26,20 @@ export function NavUser() {
     const router = useRouter();
     const userAuth = useAppSelector((state) => state.userState).user as UserType;
     useLayoutEffect(() => {
-        console.log(userAuth);
+        // console.log(userAuth);
         if (!userAuth) router.push("/login");
     }, [userAuth]);
     const handleLogout = () => {
         toast({
             title: "Logout",
             description: "You are logging out",
-            variant: "default",
+            className: "bg-sky-500 text-white",
             duration: 3000,
         });
         localStorage.removeItem("persist:userState");
         localStorage.removeItem("persist:root");
         localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userId");
+        localStorage.removeItem("roleRegistered");
         router.push("/login");
     };
     if (!userAuth) {
@@ -60,7 +59,7 @@ export function NavUser() {
                                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">{userAuth.name}</span>
+                                <span className="truncate font-semibold">{userAuth.name || "Unknown"}</span>
                                 <span className="truncate text-xs">{userAuth.email}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />

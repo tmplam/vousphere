@@ -1,15 +1,21 @@
-import { ErrorResponse, SuccessResponse } from "@/schema/http.schema";
-import { LoginRequestDTO, LoginResponseDTO, RegisterRequestDTO, RegisterResponseDTO } from "@/schema/auth.schema";
-import { UserType } from "@/schema/user.schema";
-import axios from "axios";
-const BASE_API = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { BASE_API } from "@/apis/constants";
+import axios, { AxiosResponse } from "axios";
+
+export async function demoCallARequest(id: string): Promise<AxiosResponse<any>> {
+    try {
+        const result = await axios.patch(`${BASE_API}/abc-service/${id}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
 
 export const getStatistics = async (): Promise<any> => {
     try {
-        const userId = localStorage.getItem("userId");
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return null;
+        if (!accessToken) return null;
         // const [totalUser, totalOrder, totalProduct] = await Promise.all([
         //     axios.get(`${BASE_API}/admin/get-total-user`, {
         //         headers: { Authorization: `Bearer ${accessToken}` },
@@ -22,7 +28,6 @@ export const getStatistics = async (): Promise<any> => {
         //     }),
         // ]);
         // const successResponse = result.data as SuccessResponse<any>[];
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
             data: [
                 {
@@ -49,11 +54,8 @@ export const getNewRegisteredUsers = async (
     time: string
 ): Promise<{ date: string; counterpart: number; customer: number }[]> => {
     try {
-        const userId = localStorage.getItem("userId");
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return [];
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (!accessToken) return [];
         const chartData = [
             { date: "2024-06-24", counterpart: 13, customer: 18 },
             { date: "2024-06-25", counterpart: 1, customer: 10 },
@@ -72,11 +74,8 @@ export const getNewRegisteredUsers = async (
 
 export const getEventParticipantStatus = async (time: string): Promise<any> => {
     try {
-        const userId = localStorage.getItem("userId");
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return null;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (!accessToken) return null;
         const chartData = [
             { date: "2024-06-24", happening: 2, ended: 2 },
             { date: "2024-06-25", happening: 10, ended: 1 },
@@ -100,11 +99,8 @@ export const getEventParticipantStatus = async (time: string): Promise<any> => {
 
 export const getPlayTurnStatistics = async (time: string): Promise<{ game: string; plays: number; fill: string }[]> => {
     try {
-        const userId = localStorage.getItem("userId");
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return [];
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (!accessToken) return [];
         const playTurnTodayData = [
             { game: "quiz", plays: 4, fill: "hsl(var(--chart-1))" },
             { game: "shake", plays: 32, fill: "hsl(var(--chart-4))" },

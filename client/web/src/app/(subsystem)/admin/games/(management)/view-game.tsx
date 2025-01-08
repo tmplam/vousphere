@@ -12,7 +12,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import React from "react";
-import Image from "next/image";
 
 export default function ViewGame({ children, game }: { children: React.ReactNode; game: GameType }) {
     return (
@@ -22,7 +21,7 @@ export default function ViewGame({ children, game }: { children: React.ReactNode
             </DialogTrigger>
             <DialogContent className="max-w-[425px] sm:max-w-[900px]">
                 <DialogHeader>
-                    <DialogTitle>User info</DialogTitle>
+                    <DialogTitle>Game info</DialogTitle>
                 </DialogHeader>
 
                 <div className="flex justify-center items-center gap-4">

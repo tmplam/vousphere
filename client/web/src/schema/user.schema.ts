@@ -1,23 +1,21 @@
+import { SubscriptionEventType } from "@/schema/event.schema";
 import z from "zod";
 
 export const UserSchema = z.object({
     id: z.string().uuid(),
     name: z.string().min(4).max(256),
-    username: z.string().min(4).max(256),
+    // username: z.string().min(4).max(256),
     email: z.string().email(),
-    phone: z.string().regex(/^\d{10}$/, { message: "Phone number is invalid" }),
-    roles: z.array(
-        z.object({
-            id: z.number(),
-            name: z.string(),
-            description: z.string(),
-        })
-    ),
-    image: z.string().url().nullable(),
-    status: z.boolean().default(true),
+    phoneNumber: z.string().regex(/^\d{10}$/, { message: "Phone number is invalid" }),
+    role: z.string(),
+    image: z.string().nullable(),
+    imageId: z.string().nullable(),
+    status: z.string(),
 });
 
-export type UserType = z.TypeOf<typeof UserSchema>;
+export type UserType = z.TypeOf<typeof UserSchema> & {
+    brand: SubscriptionEventType;
+};
 
 export const CreateUserRequestSchema = z
     .object({
@@ -55,3 +53,18 @@ export const CreateUserRequestSchema = z
     })
     .strict();
 export type CreateUserRequestDTO = z.infer<typeof CreateUserRequestSchema>;
+
+export type UserInfoRequestDTO = {
+    accessToken: string;
+};
+
+export type UserInfoResponseDTO = {};
+
+export type UserListType = {
+    page: number;
+    perPage: number;
+    total: number;
+    totalPage: number;
+    data: UserType[];
+    validationErrors: any;
+};

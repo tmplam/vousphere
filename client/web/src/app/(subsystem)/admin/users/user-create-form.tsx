@@ -51,7 +51,11 @@ export function CreateUserForm() {
     }
     return (
         <Form {...createUserForm}>
-            <form onSubmit={createUserForm.handleSubmit(onSubmit)} className="p-2 md:p-4" noValidate>
+            <form
+                onSubmit={createUserForm.handleSubmit(onSubmit)}
+                className="p-2 md:p-4 border border-gray-200 rounded-lg"
+                noValidate
+            >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div className="image">
                         <label

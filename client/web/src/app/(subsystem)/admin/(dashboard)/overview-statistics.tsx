@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { getCachedAdminDataStatistic } from "@/lib/react-query/dashboardCache";
-import { StatisticDataCardSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { useCachedAdminDataStatistic } from "@/lib/react-query/dashboardCache";
+import { StatisticDataCardSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const OverviewStatistics = () => {
-    const { data, isLoading, isError, isPaused } = getCachedAdminDataStatistic();
+    const { data, isLoading, isError, isPaused } = useCachedAdminDataStatistic();
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !data)
         return (

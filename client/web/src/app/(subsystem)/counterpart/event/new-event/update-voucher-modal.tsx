@@ -1,5 +1,4 @@
 "use client";
-import { VoucherAmount } from "@/app/(subsystem)/counterpart/event/new-event/page";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
-import { UpdateVoucherRequestDTO, UpdateVoucherRequestSchema } from "@/schema/event.schema";
+import { UpdateVoucherRequestDTO, UpdateVoucherRequestSchema, VoucherAmount } from "@/schema/event.schema";
 import { useState } from "react";
 import { CircleX } from "lucide-react";
 import { AnimationButton } from "@/components/shared/custom-button";
@@ -42,9 +41,9 @@ export default function UpdateVoucherModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="max-w-[80vw] xl:max-w-[60vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
+            <DialogContent className="max-w-[80vw] sm:max-w-[60vw] lg:max-w-[40vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-center text-2xl">UPDATE VOUCHER</DialogTitle>
+                    <DialogTitle className="text-center text-2xl text-gradient">UPDATE VOUCHER</DialogTitle>
                 </DialogHeader>
                 <div className="h-full w-full">
                     <VoucherAmountForm
@@ -72,15 +71,15 @@ function VoucherAmountForm({
 }) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
-    const [image, setImage] = useState<File | null>(item.voucher.image);
+    // const [image, setImage] = useState<File | null>(item.voucher.image);
     const updateVoucherForm = useForm<UpdateVoucherRequestDTO>({
         resolver: zodResolver(UpdateVoucherRequestSchema),
         defaultValues: {
-            value: item.voucher.value!,
-            description: item.voucher.description!,
-            expiryDate: item.voucher.expiryDate!,
-            amount: item.amount,
-            image: "",
+            discount: item.discount!,
+            total: item.total!,
+            // description: item.voucher.description!,
+            // expiryDate: item.voucher.expiryDate!,
+            // image: "",
         },
     });
     async function onSubmit(values: UpdateVoucherRequestDTO) {
@@ -92,11 +91,11 @@ function VoucherAmountForm({
                 duration: 2000,
                 className: "bg-lime-500 text-white",
             });
-            const { amount: voucherAmount, ...voucherValue } = values;
-            voucherValue.image = image;
-            const updatedVocherAmount = { amount: voucherAmount, voucher: voucherValue };
-            console.log(updatedVocherAmount);
-            onUpdateVouchers(updatedVocherAmount, index);
+            // const { amount: voucherAmount, ...voucherValue } = values;
+            // voucherValue.image = image;
+            // const updatedVocherAmount = { amount: voucherAmount, voucher: voucherValue };
+            // console.log(updatedVocherAmount);
+            onUpdateVouchers({ ...values }, index);
             setOpen(false);
         } catch (error: any) {
             handleErrorApi({
@@ -107,11 +106,16 @@ function VoucherAmountForm({
             setLoading(false);
         }
     }
+
+    const triggerUpdateVoucherSubmitForm = () => {
+        updateVoucherForm.handleSubmit(onSubmit)();
+    };
+
     return (
         <Form {...updateVoucherForm}>
             <form onSubmit={updateVoucherForm.handleSubmit(onSubmit)} noValidate>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div className="image">
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="image hidden">
                         <label
                             htmlFor="uploadVoucherFile"
                             className=" text-gray-700 dark:text-gray-300 font-semibold text-base rounded max-w-md h-18 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif] py-1"
@@ -133,7 +137,7 @@ function VoucherAmountForm({
                                 </svg>
                                 Upload file
                             </div>
-                            <input
+                            {/* <input
                                 type="file"
                                 id="uploadVoucherFile"
                                 className="hidden"
@@ -142,12 +146,12 @@ function VoucherAmountForm({
                                     setImage(e.target.files ? e.target.files[0] : null);
                                 }}
                                 value=""
-                            />
+                            /> */}
                             <p className="text-xs text-center font-medium text-gray-400">
                                 Only PNG, JPG and JPEG are allowed.
                             </p>
                         </label>
-                        {image && (
+                        {/* {image && (
                             <div className="relative mt-2 w-[360px] mx-auto border rounded-sm p-1">
                                 <img
                                     src={URL.createObjectURL(image)}
@@ -161,13 +165,13 @@ function VoucherAmountForm({
                                     <CircleX strokeWidth={3} color="red" className="hover:stroke-lime-500" />
                                 </button>
                             </div>
-                        )}
+                        )} */}
                     </div>
                     <div className="space-y-2">
-                        <div className="flex flex-wrap lg:justify-between gap-x-10  gap-y-2">
+                        <div className="flex flex-wrap justify-center gap-x-10 gap-y-2">
                             <FormField
                                 control={updateVoucherForm.control}
-                                name="value"
+                                name="discount"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Discount value</FormLabel>
@@ -177,7 +181,8 @@ function VoucherAmountForm({
                                                     type="number"
                                                     min={1}
                                                     max={100}
-                                                    {...field}
+                                                    value={field.value}
+                                                    onChange={field.onChange}
                                                     className="!mt-0  border-gray-300"
                                                 />
                                                 <span>(%)</span>
@@ -187,7 +192,7 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                            <FormField
+                            {/* <FormField
                                 control={updateVoucherForm.control}
                                 name="expiryDate"
                                 render={({ field }) => (
@@ -204,9 +209,9 @@ function VoucherAmountForm({
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />
-                        </div>
-                        <FormField
+                            /> */}
+
+                            {/* <FormField
                             control={updateVoucherForm.control}
                             name="description"
                             render={({ field }) => (
@@ -219,39 +224,46 @@ function VoucherAmountForm({
                                             {...field}
                                             className="!mt-0 border-gray-300"
                                         />
-                                    </FormControl>
-                                    {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
+                                    </FormControl> 
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
-                        <FormField
-                            control={updateVoucherForm.control}
-                            name="amount"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Total vouchers:</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter voucher amount"
-                                            type="number"
-                                            min={1}
-                                            {...field}
-                                            className="!mt-0 border-gray-300 w-auto"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                control={updateVoucherForm.control}
+                                name="total"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Total vouchers:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Enter total voucher"
+                                                type="number"
+                                                min={1}
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                className="!mt-0 border-gray-300 w-auto"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="!mt-5 flex !justify-center items-center gap-2 md:gap-5">
                     <DialogClose asChild>
-                        <Button className="block text-base cancel-btn-color">Close</Button>
+                        <Button type="button" className="text-md cancel-btn-color">
+                            Close
+                        </Button>
                     </DialogClose>
-                    <AnimationButton type="submit" className="block px-3 py-[.37rem]">
+                    <AnimationButton
+                        type="button"
+                        className="block px-3 py-[.37rem]"
+                        onClick={triggerUpdateVoucherSubmitForm}
+                    >
                         Update
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
                     </AnimationButton>

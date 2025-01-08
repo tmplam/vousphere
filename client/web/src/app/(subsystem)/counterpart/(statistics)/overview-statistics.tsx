@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { getCachedCounterpartDataStatistic } from "@/lib/react-query/counterpartDashboardCache";
-import { StatisticDataCardSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { useCachedCounterpartDataStatistic } from "@/lib/react-query/counterpartDashboardCache";
+import { StatisticDataCardSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const OverviewStatistics = () => {
-    const { data, isLoading, isError, isPaused } = getCachedCounterpartDataStatistic();
+    const { data, isLoading, isError, isPaused } = useCachedCounterpartDataStatistic();
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !data)
         return (

@@ -1,150 +1,133 @@
-import { EventGameType, SubscriptionType } from "@/schema/event.schema";
+import { BASE_API } from "@/apis/constants";
+import { ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
+import { EventGameListType, EventGameType, SubscriptionRequestDTO } from "@/schema/event.schema";
+import { SuccessResponse } from "@/schema/http.schema";
+import axios, { AxiosResponse } from "axios";
 
-export async function getMySubscription(): Promise<SubscriptionType | null> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const randomNumber = Math.floor(Math.random() * 1000);
-    // return null;
-    return {
-        id: "UUDI-123D",
-        name: "The Lunar New Year 2024 Buy One Get One Free Event only in Ho Chi Minh City",
-        address: "123 Main Street, Anytown, USA - " + randomNumber,
-        area: {
-            id: "2",
-            name: "Drink",
-        },
-        location: [10.7628, 106.6825],
-        status: true,
-    };
+export async function getAllEvents(
+    role: string,
+    page: number = 1,
+    perPage: number = 10,
+    keyword?: string,
+    status?: string,
+    startTime?: string,
+    endTime?: string
+): Promise<EventGameListType | null> {
+    try {
+        const params = new URLSearchParams();
+        params.append("page", page.toString());
+        params.append("perPage", perPage.toString());
+        if (keyword) params.append("keyword", keyword);
+        if (status) params.append("status", status);
+        if (startTime) params.append("startTime", startTime);
+        if (endTime) params.append("endTime", endTime);
+        let baseUrl = `${BASE_API}/event-service/api/admin/events`;
+        if (role === ROLE_COUNTERPART) {
+            baseUrl = `${BASE_API}/event-service/api/events/registered`;
+        }
+        const result = (
+            await axios.get(`${baseUrl}?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<EventGameListType>;
+        return result.data;
+    } catch (error: any) {
+        return null;
+    }
 }
 
-export async function getAllMyEvents(page: number, perPage: number): Promise<EventGameType[] | null> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const randomNumber = Math.floor(Math.random() * 1000);
-    // return null;
-    return [
-        {
-            id: 1,
-            name: "New Year 2024",
-            image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-            vouchers: [
-                {
-                    amount: 10,
-                    voucher: {
-                        code: "UUDI-123D",
-                        qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        value: 10,
-                        description: "Free 10% off on all products",
-                        expiryDate: "2024-12-01T10:00:00Z",
-                        status: true,
-                    },
-                },
-                {
-                    amount: 14,
-                    voucher: {
-                        code: "UUDI-125D",
-                        qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        value: 14,
-                        description: "Free 14% off on all products",
-                        expiryDate: "2024-12-01T10:00:00Z",
-                        status: true,
-                    },
-                },
-            ],
-            startTime: "2024-12-01T10:00:00Z",
-            endTime: "2024-12-01T12:00:00Z",
-            games: [],
-        },
-        {
-            id: 2,
-            name: "A thank giving party 2024 with best wishes to all",
-            image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-            vouchers: [
-                {
-                    amount: 10,
-                    voucher: {
-                        code: "UUDI-123D",
-                        qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                        value: 10,
-                        description: "Free 10% off on all products",
-                        expiryDate: "2024-12-01T10:00:00Z",
-                        status: true,
-                    },
-                },
-            ],
-            startTime: "2024-12-02T14:00:00Z",
-            endTime: "2024-12-02T16:00:00Z",
-            games: [],
-        },
-    ];
+export async function callCreateEventRequest(values: any): Promise<AxiosResponse<any>> {
+    try {
+        const result = await axios.post(`${BASE_API}/event-service/api/events`, values, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
 }
 
-export async function getEventDetail(id: number): Promise<EventGameType | null> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // return null;
-    return {
-        id: 1,
-        name: "The opening of ABC company in the New Year 2025",
-        image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-        vouchers: [
+export async function callUpdateEventRequest(id: string, values: any): Promise<AxiosResponse<any>> {
+    try {
+        console.log(values);
+        const result = await axios.put(`${BASE_API}/event-service/api/events/${id}`, values, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function getEventDetail(id: string): Promise<EventGameType | null> {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/event-service/api/events/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<EventGameType>;
+        return result.data;
+    } catch (error: any) {
+        return null;
+    }
+}
+
+export async function callApproveEventRequest(id: string): Promise<AxiosResponse<any>> {
+    try {
+        const result = await axios.patch(
+            `${BASE_API}/event-service/api/events/${id}/approve`,
+            { comment: "" },
             {
-                amount: 10,
-                voucher: {
-                    code: "UUDI-123D",
-                    qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    value: 8,
-                    description: "Free 10% off on all products",
-                    expiryDate: "2024-12-01T10:00:00Z",
-                    status: true,
-                },
-            },
-            {
-                amount: 14,
-                voucher: {
-                    code: "UUDI-125D",
-                    qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    value: 25,
-                    description: "Free 14% off on all products",
-                    expiryDate: "2024-12-01T10:00:00Z",
-                    status: true,
-                },
-            },
-            {
-                amount: 5,
-                voucher: {
-                    code: "UUDI-125D",
-                    qrCode: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    image: "https://c8.alamy.com/comp/2JB7FMY/coupon-mockup-with-50-percent-off-discount-voucher-gift-coupon-coupon-promotion-sale-vector-2JB7FMY.jpg",
-                    value: 50,
-                    description: "Free 50% off on all products",
-                    expiryDate: "2024-12-01T10:00:00Z",
-                    status: true,
-                },
-            },
-        ],
-        startTime: "2024-12-01T10:00",
-        endTime: "2024-12-01T12:00",
-        games: [
-            {
-                id: "HDFS-sdfd",
-                name: "HQ Trivia Game",
-                type: "Quiz",
-                image: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHTS5qluf5pGj6LUlIkPUXGK0ez0V0p67SCr-sZOnWVsLF4LwiqPbz4-qqVrMQygAuJWFE_Ima1aIE1Xn3MRHAihHqAIBx1JkZusra7dFGig",
-                allowTrading: true,
-                guide: "User will have to answer the questions and win the game if they get it right.",
-            },
-            {
-                id: "HDFS-2323",
-                name: "Shake your phone",
-                type: "collect",
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCSjazoiTIpiz00YLORty3X6_r9XzbgaIOaw&s",
-                allowTrading: false,
-                guide: "Shake your phone to randomly receive rewards or combine items to exchange for rewards.",
-            },
-        ],
-    };
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            }
+        );
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callRejectEventRequest(id: string, payload: { comment: string }): Promise<AxiosResponse<any>> {
+    try {
+        const result = await axios.patch(`${BASE_API}/event-service/api/events/${id}/reject`, payload, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callCreateSubscriptionRequest(data: SubscriptionRequestDTO): Promise<AxiosResponse<any, any>> {
+    try {
+        const { location, ...payload } = data;
+        const body = {
+            ...payload,
+            latitude: location[0],
+            longitude: location[1],
+        };
+        const result = await axios.put(`${BASE_API}/user-service/api/brands/brand-info`, body, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function callUpdateSubscriptionRequest(data: SubscriptionRequestDTO): Promise<AxiosResponse<any, any>> {
+    try {
+        const { location, ...payload } = data;
+        const body = {
+            ...payload,
+            latitude: location[0],
+            longitude: location[1],
+        };
+        const result = await axios.put(`${BASE_API}/user-service/api/brands/brand-info`, body, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error.response.data;
+    }
 }

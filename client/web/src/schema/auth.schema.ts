@@ -29,40 +29,18 @@ export const RegisterRequestSchema = z
         //     message:
         //         "Password must contain one first uppercase letter, at least one number and one special character",
         // })
-        confirmPassword: z.string().min(6).max(100),
+        isBrand: z.boolean().default(false),
     })
-    .strict()
-    .superRefine(({ confirmPassword, password }, ctx) => {
-        if (confirmPassword !== password) {
-            ctx.addIssue({
-                code: "custom",
-                message: "Passwords do not match",
-                path: ["confirmPassword"],
-            });
-        }
-    });
+    .strict();
 
 export type RegisterRequestDTO = z.infer<typeof RegisterRequestSchema>;
 
 export const RegisterResponseSchema = z.object({
+    isSuccess: z.boolean(),
+    statusCode: z.number(),
+    validationErrors: z.array(z.object({ field: z.string(), message: z.string() })).nullable(),
     data: z.object({
-        accessToken: z.string(),
-        refreshToken: z.string(),
-        user: z.object({
-            id: z.string().uuid(),
-            name: z.string(),
-            username: z.string(),
-            phone: z.string(),
-            email: z.string(),
-            roles: z.array(
-                z.object({
-                    id: z.number(),
-                    name: z.string(),
-                    description: z.string(),
-                })
-            ),
-            status: z.boolean(),
-        }),
+        userId: z.string().uuid(),
     }),
     message: z.string(),
 });
@@ -91,10 +69,60 @@ export const LoginRequestSchema = z
 
 export type LoginRequestDTO = z.infer<typeof LoginRequestSchema>;
 
-export const LoginResponseSchema = RegisterResponseSchema;
+export const LoginResponseSchema = z.object({
+    isSuccess: z.boolean(),
+    statusCode: z.number(),
+    validationErrors: z.array(z.object({ field: z.string(), message: z.string() })).nullable(),
+    data: z.object({
+        accessToken: z.string(),
+    }),
+    message: z.string(),
+});
 
 export type LoginResponseDTO = z.infer<typeof LoginResponseSchema>;
 
-export type UserType = LoginResponseDTO["data"]["user"] & {
-    image: string;
+export const UserTypeSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    phoneNumber: z.string().min(10).max(10),
+    email: z.string(),
+    image: z.string().nullable(),
+    brand: z.string().nullable(),
+    imageId: z.string().nullable(),
+    role: z.string(),
+    status: z.string(),
+});
+
+export type UserType = z.infer<typeof UserTypeSchema>;
+
+export const OTPSchema = z.object({
+    otpCode: z
+        .string()
+        .min(6, {
+            message: "Your one-time password must be 6 characters.",
+        })
+        .max(6, {
+            message: "Your one-time password must be 6 characters.",
+        }),
+    email: z.string().email(),
+});
+
+export type SendOTPRequestDTO = z.infer<typeof OTPSchema>;
+
+export type SentOTPResponseDTO = {
+    isSuccess: boolean;
+    statusCode: number;
+    message: string;
+    data: any;
+    validationErrors: any;
+};
+
+export const ReSendOTPRequestSchema = z.object({
+    email: z.string().email(),
+});
+
+export type ReSendOTPRequestDTO = z.infer<typeof ReSendOTPRequestSchema>;
+export type ReSentOTPResponseDTO = {
+    statusCode: number;
+    data: any;
 };

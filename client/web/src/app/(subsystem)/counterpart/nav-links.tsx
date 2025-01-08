@@ -19,7 +19,7 @@ export const counterpartNavMain = [
                 icon: Calendar,
             },
             {
-                title: "Questions",
+                title: "Quizzes",
                 url: "/counterpart/event/kahoot",
                 icon: FileQuestionIcon,
             },

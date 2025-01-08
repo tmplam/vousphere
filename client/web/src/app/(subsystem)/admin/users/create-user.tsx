@@ -16,7 +16,7 @@ export function CreateUserDialog({ children }: { children: React.ReactNode }) {
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="max-w-[80vw] sm:max-w-[60vw] md:max-w-[70vw] lg:max-w-[70vw] xl:max-w-[60vw] rounded-md">
+            <DialogContent className="max-w-[80vw] sm:max-w-[60vw] md:max-w-[70vw] lg:max-w-[70vw] xl:max-w-[60vw] rounded-md border-gray-200">
                 <DialogHeader>
                     <DialogTitle className="text-center text-2xl uppercase text-gradient">Create user</DialogTitle>
                 </DialogHeader>

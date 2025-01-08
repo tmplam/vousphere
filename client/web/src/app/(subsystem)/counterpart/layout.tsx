@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CounterpartSidebar } from "@/components/shared/sidebar/app-sidebar";
 import { CSSProperties } from "react";
 import { DarkModeToggle } from "@/components/utility/mode-toggle";
-import { AuthenticatedRoute, ROLE_ADMIN, ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
+import { AuthenticatedRoute, ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
 import Footer from "@/components/shared/footer";
 import { Bell } from "lucide-react";
 import Notification from "@/app/(subsystem)/admin/notification";

@@ -1,9 +1,7 @@
 export const getCounterpartStatistics = async (): Promise<any> => {
     try {
-        const userId = localStorage.getItem("userId");
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return null;
+        if (!accessToken) return null;
         // const [totalUser, totalOrder, totalProduct] = await Promise.all([
         //     axios.get(`${BASE_API}/admin/get-total-user`, {
         //         headers: { Authorization: `Bearer ${accessToken}` },
@@ -16,15 +14,14 @@ export const getCounterpartStatistics = async (): Promise<any> => {
         //     }),
         // ]);
         // const successResponse = result.data as SuccessResponse<any>[];
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
             data: [
                 {
-                    data: "100",
+                    data: "12100",
                     trending: "1230",
                 },
                 {
-                    data: "10",
+                    data: "12100",
                     trending: "1230",
                 },
                 {
