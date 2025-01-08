@@ -36,7 +36,7 @@ public class EventStartedJob(
             EventName = eventData.Name,
             Description = eventData.Description,
             ImageId = eventData.ImageId,
-            BrandId = eventData.BrandId
+            BrandId = eventData.BrandId,
         };
 
         await Task.WhenAll(

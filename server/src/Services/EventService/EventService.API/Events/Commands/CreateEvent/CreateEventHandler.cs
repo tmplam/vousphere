@@ -59,7 +59,20 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
             .WithMessage("Event games must have unique Game Ids");
 
         RuleForEach(e => e.Games)
-            .SetValidator(e => new EventGameDtoValidator(e));
+            .ChildRules(g =>
+            {
+                g.RuleFor(g => g.GameId)
+                    .NotEmpty().WithMessage("Game Id is required");
+
+                g.When(g => g.GameId == GameIdentifiers.QuizGameId, () =>
+                {
+                    g.RuleFor(g => g.StartTime)
+                        .NotEmpty().WithMessage("Start time is required for quiz-game");
+
+                    g.RuleFor(g => g.QuizzCollectionId)
+                        .NotEmpty().WithMessage("Quiz collection id is required for quiz-game");
+                });
+            });
 
         When(x => x.Games.Any(g => g.PopUpItemsEnabled), () =>
         {
@@ -72,26 +85,6 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
                     RuleFor(x => x.Item!.NumberPieces)
                         .GreaterThan(0).WithMessage("Item number of pieces must be greater than 0");
                 });
-        });
-    }
-}
-
-public class EventGameDtoValidator : AbstractValidator<EventGameDto>
-{
-    public EventGameDtoValidator(CreateEventCommand createEventCommand)
-    {
-        RuleFor(g => g.GameId)
-            .NotEmpty().WithMessage("Game Id is required");
-
-        When(g => g.GameId == GameIdentifiers.QuizGameId, () =>
-        {
-            RuleFor(g => g.StartTime)
-                .NotEmpty().WithMessage("Start time is required for quiz-game")
-                .GreaterThan(createEventCommand.StartTime).WithMessage("Quiz game start time must be greater than event start time")
-                .LessThan(createEventCommand.EndTime).WithMessage("Quiz game start time must be less than event end time");
-
-            RuleFor(g => g.QuizzCollectionId)
-                .NotEmpty().WithMessage("Quiz collection id is required for quiz-game");
         });
     }
 }

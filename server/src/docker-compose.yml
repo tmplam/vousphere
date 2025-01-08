@@ -16,6 +16,10 @@ services:
     image: postgres
 
 
+  gamedistributedcache:
+    image: redis
+
+
   mediadb:
     image: postgres
 

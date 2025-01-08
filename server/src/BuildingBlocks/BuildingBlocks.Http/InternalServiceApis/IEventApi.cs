@@ -10,4 +10,7 @@ public interface IEventApi
 
     [Get("/api/events/{eventId}/exists")]
     Task<bool> CheckEventExistsAsync(Guid eventId);
+
+    [Get("/api/events/{eventId}/internal-info")]
+    Task<InternalEventInfoDto> GetInternalEventInfoAsync(Guid eventId);
 }

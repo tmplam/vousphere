@@ -39,6 +39,13 @@ services:
       - postgres_game:/var/lib/postgresql/data/
 
 
+  gamedistributedcache:
+    container_name: gamedistributedcache
+    restart: always
+    ports:
+      - "6379:6379"
+
+
   mediadb:
     container_name: mediadb
     environment:
@@ -145,6 +152,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__Database=Server=gamedb;Port=5432;Database=GameDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ConnectionStrings__Redis=gamedistributedcache:6379
       - MessageBroker__Host=amqp://vousphere-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest

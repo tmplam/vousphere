@@ -61,6 +61,7 @@ builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 
 builder.Services.AddMediaServiceClient();
+builder.Services.AddEventServiceClient();
 
 
 if (builder.Environment.IsDevelopment())
