@@ -1,0 +1,8 @@
+﻿using BuildingBlocks.Http.Dtos.Events;
+
+namespace GameService.API.Services;
+
+public interface IEventGameService
+{
+    Task<InternalEventInfoDto?> GetEventInfoAsync(Guid eventId);
+}

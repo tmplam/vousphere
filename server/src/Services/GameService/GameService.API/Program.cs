@@ -2,6 +2,7 @@ using BuildingBlocks.Cors;
 using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using GameService.API.Hubs;
+using GameService.API.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,12 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Quiz>();
 }).UseLightweightSessions();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    //options.InstanceName = "Game"; // Differentiate different apps key
+});
+
 builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
@@ -62,6 +69,9 @@ builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 
 builder.Services.AddMediaServiceClient();
 builder.Services.AddEventServiceClient();
+
+builder.Services.AddScoped<IEventGameService, EventGameService>();
+builder.Services.Decorate<IEventGameService, CachedEventGameService>(); // Decorate
 
 
 if (builder.Environment.IsDevelopment())
