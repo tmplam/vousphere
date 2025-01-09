@@ -1,36 +1,205 @@
-import { GameType } from "@/schema/game.schema";
+import { BASE_API } from "@/apis/constants";
+import {
+    CreateQuestionRequestDTO,
+    CreateQuizRequestDTO,
+    CreateQuizResponseDTO,
+    GameAndQuizListType,
+    GameType,
+    QuizQuestionType,
+    QuizType,
+    UpdateGameRequestDTO,
+    UpdateQuestionRequestDTO,
+    UpdateQuizRequestDTO,
+} from "@/schema/game.schema";
+import { SuccessResponse } from "@/schema/http.schema";
+import { PaginationType } from "@/schema/types/common";
+import axios, { AxiosResponse } from "axios";
 
-export async function getAllGames(): Promise<GameType[]> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return [
-        {
-            id: "HDFS-sdfd",
-            name: "HQ Trivia Game",
-            type: "Quiz",
-            image: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHTS5qluf5pGj6LUlIkPUXGK0ez0V0p67SCr-sZOnWVsLF4LwiqPbz4-qqVrMQygAuJWFE_Ima1aIE1Xn3MRHAihHqAIBx1JkZusra7dFGig",
-            allowTrading: true,
-            // guide: "User will have to answer the questions and win the game if they get it right.",
-            guide: "User will have to ",
-        },
-        {
-            id: "HDFS-2323",
-            name: "Shake your phone",
-            type: "collect",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCSjazoiTIpiz00YLORty3X6_r9XzbgaIOaw&s",
-            allowTrading: false,
-            guide: "Shake your phone to randomly receive rewards or combine items to exchange for rewards.",
-        },
-    ];
+export async function getAllGames(): Promise<GameType[] | null> {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/game-service/api/games`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<any>;
+        return result.data.games as GameType[];
+    } catch (error: any) {
+        return null;
+    }
 }
 
 export async function getGameById(id: string): Promise<GameType> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return {
-        id: "UUDI-123D",
-        name: "John Doe dsfsd",
-        type: "Quiz",
-        image: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQHTS5qluf5pGj6LUlIkPUXGK0ez0V0p67SCr-sZOnWVsLF4LwiqPbz4-qqVrMQygAuJWFE_Ima1aIE1Xn3MRHAihHqAIBx1JkZusra7dFGig",
-        allowTrading: true,
-        guide: "User will have to answer the questions and win the game if they get it right.",
-    };
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/game-service/api/games/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<GameType>;
+        // console.log(result);
+        return result.data;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function getAllQuizzes(
+    page: number = 1,
+    perPage: number = 100,
+    includeQuestions: boolean = false
+): Promise<PaginationType<QuizQuestionType> | null> {
+    try {
+        const params = new URLSearchParams();
+        params.append("page", page.toString());
+        params.append("perPage", perPage.toString());
+        params.append("includeQuestions", includeQuestions.toString());
+        const result = (
+            await axios.get(`${BASE_API}/game-service/api/quizzes?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<PaginationType<QuizQuestionType>>;
+        return result.data;
+    } catch (error: any) {
+        return null;
+    }
+}
+
+export async function getQuizById(id: string): Promise<QuizQuestionType | null> {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/game-service/api/quizzes/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<QuizQuestionType>;
+        // console.log(result);
+        return result.data;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function getQuizQuestionById(id: string): Promise<QuizQuestionType | null> {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/game-service/api/quizzes/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<QuizQuestionType>;
+        // console.log(result);
+        return result.data;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function callCreateQuizRequest(
+    values: CreateQuizRequestDTO
+): Promise<SuccessResponse<CreateQuizResponseDTO>> {
+    try {
+        const result = (
+            await axios.post(`${BASE_API}/game-service/api/quizzes`, values, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<any>;
+        return result;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function callUpdateQuizRequest(
+    values: UpdateQuizRequestDTO
+): Promise<SuccessResponse<CreateQuizResponseDTO>> {
+    try {
+        const result = (
+            await axios.patch(`${BASE_API}/game-service/api/quizzes/${values.quizId}`, values, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<any>;
+        return result;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function callCreateQuizQuestionRequest(
+    quizId: string,
+    values: CreateQuestionRequestDTO
+): Promise<AxiosResponse<any, any>> {
+    try {
+        const result = await axios.post(`${BASE_API}/game-service/api/quizzes/${quizId}/questions`, values, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callUpdateQuizQuestionRequest(
+    quizId: string,
+    quizQuesionId: string,
+    values: UpdateQuestionRequestDTO
+): Promise<AxiosResponse<any, any>> {
+    try {
+        const result = await axios.put(
+            `${BASE_API}/game-service/api/quizzes/${quizId}/questions/${quizQuesionId}`,
+            values,
+            {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            }
+        );
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callDeleteQuizQuestionRequest(
+    quizId: string,
+    quizQuesionId: string
+): Promise<AxiosResponse<any, any>> {
+    try {
+        const result = await axios.delete(`${BASE_API}/game-service/api/quizzes/${quizId}/questions/${quizQuesionId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callDeleteQuizRequest(quizId: string): Promise<AxiosResponse<any, any>> {
+    try {
+        const result = await axios.delete(`${BASE_API}/game-service/api/quizzes/${quizId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export async function callUpdateGameRequest(
+    id: string,
+    values: UpdateGameRequestDTO
+): Promise<AxiosResponse<any, any>> {
+    try {
+        const result = await axios.put(`${BASE_API}/game-service/api/games/${id}`, values, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        });
+        return result;
+    } catch (error: any) {
+        return error.response.data;
+    }
+}
+
+export async function getAllGamesAndQuizzes(): Promise<GameAndQuizListType | null> {
+    try {
+        const games = await getAllGames();
+        const quizzesRes = await getAllQuizzes();
+        const quizzes = quizzesRes ? quizzesRes.data : null;
+        return { games, quizzes };
+    } catch (error: any) {
+        return null;
+    }
 }

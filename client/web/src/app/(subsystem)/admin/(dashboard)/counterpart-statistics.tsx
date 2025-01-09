@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-import { getCachedEventStatusStatistic } from "@/lib/react-query/dashboardCache";
-import { EventStatusSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { useCachedEventStatusStatistic } from "@/lib/react-query/dashboardCache";
+import { EventStatusSkeleton } from "@/app/(subsystem)/admin/skeletons";
 
 const chartConfig = {
     happening: {
@@ -31,7 +31,7 @@ const chartConfig = {
 export function EventStatusStatistics() {
     // const [eventData, setEventData] = useState(chartTodayData);
     const [time, setTime] = useState("last3days");
-    const { data: eventData, isLoading, isError, isPaused } = getCachedEventStatusStatistic(time);
+    const { data: eventData, isLoading, isError, isPaused } = useCachedEventStatusStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !eventData) return <EventStatusSkeleton />;
     const timeLabel = time == "last3days" ? "last three days" : "this week";

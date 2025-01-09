@@ -1,67 +1,121 @@
 import { ErrorResponse, SuccessResponse } from "@/schema/http.schema";
-import { LoginRequestDTO, LoginResponseDTO, RegisterRequestDTO, RegisterResponseDTO } from "@/schema/auth.schema";
-import { UserType } from "@/schema/user.schema";
+import {
+    LoginRequestDTO,
+    LoginResponseDTO,
+    RegisterRequestDTO,
+    RegisterResponseDTO,
+    ReSendOTPRequestDTO,
+    ReSentOTPResponseDTO,
+    SendOTPRequestDTO,
+    SentOTPResponseDTO,
+} from "@/schema/auth.schema";
+import { UserListType, UserType } from "@/schema/user.schema";
 import axios from "axios";
-const BASE_API = process.env.NEXT_PUBLIC_API_ENDPOINT;
+import { BASE_API } from "@/apis/constants";
 
-export const getUserById = async (): Promise<UserType | null> => {
+export const callRegisterRequest = async (
+    payload: RegisterRequestDTO
+): Promise<RegisterResponseDTO | ErrorResponse> => {
     try {
-        const userId = localStorage.getItem("userId");
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!accessToken || !refreshToken || !userId) return null;
-        const result = await axios.get(`${BASE_API}/user/info/${userId}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const successResponse = result.data as SuccessResponse<UserType>;
-        return successResponse.data as UserType;
+        const result = (await axios.post(`${BASE_API}/user-service/api/users/sign-up`, payload)).data;
+        console.log(result);
+        return result as RegisterResponseDTO;
     } catch (error: any) {
-        // throw error;
+        return error.response.data as ErrorResponse;
+    }
+};
+
+export const callLoginRequest = async (values: LoginRequestDTO): Promise<LoginResponseDTO | ErrorResponse> => {
+    try {
+        const result = (await axios.post(`${BASE_API}/user-service/api/users/sign-in`, values)).data;
+        console.log(result);
+        return result as LoginResponseDTO;
+    } catch (error: any) {
+        return error.response.data as ErrorResponse;
+    }
+};
+
+export const callSendOTPRequest = async (values: SendOTPRequestDTO): Promise<SentOTPResponseDTO | ErrorResponse> => {
+    try {
+        const result = (await axios.patch(`${BASE_API}/user-service/api/users/verify-email`, values)).data;
+        console.log(result);
+        return result as SentOTPResponseDTO;
+    } catch (error: any) {
+        return error.response.data as ErrorResponse;
+    }
+};
+
+export const callReSendOTPRequest = async (
+    values: ReSendOTPRequestDTO
+): Promise<ReSentOTPResponseDTO | ErrorResponse> => {
+    try {
+        const result = await axios.post(`${BASE_API}/user-service/api/users/resend-otp`, values);
+        console.log(result);
+        return { data: result.data, statusCode: result.status } as ReSentOTPResponseDTO;
+    } catch (error: any) {
+        return error.response.data as ErrorResponse;
+    }
+};
+
+export const getUserInfo = async (): Promise<UserType | null> => {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/user-service/api/users/profile`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<UserType>;
+        return result.data;
+    } catch (error: any) {
         return null;
     }
 };
 
-export const callRegisterRequest = async (payload: RegisterRequestDTO): Promise<SuccessResponse<any>> => {
+export async function getUserList(
+    currentPage: number,
+    perPage: number,
+    keyword?: string,
+    role?: string
+): Promise<UserListType | null> {
     try {
-        // return (await axios.post(`${BASE_API}/auth/register`, payload));
-        return {
-            statusCode: 200,
-            message: "Success",
-            data: null,
-            others: null,
-        };
-    } catch (error: any) {
-        throw error;
+        const params = new URLSearchParams({
+            page: currentPage.toString(),
+            perPage: perPage.toString(),
+        });
+        if (keyword) params.set("keyword", keyword);
+        if (role) params.set("role", role.charAt(0).toUpperCase() + role.slice(1));
+        const result = (
+            await axios.get(`${BASE_API}/user-service/api/users?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<UserListType>;
+        return result.data as UserListType;
+    } catch (error) {
+        return null;
     }
-};
+}
 
-export const callLoginRequest = async (values: LoginRequestDTO): Promise<LoginResponseDTO> => {
+export async function toggleBlockUser(userId: string): Promise<SuccessResponse<any> | ErrorResponse> {
     try {
-        // const result = (await axios.post(`${BASE_API}/auth/login`, values)).data;
-        // return result as LoginResponseDTO;
-        return {
-            message: "Success",
-            data: {
-                accessToken: "accessToken",
-                refreshToken: "refreshToken",
-                user: {
-                    id: "AEESX-UUID", // UUID
-                    name: "name",
-                    username: "adminAccount",
-                    phone: "phone",
-                    email: "admin@gmail.com",
-                    roles: [
-                        {
-                            id: 1,
-                            name: values.email === "admin@gmail.com" ? "admin" : "counterpart",
-                            description: "admin",
-                        },
-                    ],
-                    status: true,
-                },
-            },
-        };
+        const result = (
+            await axios.patch(`${BASE_API}/user-service/api/users/${userId}/toggle-block`, null, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<any>;
+        return result;
     } catch (error: any) {
-        throw error;
+        return error.response.data as ErrorResponse;
     }
-};
+}
+
+export async function getUserById(id: string): Promise<UserType | null> {
+    try {
+        const result = (
+            await axios.get(`${BASE_API}/user-service/api/users/${id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<UserType>;
+        return result.data;
+    } catch (error: any) {
+        return null;
+    }
+}

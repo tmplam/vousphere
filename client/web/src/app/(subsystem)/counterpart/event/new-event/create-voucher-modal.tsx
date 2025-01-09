@@ -1,5 +1,4 @@
 "use client";
-import { VoucherAmount } from "@/app/(subsystem)/counterpart/event/new-event/page";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
-import { CreateVoucherRequestDTO, CreateVoucherRequestSchema } from "@/schema/event.schema";
+import { CreateVoucherRequestDTO, CreateVoucherRequestSchema, VoucherAmount } from "@/schema/event.schema";
 import { useState } from "react";
 import { CircleX } from "lucide-react";
 import { AnimationButton } from "@/components/shared/custom-button";
@@ -39,9 +38,9 @@ export default function CreateVoucherModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="max-w-[80vw] xl:max-w-[60vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
+            <DialogContent className="max-w-[80vw] sm:max-w-[60vw] lg:max-w-[40vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
                 <DialogHeader>
-                    <DialogTitle className="text-center text-2xl">ADD VOUCHER</DialogTitle>
+                    <DialogTitle className="text-center text-2xl text-gradient">ADD VOUCHER</DialogTitle>
                 </DialogHeader>
                 <div className="h-full w-full">
                     <VoucherAmountForm onAddingVouchers={onAddingVouchers} setOpen={setOpen} />
@@ -62,39 +61,32 @@ function VoucherAmountForm({
     const { toast } = useToast();
     const [image, setImage] = useState<File | null>(null);
     const createVoucherForm = useForm<CreateVoucherRequestDTO>({
-        resolver: zodResolver(
-            CreateVoucherRequestSchema.and(
-                z.object({
-                    amount: z.coerce
-                        .number({ required_error: "The amount of vouchers is required" })
-                        .min(1, { message: "The amount of vouchers must be at least 1" }),
-                })
-            )
-        ),
+        resolver: zodResolver(CreateVoucherRequestSchema),
         defaultValues: {
-            value: 1,
-            description: "demo demo demo",
-            expiryDate: "2024-12-27T20:00",
-            amount: 1,
-            image: "null",
+            total: 1,
+            discount: 5,
+            // description: "demo demo demo",
+            // expiryDate: "2024-12-27T20:00",
+            // amount: 1,
+            // image: "null",
         },
     });
     async function onSubmit(values: CreateVoucherRequestDTO) {
         if (loading) return;
         setLoading(true);
         try {
-            console.log({ ...values, image: image });
+            console.log(values);
+            onAddingVouchers({ ...values });
             toast({
                 description: "Add voucher successfully",
                 duration: 2000,
                 className: "bg-lime-500 text-white",
             });
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
-            const { amount: voucherAmount, ...voucherValue } = values;
-            voucherValue.image = image;
-            onAddingVouchers({ amount: voucherAmount, voucher: voucherValue });
+            // const { amount: voucherAmount, ...voucherValue } = values;
+            // voucherValue.image = image;
+            // onAddingVouchers({ amount: voucherAmount, voucher: voucherValue });
             createVoucherForm.reset();
-            setImage(null);
+            // setImage(null);
             setOpen(false);
         } catch (error: any) {
             handleErrorApi({
@@ -105,11 +97,16 @@ function VoucherAmountForm({
             setLoading(false);
         }
     }
+
+    const triggerCreateVoucherSubmit = () => {
+        createVoucherForm.handleSubmit(onSubmit)();
+    };
+
     return (
         <Form {...createVoucherForm}>
             <form onSubmit={createVoucherForm.handleSubmit(onSubmit)} noValidate>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div className="image">
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+                    <div className="image hidden">
                         <FormLabel>Voucher image</FormLabel>
                         <label
                             htmlFor="uploadVoucherFile"
@@ -163,10 +160,10 @@ function VoucherAmountForm({
                         )}
                     </div>
                     <div className="space-y-2">
-                        <div className="flex flex-wrap lg:justify-between gap-x-10  gap-y-2">
+                        <div className="flex flex-wrap justify-center gap-x-6 xl:gap-x-10 gap-y-2">
                             <FormField
                                 control={createVoucherForm.control}
-                                name="value"
+                                name="discount"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Discount value</FormLabel>
@@ -186,7 +183,7 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                            <FormField
+                            {/* <FormField
                                 control={createVoucherForm.control}
                                 name="expiryDate"
                                 render={({ field }) => (
@@ -204,47 +201,28 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                        </div>
-                        <FormField
-                            control={createVoucherForm.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Voucher description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            rows={4}
-                                            placeholder="Enter description for your voucher"
-                                            {...field}
-                                            className="!mt-0 border-gray-300"
-                                        />
-                                    </FormControl>
-                                    {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        </div> */}
 
-                        <FormField
-                            control={createVoucherForm.control}
-                            name="amount"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Total vouchers:</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter voucher amount"
-                                            type="number"
-                                            min={1}
-                                            {...field}
-                                            className="!mt-0 border-gray-300 w-auto"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* <FormField
+                            <FormField
+                                control={createVoucherForm.control}
+                                name="total"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Total vouchers:</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Enter total voucher"
+                                                type="number"
+                                                min={1}
+                                                {...field}
+                                                className="!mt-0 border-gray-300 w-auto"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {/* <FormField
                             control={createVoucherForm.control}
                             name="amount"
                             render={({ field }) => (
@@ -266,13 +244,18 @@ function VoucherAmountForm({
                                 </FormItem>
                             )}
                         /> */}
+                        </div>
                     </div>
                 </div>
                 <div className="!mt-5 flex !justify-center items-center gap-6">
                     <DialogClose asChild>
                         <Button className="block text-base cancel-btn-color !py-0">Close</Button>
                     </DialogClose>
-                    <AnimationButton type="submit" className="block py-[.37rem] px-4">
+                    <AnimationButton
+                        type="button"
+                        className="block py-[.37rem] px-4"
+                        onClick={triggerCreateVoucherSubmit}
+                    >
                         Add
                         {loading && <span className="ml-2 animate-spin">⌛</span>}
                     </AnimationButton>

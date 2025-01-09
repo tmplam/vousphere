@@ -1,26 +1,29 @@
 "use client";
 
+import { getBadgeCSS } from "@/app/(subsystem)/admin/event/event-status-badge";
+import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import UpdateEventForm from "@/app/(subsystem)/counterpart/event/detail/[id]/update-event-form";
+import GameItem, { RenderGameItemList } from "@/app/(subsystem)/counterpart/event/detail/[id]/view-game-item";
 import ViewGameModal from "@/app/(subsystem)/counterpart/event/detail/[id]/view-game-modal";
+import VoucherItem from "@/app/(subsystem)/counterpart/event/detail/[id]/view-voucher-item";
 import ViewVoucherModal from "@/app/(subsystem)/counterpart/event/detail/[id]/view-voucher-modal";
-import { VoucherAmount } from "@/app/(subsystem)/counterpart/event/new-event/page";
+import ImageGrid from "@/app/(subsystem)/counterpart/event/new-event/image-grid";
+
 import { MyEventDetailsSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import ErrorPage from "@/app/error";
 import { AnimationButton } from "@/components/shared/custom-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useCachedMyEventDetailQuery } from "@/lib/react-query/eventCache";
-import { getQueryParams, printTimeNoSecond } from "@/lib/utils";
-import { VoucherEventType } from "@/schema/event.schema";
-import { GameType } from "@/schema/game.schema";
-import { Calendar, Clock, Gamepad, Gamepad2, Info, Star, Ticket } from "lucide-react";
+import { defaultEventImage, defaultGameImage, getQueryParams, printTimeNoSecond } from "@/lib/utils";
+import { Calendar, Clock, Gamepad, Gamepad2, Info, LayoutGrid, Star, Ticket, Trash } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function EventDetails() {
     const [update, setUpdate] = useState<boolean>(false);
-    const eventId = getQueryParams<number>(useParams(), "id");
+    const eventId = getQueryParams<string>(useParams(), "id");
     const {
         data: myEventDetail,
         isLoading,
@@ -45,7 +48,7 @@ export default function EventDetails() {
         );
     }
     if (!isLoading && !myEventDetail) return <ErrorPage />;
-    const totalNumOfVouchers = myEventDetail!.vouchers.reduce((prev, curr) => prev + curr.amount, 0);
+
     return (
         <>
             <div className="flex items-center justify-between mb-6">
@@ -55,20 +58,38 @@ export default function EventDetails() {
                 <>
                     <div className="p-3 w-[90vw] sm:w-[80vw] lg:w-[60vw] mx-auto">
                         <div className="space-y-4 shadow-md border shadow-gray-100 rounded-md dark:bg-slate-800 bg-white mx-auto py-3">
-                            <div className="flex justify-center items-center w-[85%] md:w-[80%] h-64 sm:h-80 lg:h-96 overflow-hidden rounded-lg mx-auto">
+                            <div className="flex justify-center items-center w-[85%] md:w-[80%] h-64 sm:h-80 lg:h-96 overflow-hidden rounded-lg mx-auto border">
                                 <img
                                     src={myEventDetail!.image}
                                     alt={myEventDetail!.name}
                                     width={100}
                                     height={100}
-                                    className="w-full h-full border shadow-md"
+                                    className="w-full h-full border object-cover shadow-md rounded-lg"
                                 />
                             </div>
-                            <div className="px-4 sm:px-8 xl:px-12">
+                            <div className="px-4 sm:px-8 xl:px-12 border-t border-t-gray-200 pt-2">
                                 <div className="flex flex-col w-full space-y-2">
                                     <div className="text-xl sm:text-2xl font-thin">
                                         <b className="font-semibold">Event name:</b> {myEventDetail!.name}
                                     </div>
+                                    <div className="text-lg">
+                                        <b>Description: </b>
+                                        <span className="text-md">{myEventDetail!.description}</span>
+                                    </div>
+                                    <div className="text-lg">
+                                        <b>Status: </b>
+                                        <span className="text-md -translate-y-[.2rem] inline-block ml-1">
+                                            {getBadgeCSS(myEventDetail!.status)}
+                                        </span>
+                                    </div>
+                                    {myEventDetail?.status === "Rejected" && (
+                                        <div className="text-lg">
+                                            <b>Reason rejected: </b>
+                                            <span className="text-md text-red-600 dark:text-rose-500">
+                                                {myEventDetail!.comment}
+                                            </span>
+                                        </div>
+                                    )}
                                     <div className="flex items-center gap-1">
                                         <div className="flex flex-[1] flex-wrap">
                                             <div className="w-32">
@@ -110,13 +131,16 @@ export default function EventDetails() {
                                     <div className="space-y-1">
                                         <p className="flex items-center gap-1">
                                             <Ticket className="inline w-6" size={18} />
-                                            <b className="text-lg">Total vouchers:</b> {totalNumOfVouchers}
+                                            <b className="text-lg">Total vouchers:</b> {myEventDetail?.totalVouchers}
                                         </p>
                                         <div className="grid grid-col-1 md:grid-cols-2 gap-3">
-                                            {myEventDetail!.vouchers.map((item, index) => (
+                                            {myEventDetail!.voucherTypes.map((item, index) => (
                                                 <VoucherItem key={index} item={item} />
                                             ))}
                                         </div>
+                                        <p className="ml-3">
+                                            Publised vouchers: {myEventDetail?.totalPublishedVouchers}
+                                        </p>
                                     </div>
                                     <div className="space-y-1">
                                         <p className="flex items-center gap-1">
@@ -124,11 +148,24 @@ export default function EventDetails() {
                                             <b className="text-lg">Games:</b>
                                         </p>
                                         <div className="grid grid-col-1 md:grid-cols-2 gap-3">
-                                            {myEventDetail!.games.map((item, index) => (
-                                                <GameItem key={index} item={item} />
-                                            ))}
+                                            <RenderGameItemList itemList={myEventDetail!.games} />
                                         </div>
                                     </div>
+                                    {myEventDetail?.item && (
+                                        <div className="space-y-1">
+                                            <p className="flex items-center gap-1">
+                                                <LayoutGrid className="inline w-6" size={18} />
+                                                <b className="text-lg mr-2">Collection items:</b>
+                                                <span className={getBadge()}>{` ${
+                                                    myEventDetail!.item.numberPieces
+                                                } pieces`}</span>
+                                            </p>
+                                            <ImageGrid
+                                                imageUrl={myEventDetail.item.image || defaultEventImage}
+                                                items={myEventDetail.item.numberPieces}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <Separator />
@@ -164,58 +201,5 @@ export default function EventDetails() {
                 </>
             )}
         </>
-    );
-}
-
-function VoucherItem({ item }: { item: VoucherEventType }) {
-    return (
-        <div className="flex items-center bg-white dark:bg-black rounded-lg border border-gray-200">
-            <div className="p-2 basis-[5rem] h-[5rem]">
-                <img
-                    src={
-                        item.voucher.image
-                            ? item.voucher.image
-                            : "https://agencyvn.com/wp-content/uploads/2019/05/Voucher-l%C3%A0-g%C3%AC.jpg"
-                    }
-                    alt="Voucher image"
-                    className="w-full h-full object-cover border"
-                />
-            </div>
-            <div className="flex flex-[1] flex-col">
-                <p className="font-semibold text-md">
-                    Discount <span className="dynamic-text text-lg">{item.voucher.value}%</span>
-                </p>
-                <span className="text-xs line-clamp-2 min-h-[1.8rem]">{item.voucher.description}</span>
-                <span className="text-sm">
-                    Quantity: <b>{item.amount}</b>
-                </span>
-            </div>
-            <div className="flex items-center gap-4 px-3">
-                <ViewVoucherModal item={item}>
-                    <Info color="blue" strokeWidth={3} className="cursor-pointer" />
-                </ViewVoucherModal>
-            </div>
-        </div>
-    );
-}
-
-function GameItem({ item }: { item: GameType }) {
-    return (
-        <div className="flex items-center bg-white dark:bg-black rounded-lg border border-gray-200">
-            <div className="p-2 basis-[5rem] h-[5rem]">
-                <img src={item.image} alt="Voucher image" className="w-full h-full object-cover border" />
-            </div>
-            <div className="flex flex-[1] flex-col">
-                <p className="font-semibold text-md">
-                    <span className="dynamic-text text-lg">{item.name}</span>
-                </p>
-                <span className="text-xs line-clamp-3 min-h-[3rem]">{item.guide}</span>
-            </div>
-            <div className="flex items-center gap-4 px-3">
-                <ViewGameModal item={item}>
-                    <Info color="blue" strokeWidth={3} className="cursor-pointer" />
-                </ViewGameModal>
-            </div>
-        </div>
     );
 }

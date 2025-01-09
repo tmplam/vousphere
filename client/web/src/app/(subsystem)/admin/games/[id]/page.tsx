@@ -1,6 +1,6 @@
 "use client";
 
-import { GameInfoSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { GameInfoSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import UpdateGameForm from "@/app/(subsystem)/admin/games/[id]/update-game-form";
 import ErrorPage from "@/app/error";
@@ -22,7 +22,7 @@ export default function Game() {
     const [update, setUpdate] = useState<boolean>(false);
     const [showMore, setShowMore] = useState<boolean>(false);
     const gameId = getQueryParams<string>(useParams(), "id");
-    const { data: game, isLoading, isError, isPaused } = useCachedGameQuery(gameId); // Get query status
+    const { data: game, isLoading, isError, isPaused, refetch } = useCachedGameQuery(gameId); // Get query status
     if (isError || game === null) return <ErrorPage />;
     if (isLoading || isPaused || !game) return <GameInfoSkeleton />; // isLoading is true when api in queryFn was calling and data doesn't exist in cache
 
@@ -32,7 +32,13 @@ export default function Game() {
                 <>
                     <h1 className="text-2xl md:text-4xl font-bold text-gradient">Update game info</h1>
                     <div className="w-[70vw] mx-4 sm:w-sm md:w-sm lg:w-sm xl:w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto shadow-xl rounded-lg text-gray-900">
-                        <UpdateGameForm game={game} back={() => setUpdate(!update)} />
+                        <UpdateGameForm
+                            game={game}
+                            back={(refetchData: boolean) => {
+                                setUpdate(!update);
+                                if (refetchData) refetch();
+                            }}
+                        />
                     </div>
                 </>
             ) : (
@@ -42,10 +48,12 @@ export default function Game() {
                         <Card>
                             <CardContent className="py-4">
                                 <div className="flex flex-wrap gap-4 p-4 border shadow-slate-50 shadow-[0_3px_7px_rgb(0,0,0,0.2)] rounded-lg">
-                                    {/* Hình ảnh game */}
                                     <div className="flex flex-[1] basis-[200px] flex-shrink-0 w-full">
                                         <Image
-                                            src={game.image}
+                                            src={
+                                                game.image ||
+                                                "https://t4.ftcdn.net/jpg/04/42/21/53/360_F_442215355_AjiR6ogucq3vPzjFAAEfwbPXYGqYVAap.jpg"
+                                            }
                                             alt="Game image"
                                             className="h-64 w-full object-cover rounded-md"
                                             width={300} // Adjust to fit your layout
@@ -63,7 +71,7 @@ export default function Game() {
                                             <span className={getBadge()}>{game.type}</span>
                                         </p>
 
-                                        <div className="flex items-center">
+                                        {/* <div className="flex items-center">
                                             <b>Allow trading: </b>
                                             <Badge
                                                 className={`${
@@ -74,19 +82,14 @@ export default function Game() {
                                             >
                                                 {game.allowTrading ? "Allow" : "Not allow"}
                                             </Badge>
-                                        </div>
+                                        </div> */}
                                         <div className="">
                                             <b>Guide: </b>
                                             <div className="mt-2 border-l-4 border-gray-300 pl-4">
-                                                <p className={showMore ? "" : "line-clamp-3"}>
-                                                    {game.guide} Lorem ipsum dolor sit amet consectetur adipisicing
-                                                    elit. Quod, quis. Provident molestiae corporis nisi ea rem
-                                                    perferendis non eveniet dolorum quaerat libero eius, explicabo vel
-                                                    quos magni nobis natus tempora. Lorem ipsum dolor sit amet
-                                                    consectetur adipisicing elit. Repudiandae sunt deleniti saepe sint
-                                                    in quisquam rerum nostrum, minus aspernatur ipsam odit maxime illum
-                                                    velit voluptatibus architecto sed delectus accusantium quia?
-                                                </p>
+                                                <p
+                                                    dangerouslySetInnerHTML={{ __html: game.description }}
+                                                    className={showMore ? "" : "line-clamp-5"}
+                                                ></p>
                                                 <b
                                                     className="cursor-pointer flex gap-1 items-center"
                                                     onClick={() => setShowMore(!showMore)}

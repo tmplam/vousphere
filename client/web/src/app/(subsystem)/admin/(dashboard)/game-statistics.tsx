@@ -14,8 +14,8 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getCachedPlayTurnStatistic } from "@/lib/react-query/dashboardCache";
-import { PlayTurnSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { useCachedPlayTurnStatistic } from "@/lib/react-query/dashboardCache";
+import { PlayTurnSkeleton } from "@/app/(subsystem)/admin/skeletons";
 
 const chartConfig = {
     plays: {
@@ -33,7 +33,7 @@ const chartConfig = {
 
 export function PlayTurnStatistics() {
     const [time, setTime] = useState("today");
-    const { data: playTurnData, isLoading, isError, isPaused } = getCachedPlayTurnStatistic(time);
+    const { data: playTurnData, isLoading, isError, isPaused } = useCachedPlayTurnStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !playTurnData) return <PlayTurnSkeleton />;
     const totalPlays = playTurnData.reduce((acc, curr) => acc + curr.plays, 0);

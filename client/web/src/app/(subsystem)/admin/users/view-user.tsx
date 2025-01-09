@@ -1,5 +1,5 @@
-"use client";
-import { resolveRoleBadge } from "@/app/(subsystem)/admin/users/page";
+"use client"; 
+import { AnimationButton } from "@/components/shared/custom-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,11 +26,11 @@ export default function ViewUser({ children, user }: { children: React.ReactNode
                 <DialogTrigger asChild className="cursor-pointer">
                     {children}
                 </DialogTrigger>
-                <DialogContent className="max-w-[425px] sm:max-w-[600px]">
+                <DialogContent className="max-w-[425px] sm:max-w-[600px] border border-gray-200">
                     <DialogHeader>
                         <DialogTitle>User info</DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4">
+                    <div className="grid gap-4 border border-gray-200 rounded-lg">
                         <Card>
                             <CardContent className="grid p-4">
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
@@ -39,30 +39,28 @@ export default function ViewUser({ children, user }: { children: React.ReactNode
                                     <div className="font-medium">Email:</div>
                                     <div>{user.email}</div>
                                     <div className="font-medium">Phone:</div>
-                                    <div>{user.phone}</div>
+                                    <div>{user.phoneNumber || "N/A"}</div>
                                     <div className="font-medium">Role:</div>
-                                    <div className="flex gap-2 divide-x">
-                                        {user.roles.map((role) => resolveRoleBadge(role.name))}
-                                    </div>
+                                    <div className="flex gap-2 divide-x">{user.role}</div>
                                     <div className="font-medium">Status:</div>
                                     <div>
                                         <Badge
                                             variant={user.status ? "default" : "destructive"}
                                             className="rounded-full"
                                         >
-                                            {user.status ? "Active" : "Suspended"}
+                                            {user.status}
                                         </Badge>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="flex justify-center items-center gap-4">
-                        <Button className="bg-sky-600" onClick={() => handleActiveUser(user)}>
+                    <div className="flex justify-center items-center gap-5">
+                        <Button className="bg-sky-500 text-white text-md" onClick={() => handleActiveUser(user)}>
                             Activate user
                         </Button>
                         <Link href={`/admin/users/view/${user.id}`}>
-                            <Button className="bg-lime-600">View and Update</Button>
+                            <AnimationButton className="px-4 py-[.37rem]">View and Update</AnimationButton>
                         </Link>
                     </div>
                 </DialogContent>

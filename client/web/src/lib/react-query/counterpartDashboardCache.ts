@@ -1,9 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { commonOptions } from "@/lib/react-query/options";
-import { getCounterpartStatistics } from "@/apis/counterpart-api";
+import { getCounterpartStatistics } from "@/apis/counterpart-dashboard-api";
 
-export function getCachedCounterpartDataStatistic() {
+export function useCachedCounterpartDataStatistic() {
     return useQuery({
         queryKey: ["counterpart-statistic"],
         queryFn: () => {

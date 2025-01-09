@@ -10,6 +10,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const defaultAvatar = "https://wutheringlab.com/wp-content/uploads/Shorekeeper-icon.webp";
+export const defaultGameImage =
+    "https://t4.ftcdn.net/jpg/04/42/21/53/360_F_442215355_AjiR6ogucq3vPzjFAAEfwbPXYGqYVAap.jpg";
+export const defaultVoucherImage = "https://agencyvn.com/wp-content/uploads/2019/05/Voucher-l%C3%A0-g%C3%AC.jpg";
+export const defaultEventImage = "http://image.gmarket.co.kr/service_image/2020/01/28/20200128144035177873_0_0.jpg";
 export const isClient = () => typeof window !== "undefined";
 
 export const handleErrorApi = ({
@@ -21,6 +25,7 @@ export const handleErrorApi = ({
     setError?: UseFormSetError<any>;
     duration?: number;
 }) => {
+    console.log(error);
     if (error instanceof EntityError && setError) {
         error.payload.errors.forEach((item) => {
             setError(item.field, {

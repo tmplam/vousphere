@@ -2,8 +2,9 @@
 import EventCard from "@/app/(subsystem)/counterpart/event/event-card";
 import { MyEventsSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import ErrorPage from "@/app/error";
+import { ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
 import AnimationColorfulButton, { AnimationButton } from "@/components/shared/custom-button";
-import { useCachedMyEventQuery } from "@/lib/react-query/eventCache";
+import { useCachedEventListQuery } from "@/lib/react-query/eventCache";
 import { EventGameType } from "@/schema/event.schema";
 import { PartyPopper, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +12,14 @@ import { useState } from "react";
 
 export default function Event() {
     const [create, setCreate] = useState<boolean>(false);
-    const { data: myEvents, isLoading, isError, isFetching, isPaused, refetch } = useCachedMyEventQuery(1);
+    const {
+        data: myEvents,
+        isLoading,
+        isError,
+        isFetching,
+        isPaused,
+        refetch,
+    } = useCachedEventListQuery(ROLE_COUNTERPART);
     if (isError) return <ErrorPage />;
     // if (isFetching) console.log("Fetching subscription");
     // isLoading is true when api in queryFn was calling and data doesn't exist in cache
@@ -32,7 +40,7 @@ export default function Event() {
         );
     }
     if (!isLoading && !myEvents) return <ErrorPage />;
-    if (!isLoading && myEvents?.length === 0) {
+    if (!isLoading && myEvents?.data.length === 0) {
         return (
             <div>
                 <div className="flex items-center justify-between mb-6">
@@ -56,7 +64,7 @@ export default function Event() {
                 </AnimationButton>
             </div>
             <div className="flex flex-wrap gap-4 justify-center xl:justify-start">
-                {myEvents?.map((event, index) => (
+                {myEvents?.data!.map((event, index) => (
                     <Link key={index} href={`/counterpart/event/detail/${event.id}`} className="flex-grow-0">
                         <EventCard key={index} event={event} />
                     </Link>

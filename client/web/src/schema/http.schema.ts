@@ -4,18 +4,19 @@ export type NavigationType = {
 };
 
 export type ErrorResponse = {
-    status: number;
+    statusCode: number;
     message: string;
-    timestamp: Date;
-    path: string;
-    errorCode: string;
+    isSuccess: boolean;
+    data: any;
+    validationErrors: any;
 };
 
 export type SuccessResponse<T> = {
     statusCode: number;
     message: string;
+    isSuccess: boolean;
     data: T;
-    others: any;
+    validationErrors: any;
 };
 
 type EntityErrorPayload = {

@@ -1,11 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { GameType, UpdateGameRequestDTO, UpdateGameRequestSchema } from "@/schema/game.schema";
@@ -21,6 +18,9 @@ import "froala-editor/js/plugins/char_counter.min.js";
 import FroalaEditorComponent from "react-froala-wysiwyg";
 import { CircleX } from "lucide-react";
 import { AnimationButton } from "@/components/shared/custom-button";
+import { callUploadImage } from "@/apis/media-api";
+import { callUpdateGameRequest } from "@/apis/game-api";
+import { SelectGroup } from "@/components/ui/select";
 
 const options = {
     toolbarButtons: [
@@ -41,31 +41,74 @@ const options = {
     charCounterMax: 2000,
 };
 
-export default function UpdateGameForm({ game, back }: { game: GameType; back: () => void }) {
+export default function UpdateGameForm({ game, back }: { game: GameType; back: (refetchData: boolean) => void }) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const [image, setImage] = useState<File | null>(null);
+    const [imageId, setImageId] = useState<string | null>(null);
     const updateGameForm = useForm<UpdateGameRequestDTO>({
         resolver: zodResolver(UpdateGameRequestSchema),
         defaultValues: {
             name: game.name!,
-            allowTrading: game.allowTrading!,
-            type: game.type!,
-            guide: game.guide!,
+            imageId: game.imageId!,
+            // allowTrading: game.allowTrading!,
+            // type: game.type!,
+            description: game.description!,
         },
     });
+
+    async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (file) {
+            const result = await callUploadImage(file);
+            if (result?.isSuccess && result.statusCode == 200) {
+                setImageId(result.data.imageId);
+                setImage(file);
+            } else {
+                toast({
+                    title: "Error",
+                    description: "Failed to upload image. Please try again",
+                    variant: "destructive",
+                    duration: 2000,
+                });
+            }
+        } else {
+            setImage(null);
+            setImageId(null);
+            toast({
+                title: "Error",
+                description: "Upload image from local failed",
+                variant: "destructive",
+                duration: 2000,
+            });
+        }
+    }
+
     async function onSubmit(values: UpdateGameRequestDTO) {
         if (loading) return;
         setLoading(true);
         try {
-            console.log({ ...values, image: image });
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            toast({
-                description: "Login successfully",
-                duration: 2000,
-                className: "bg-lime-500 text-white",
-            });
-            back();
+            const payload = {
+                ...values,
+            };
+            if (imageId) {
+                payload.imageId = imageId;
+            }
+            const result = await callUpdateGameRequest(game.id, payload);
+            if (result.status == 204) {
+                toast({
+                    description: "Update game successfully",
+                    duration: 3000,
+                    className: "bg-lime-500 text-white",
+                });
+                back(true);
+            } else {
+                toast({
+                    description: "Unexpected error. Please try again",
+                    duration: 2000,
+                    className: "bg-lime-500 text-white",
+                });
+            }
         } catch (error: any) {
             handleErrorApi({
                 error,
@@ -80,8 +123,9 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
             <form onSubmit={updateGameForm.handleSubmit(onSubmit)} className="p-4" noValidate>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div className="image">
+                        <FormLabel className="dark:text-white">Game image</FormLabel>
                         <label
-                            htmlFor="uploadFile1"
+                            htmlFor="uploadGameImageFile"
                             className="text-gray-500 dark:text-white font-semibold text-base rounded max-w-md h-18 flex flex-col items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed mx-auto font-[sans-serif] py-2"
                         >
                             <div className="flex items-center gap-2">
@@ -103,12 +147,10 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                             </div>
                             <input
                                 type="file"
-                                id="uploadFile1"
+                                id="uploadGameImageFile"
                                 className="hidden"
                                 accept="image/*"
-                                onChange={(e) => {
-                                    setImage(e.target.files ? e.target.files[0] : null);
-                                }}
+                                onChange={handleUploadFile}
                                 value=""
                             />
                             <p className="text-xs font-medium text-gray-400">
@@ -120,6 +162,7 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                                 <img
                                     src={URL.createObjectURL(image)}
                                     alt="your image"
+                                    fetchPriority="high"
                                     className="object-cover mx-auto max-h-80"
                                 />
                                 <button
@@ -130,7 +173,18 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                                 </button>
                             </div>
                         ) : (
-                            <img src={game.image} alt="your image" className="mt-2 w-96 mx-auto border rounded-sm" />
+                            <>
+                                {game.image ? (
+                                    <img
+                                        src={game.image}
+                                        alt="your image"
+                                        fetchPriority="high"
+                                        className="mt-2 w-96 mx-auto border rounded-sm"
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </>
                         )}
                     </div>
                     <div className="info">
@@ -148,38 +202,30 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                                             className="!mt-0 border-gray-200 bg-white dark:bg-black dark:text-white "
                                         />
                                     </FormControl>
-                                    {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                        <div className="flex gap-3 items-center py-4">
+                            <FormLabel className="dark:text-white">Game type: </FormLabel>
+                            <select
+                                id="gameType"
+                                className="bg-white border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-28 p-1 dark:bg-black dark:placeholder-gray-400 dark:text-white"
+                                disabled
+                                defaultValue={game.type}
+                            >
+                                <option value={game.type}>{game.type}</option>
+                            </select>
+                        </div>
                         <FormField
                             control={updateGameForm.control}
-                            name="allowTrading"
-                            render={({ field }) => (
-                                <FormItem className="flex gap-3 items-center py-4">
-                                    <FormLabel className="dark:text-white">Allow Trading</FormLabel>
-                                    <FormControl>
-                                        {/* <Checkbox className="!mt-0" /> */}
-                                        <Checkbox
-                                            className="!mt-0"
-                                            checked={field.value ? true : false}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={updateGameForm.control}
-                            name="guide"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="dark:text-white">Guide</FormLabel>
                                     <FormControl>
                                         <Controller
-                                            name="guide"
+                                            name="description"
                                             rules={{ required: true }}
                                             control={updateGameForm.control}
                                             render={({ field }) => (
@@ -201,7 +247,7 @@ export default function UpdateGameForm({ game, back }: { game: GameType; back: (
                 <div className="!mt-5 flex justify-center items-center gap-6 ">
                     <Button
                         className="block text-base !py-0 cancel-btn-color"
-                        onClick={() => back()}
+                        onClick={() => back(false)}
                         variant="destructive"
                     >
                         Cancel

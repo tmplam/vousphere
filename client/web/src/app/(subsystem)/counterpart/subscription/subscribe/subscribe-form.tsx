@@ -15,6 +15,7 @@ import MapWithClick from "@/lib/leaflet/Map";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimationButton } from "@/components/shared/custom-button";
+import { callCreateSubscriptionRequest } from "@/apis/event-api";
 
 export function SubscriptionForm() {
     const [loading, setLoading] = useState(false);
@@ -25,22 +26,31 @@ export function SubscriptionForm() {
         defaultValues: {
             name: "Alysa Kendall",
             address: "123 Main Street, Anytown, USA",
+            phoneNumber: "1234567890",
+            domain: "food",
         },
     });
     async function onSubmit(values: SubscriptionRequestDTO) {
         if (loading) return;
         setLoading(true);
         try {
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
-            // const result = await authApiRequest.login(values);
-            console.log({ ...values });
-            toast({
-                description: "Login successfully",
-                duration: 2000,
-                className: "bg-lime-500 text-white",
-            });
-            createSubscriptionForm.reset();
-            router.push("/counterpart/subscription");
+            const result = await callCreateSubscriptionRequest(values);
+            if (result.status == 204) {
+                toast({
+                    description: "Subscribe successfully",
+                    duration: 2000,
+                    className: "bg-lime-500 text-white",
+                });
+                createSubscriptionForm.reset();
+                router.push("/counterpart/subscription");
+            } else {
+                toast({
+                    description: "Failed to subscribe. Please try again",
+                    variant: "destructive",
+                    duration: 3000,
+                    className: "bg-red-500 text-white",
+                });
+            }
         } catch (error: any) {
             handleErrorApi({
                 error,
@@ -73,6 +83,19 @@ export function SubscriptionForm() {
                 />
                 <FormField
                     control={createSubscriptionForm.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Phone number</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter phone number" {...field} className="!mt-0 border-gray-200" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={createSubscriptionForm.control}
                     name="address"
                     render={({ field }) => (
                         <FormItem>
@@ -85,14 +108,13 @@ export function SubscriptionForm() {
                                     className="!mt-0 border-gray-200"
                                 />
                             </FormControl>
-                            {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
                     control={createSubscriptionForm.control}
-                    name="areaId"
+                    name="domain"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Area</FormLabel>
@@ -103,12 +125,11 @@ export function SubscriptionForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent className="z-50 border-gray-200">
-                                    <SelectItem value="1">Food</SelectItem>
-                                    <SelectItem value="2">Drink</SelectItem>
-                                    <SelectItem value="3">Fashion</SelectItem>
+                                    <SelectItem value="food">Food</SelectItem>
+                                    <SelectItem value="drink">Drink</SelectItem>
+                                    <SelectItem value="fashion">Fashion</SelectItem>
                                 </SelectContent>
                             </Select>
-                            {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}

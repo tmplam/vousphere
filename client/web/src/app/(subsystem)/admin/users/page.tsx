@@ -31,48 +31,33 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import ViewUser from "@/app/(subsystem)/admin/users/view-user";
-import { UserType } from "@/schema/auth.schema";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCachedUserList } from "@/lib/react-query/userCache";
 import Loading from "@/app/loading";
 import { AnimationButton } from "@/components/shared/custom-button";
+import { toggleBlockUser } from "@/apis/user-api";
+import { getUserStatusBadge, resolveRoleBadge } from "@/app/(subsystem)/admin/users/user-status-badge";
 
-export const resolveRoleBadge = (role: string) => {
-    switch (role.toLowerCase()) {
-        case "admin":
-            return (
-                <Badge key="admin" variant="default">
-                    Admin
-                </Badge>
-            );
-        case "user":
-            return (
-                <Badge key="user" className="bg-amber-600 text-white">
-                    User
-                </Badge>
-            );
-        case "counterpart":
-            return (
-                <Badge key="counterpart" className="bg-blue-600 text-white">
-                    Counterpart
-                </Badge>
-            );
-        default:
-            return null;
-    }
-};
+const userRoleList = ["Admin", "Brand", "Player"];
 
 export default function UserManagement() {
-    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
     const { replace } = useRouter();
     const searchParams = useSearchParams();
     const currentPageNullable = searchParams.get("page");
+    const role = searchParams.get("role") || "";
+    const keyword = searchParams.get("keyword") || "";
     const currentPage = currentPageNullable ? parseInt(currentPageNullable) : 1;
     const { toast } = useToast();
-    const totalPages = 1;
-    const { data: currentUsers, isLoading, isError, isFetched, isPaused } = useCachedUserList(currentPage);
+    const {
+        data: currentUsers,
+        isLoading,
+        isError,
+        isFetched,
+        isPaused,
+        refetch,
+    } = useCachedUserList(currentPage, 5, keyword, role);
     if (isError) return <p>Something went wrong</p>;
     if (isLoading || isPaused || !currentUsers) return <Loading />; // Isloading is true when api in queryFn was calling and data doesn't exist in cache
     if (isFetched) {
@@ -83,22 +68,41 @@ export default function UserManagement() {
         const params = new URLSearchParams(searchParams);
         params.set("page", pageNumber.toString());
         const newUrl = `${pathname}?${params.toString()}`;
-        console.log(newUrl);
         replace(newUrl);
     };
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
+        const params = new URLSearchParams(searchParams);
+        params.set("keyword", e.target.value);
+        const newUrl = `${pathname}?${params.toString()}`;
+        replace(newUrl);
+    };
+
+    const resetAllFilter = () => {
+        const params = new URLSearchParams(searchParams);
+        params.delete("keyword");
+        params.delete("role");
+        const newUrl = `${pathname}?${params.toString()}`;
+        replace(newUrl);
     };
 
     async function handleStatusChange(id: string, status: boolean) {
         setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const result = await toggleBlockUser(id);
+        if (result?.statusCode !== 200) {
+            toast({
+                title: "Error",
+                description: result?.message,
+                className: "bg-red-500 text-white",
+            });
+        } else {
+            refetch();
+            toast({
+                title: "Success",
+                description: "User status updated successfully",
+                className: "bg-lime-500 text-white",
+            });
+        }
         setLoading(false);
-        toast({
-            title: "Success",
-            description: "User status updated successfully",
-            className: "bg-lime-500 text-white",
-        });
     }
     if (loading) {
         return (
@@ -107,6 +111,16 @@ export default function UserManagement() {
             </div>
         );
     }
+    const handleFilter = (role: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (role === "all") {
+            params.delete("role");
+        } else {
+            params.set("role", role);
+        }
+        const newUrl = `${pathname}?${params.toString()}`;
+        replace(newUrl);
+    };
 
     return (
         <div className="rounded-sm">
@@ -121,35 +135,41 @@ export default function UserManagement() {
             <div className="flex items-center justify-between my-2 gap-4">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="border-gray-200">
                             Sort by:
                             <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
-                        {/* <DropdownMenuItem>Role</DropdownMenuItem> */}
-
                         <DropdownMenuGroup>
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>Role</DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
                                     <DropdownMenuSubContent>
-                                        <DropdownMenuItem>Admin</DropdownMenuItem>
-                                        <DropdownMenuItem>Counterpart</DropdownMenuItem>
-                                        {/* <DropdownMenuSeparator /> */}
-                                        <DropdownMenuItem>User</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleFilter("")}>All</DropdownMenuItem>
+                                        {userRoleList.map((role) => (
+                                            <DropdownMenuItem key={role} onClick={() => handleFilter(role)}>
+                                                {role}
+                                            </DropdownMenuItem>
+                                        ))}
                                     </DropdownMenuSubContent>
                                 </DropdownMenuPortal>
                             </DropdownMenuSub>
                         </DropdownMenuGroup>
-                        <DropdownMenuItem>Name</DropdownMenuItem>
+                        {/* <DropdownMenuItem>Name</DropdownMenuItem> */}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                {(keyword || role) && (
+                    <Badge onClick={resetAllFilter} className="cursor-pointer px-2 py-1 cancel-btn-color text-white">
+                        Reset
+                    </Badge>
+                )}
                 <div className="relative w-full max-w-md">
                     <Input
                         type="text"
                         placeholder="Search..."
-                        className="pr-10 rounded-full " // Extra padding to accommodate the button
+                        className="pr-10 rounded-full border border-gray-200 bg-white dark:bg-black"
+                        defaultValue={keyword}
                         onChange={handleSearch}
                     />
                     <div className="absolute right-1 top-1/2 -translate-y-1/2 px-2">
@@ -157,7 +177,7 @@ export default function UserManagement() {
                     </div>
                 </div>
             </div>
-            <div className="overflow-x-auto rounded-md border bg-white dark:bg-slate-900">
+            <div className="overflow-x-auto rounded-md border bg-white dark:bg-slate-900 border-gray-200">
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-gray-200 hover:bg-gray-200 dark:bg-gray-800">
@@ -170,42 +190,33 @@ export default function UserManagement() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {currentUsers.length === 0 && (
-                            <TableCell colSpan={6} className="text-center">
-                                No users found
-                            </TableCell>
+                        {currentUsers.data.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center">
+                                    No user found
+                                </TableCell>
+                            </TableRow>
                         )}
-                        {currentUsers.map((user, index) => (
+                        {currentUsers.data.map((user, index) => (
                             <TableRow key={user.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell className="font-medium">{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <div className="flex gap-2">
-                                        {user.roles.map((role) => resolveRoleBadge(role.name))}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="content-center">
-                                    <Badge
-                                        variant={user.status ? "default" : "destructive"}
-                                        className={`rounded-full text-white ${user.status ? "bg-green-600" : ""}`}
-                                    >
-                                        {user.status ? "Active" : "Suspended"}
-                                    </Badge>
-                                </TableCell>
+                                <TableCell>{resolveRoleBadge(user.role)}</TableCell>
+                                <TableCell className="content-center">{getUserStatusBadge(user.status)}</TableCell>
                                 <TableCell className="flex gap-3">
                                     <Dialog>
                                         <DialogTrigger asChild className="cursor-pointer">
-                                            {user.status ? (
+                                            {user.status != "Blocked" ? (
                                                 <Ban size={24} strokeWidth={3} color="red" />
                                             ) : (
                                                 <LockKeyholeOpen size={24} strokeWidth={3} color="lime" />
                                             )}
                                         </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px]">
+                                        <DialogContent className="sm:max-w-[425px] border border-gray-200">
                                             <DialogHeader>
                                                 <DialogTitle>
-                                                    {user.status ? "Suspend account" : "Activate account"}
+                                                    {user.status != "Blocked" ? "Suspend account" : "Activate account"}
                                                 </DialogTitle>
                                                 <DialogDescription>
                                                     {user.status
@@ -216,7 +227,7 @@ export default function UserManagement() {
                                             <DialogFooter>
                                                 <DialogClose asChild>
                                                     <Button onClick={() => handleStatusChange(user.id, !user.status)}>
-                                                        {user.status ? "Suspend" : "Activate"}
+                                                        {user.status != "Blocked" ? "Suspend" : "Activate"}
                                                     </Button>
                                                 </DialogClose>
                                             </DialogFooter>
@@ -236,8 +247,8 @@ export default function UserManagement() {
             </div>
             <div className="flex items-center justify-center mt-3">
                 <CustomShadcnPagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
+                    currentPage={currentUsers.page}
+                    totalPages={currentUsers.totalPage}
                     onPageChange={handlePageChange}
                 />
             </div>

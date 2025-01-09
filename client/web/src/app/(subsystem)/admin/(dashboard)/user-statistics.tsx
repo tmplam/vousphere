@@ -5,8 +5,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { getCachedNewUsersStatistic } from "@/lib/react-query/dashboardCache";
-import { NewUserChartBarSkeleton } from "@/app/(subsystem)/admin/(dashboard)/skeletons";
+import { useCachedNewUsersStatistic } from "@/lib/react-query/dashboardCache";
+import { NewUserChartBarSkeleton } from "@/app/(subsystem)/admin/skeletons";
 
 const chartConfig = {
     views: {
@@ -24,7 +24,7 @@ const chartConfig = {
 
 export function NewUserStatistics() {
     const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("counterpart");
-    const { data: newUsersData, isLoading, isError, isPaused } = getCachedNewUsersStatistic("week");
+    const { data: newUsersData, isLoading, isError, isPaused } = useCachedNewUsersStatistic("week");
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !newUsersData) return <NewUserChartBarSkeleton />;
     const total = {

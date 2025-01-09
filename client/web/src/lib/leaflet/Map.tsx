@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer, Marker, useMap, ZoomControl, useMapEvents, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import { LatLngLiteral } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -43,4 +43,5 @@ const MapWithClick = memo(({ location, onChange }: { location?: number[]; onChan
     );
 });
 
+MapWithClick.displayName = "MapWithClick";
 export default MapWithClick;

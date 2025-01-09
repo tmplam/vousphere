@@ -37,6 +37,14 @@ export function SelectGameSkeleton() {
     );
 }
 
+export function GameItemSkeleton() {
+    return (
+        <>
+            <Skeleton className="h-24 w-56 rounded-full bg-gray-200 text-sm font-medium" />
+        </>
+    );
+}
+
 export function MyEventsSkeleton({ amount = 4 }: { amount?: number }) {
     return (
         <>

@@ -31,8 +31,7 @@ const userSlice: Slice<any> = createSlice({
         updateUser(state, action) {
             localStorage.removeItem(persistedStateName);
             state.user = state.user ? { ...state.user, ...action.payload } : { ...action.payload };
-            console.log(state);
-            localStorage.setItem(persistedStateName, JSON.stringify(state));
+            // localStorage.setItem(persistedStateName, JSON.stringify(state));
         },
         updateUserId(state, action) {
             console.log(action.payload);

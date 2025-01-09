@@ -6,9 +6,9 @@ import {
     getEventParticipantStatus,
     getNewRegisteredUsers,
     getPlayTurnStatistics,
-} from "@/apis/admin-api";
+} from "@/apis/admin-dashboard-api";
 
-export function getCachedAdminDataStatistic() {
+export function useCachedAdminDataStatistic() {
     return useQuery({
         queryKey: ["admin-statistic"],
         queryFn: () => {
@@ -19,7 +19,7 @@ export function getCachedAdminDataStatistic() {
     });
 }
 
-export function getCachedNewUsersStatistic(time: string) {
+export function useCachedNewUsersStatistic(time: string) {
     return useQuery({
         queryKey: ["new-users-statistic", time],
         queryFn: () => {
@@ -30,7 +30,7 @@ export function getCachedNewUsersStatistic(time: string) {
     });
 }
 
-export function getCachedEventStatusStatistic(time: string) {
+export function useCachedEventStatusStatistic(time: string) {
     return useQuery({
         queryKey: ["event-status-statistic", time],
         queryFn: () => {
@@ -41,7 +41,7 @@ export function getCachedEventStatusStatistic(time: string) {
     });
 }
 
-export function getCachedPlayTurnStatistic(time: string) {
+export function useCachedPlayTurnStatistic(time: string) {
     return useQuery({
         queryKey: ["play-turn-statistic", time],
         queryFn: () => {
