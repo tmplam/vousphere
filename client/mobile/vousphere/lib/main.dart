@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/LoginPage.dart';
 import 'package:vousphere/features/home/presentation/HomePage.dart';
+import 'package:vousphere/features/notification/NotificationPage.dart';
 import 'package:vousphere/features/profile/presentation/ProfilePage.dart';
 import 'package:vousphere/features/voucher/presentation/VoucherPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
@@ -86,7 +87,16 @@ class _MyMainPageState extends State<MyMainPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.notifications)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.notifications),
+              ),
             )
           ],
         ),
