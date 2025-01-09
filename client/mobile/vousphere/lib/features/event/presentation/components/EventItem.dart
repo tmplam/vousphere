@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
@@ -69,26 +70,43 @@ class EventItem extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             ),
+                            const SizedBox(height: 4,),
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.calendar_today, color: Colors.green, size: 15,),
-                                const SizedBox(width: 10),
+                                const Icon(Icons.date_range_rounded, color: Colors.green, size: 16,),
                                 Text(
-                                  event.startTime.toIso8601String(),
+                                  DateTimeUtils.getFormatMMMDD(event.startTime),
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(width: 8,),
+                                const Icon(Icons.access_time_outlined, color: Colors.green, size: 16,),
+                                Text(
+                                  DateTimeUtils.getFormatHHmm(event.startTime),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                const Icon(Icons.timer, color: Colors.redAccent, size: 15,),
-                                const SizedBox(width: 10),
-                                Text(
-                                  event.endTime.toIso8601String(),
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     const Icon(Icons.calendar_today, color: Colors.green, size: 15,),
+                            //     const SizedBox(width: 10),
+                            //     Text(
+                            //       event.startTime.toIso8601String(),
+                            //       style: const TextStyle(fontSize: 14),
+                            //     ),
+                            //   ],
+                            // ),
+                            // Row(
+                            //   children: [
+                            //     const Icon(Icons.timer, color: Colors.redAccent, size: 15,),
+                            //     const SizedBox(width: 10),
+                            //     Text(
+                            //       event.endTime.toIso8601String(),
+                            //       style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),

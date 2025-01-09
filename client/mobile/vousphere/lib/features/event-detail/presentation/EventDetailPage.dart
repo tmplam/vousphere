@@ -1,7 +1,11 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/game/QuizGame.dart';
 import 'package:vousphere/features/game/ShakeGame.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
 import 'package:vousphere/shared/widgets/VerticalSpacing.dart';
 
 class EventDetailPage extends StatelessWidget {
@@ -11,6 +15,9 @@ class EventDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -71,17 +78,23 @@ class EventDetailPage extends StatelessWidget {
             // Coupon
             Center(
               child: Image.network(
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5YCM6mpryXt6cLtYDLKvkjdBjmKyrv0uB1w&s",
+                event.image,
                 height: 160,
+                width: 400,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Image.network(
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5YCM6mpryXt6cLtYDLKvkjdBjmKyrv0uB1w&s",
+                    height: 160,
+                ),
               ),
             ),
             const SizedBox(height: 8),
             // Event Title
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                "2nd Exit At The Roundabout!",
-                style: TextStyle(
+                event.name,
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -90,68 +103,68 @@ class EventDetailPage extends StatelessWidget {
             const SizedBox(height: 8),
 
             // Event Title
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(Icons.videogame_asset, color: Colors.blue),
-                  SizedBox(width: 10),
-                  Text(
+                  const Icon(Icons.videogame_asset, color: Colors.blue),
+                  const SizedBox(width: 10),
+                  const Text(
                     "Remain Turn: ",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "1",
-                    style: TextStyle(fontSize: 16, color: Colors.red),
+                    '${userProvider.user.player?['numberOfPlays']}',
+                    style: const TextStyle(fontSize: 16, color: Colors.red),
                   ),
                 ],
               ),
             ),
             const VerticalSpacing(10),
             // Remain Voucher with Icon
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(Icons.card_giftcard, color: Colors.green),
-                  SizedBox(width: 10),
-                  Text(
+                  const Icon(Icons.card_giftcard, color: Colors.green),
+                  const SizedBox(width: 10),
+                  const Text(
                     "Remain Voucher: ",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "996",
-                    style: TextStyle(fontSize: 16),
+                    '${event.totalVouchers - event.totalPublishedVouchers}',
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
             const VerticalSpacing(10),
             // Date with Icon
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today, color: Colors.orange),
-                  SizedBox(width: 10),
+                  const Icon(Icons.calendar_today, color: Colors.orange),
+                  const SizedBox(width: 10),
                   Text(
-                    "Mon, 09 Jan 2023 13:40:41 GMT",
-                    style: TextStyle(fontSize: 16),
+                    DateTimeUtils.getFullString(event.startTime),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
             const VerticalSpacing(10),
             // Expiry Date with Icon
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(Icons.timer, color: Colors.redAccent),
-                  SizedBox(width: 10),
+                  const Icon(Icons.timer, color: Colors.redAccent),
+                  const SizedBox(width: 10),
                   Text(
-                    "Exp date: Tue, 28 Feb 2023 13:39:41 GMT",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    DateTimeUtils.getFullString(event.endTime),
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ],
               ),
@@ -165,11 +178,11 @@ class EventDetailPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.location_on, color: Colors.green),
                   const SizedBox(width: 10),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      "Phúc Long - Nha Trang",
+                      event.brand.address,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                   ),
                   TextButton(
@@ -197,15 +210,13 @@ class EventDetailPage extends StatelessWidget {
             const SizedBox(height: 8),
             // Related Vouchers Section
             SizedBox(
-              height: 100,
-              child: ListView(
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  _relatedVoucherCard("Starbucks Meeting",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5YCM6mpryXt6cLtYDLKvkjdBjmKyrv0uB1w&s"),
-                  _relatedVoucherCard("KFC Master Chef",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5YCM6mpryXt6cLtYDLKvkjdBjmKyrv0uB1w&s"),
-                ],
+                child: Row(
+                  children: event.voucherTypes.map(
+                          (voucher) => _relatedVoucherCard(voucher['remaining'], voucher['discount'])
+                  ).toList(),
+                ),
               ),
             ),
             const Divider(),
@@ -216,14 +227,11 @@ class EventDetailPage extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
-                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\n"
-                "It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n\n"
-                "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                style: TextStyle(fontSize: 16),
+                event.description,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             const SizedBox(height: 20),
@@ -349,24 +357,38 @@ class EventDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _relatedVoucherCard(String title, String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16.0),
-      width: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.grey.shade300,
-      ),
+  Widget _relatedVoucherCard(int remain, int discount) {
+    return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Image.network(imageUrl),
+          DottedBorder(
+            color: Colors.red,
+            strokeWidth: 1.5,
+            dashPattern: [4, 4],
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(8),
+            child: Container(
+              width: 150,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Center(
+                  child: Text(
+                    '$discount% OFF',
+                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 32, color: Colors.blue.shade700),
+                  )
+              ),
+            ),
+          )
+          ,
           const SizedBox(height: 8),
           Text(
-            title,
+            'Remain: $remain',
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 8),
         ],
       ),
     );

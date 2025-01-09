@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/core/constants/ApiConstants.dart';
+import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/OtpPage.dart';
 import 'package:vousphere/features/auth/presentation/components/AppLogo.dart';
@@ -106,6 +107,13 @@ class _LoginPageState extends State<LoginPage> {
           }
       );
       if(response.statusCode == 200) {
+        String role = response.data['data']['role'];
+        if(role.toLowerCase() != 'player') {
+          setState(() {
+            errorMessage = "Invalid email or password";
+          });
+          return;
+        }
         final accessToken = response.data['data']['accessToken'];
         await apiService.saveTokens(accessToken);
 
@@ -133,9 +141,6 @@ class _LoginPageState extends State<LoginPage> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.setIsAuthenticated(true);
     await userProvider.getUser();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   void register() async {
@@ -281,6 +286,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
