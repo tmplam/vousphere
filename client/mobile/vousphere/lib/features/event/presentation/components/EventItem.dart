@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class EventItem extends StatelessWidget {
   const EventItem({super.key, required this.event});
@@ -9,6 +11,9 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         height: 120,
@@ -64,20 +69,55 @@ class EventItem extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             ),
-                            Text(
-                              event.startTime.toIso8601String().substring(0, 10),
-                              style: const TextStyle(color: Colors.grey),
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today, color: Colors.green, size: 15,),
+                                const SizedBox(width: 10),
+                                Text(
+                                  event.startTime.toIso8601String(),
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Icon(Icons.timer, color: Colors.redAccent, size: 15,),
+                                const SizedBox(width: 10),
+                                Text(
+                                  event.endTime.toIso8601String(),
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      Container(
+                      userProvider.isFavorite(event.id)
+                      ? Container(
                           margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: Colors.red.shade50
+                              color: Colors.red.shade50,
                           ),
-                          child: IconButton(onPressed: () {}, icon: Icon(Icons.favorite, color: Colors.red,))
+                          child: IconButton(
+                              onPressed: () async {
+                                await userProvider.removeFromFavorite(event.id);
+                              },
+                              icon: const Icon(Icons.favorite, color: Colors.red)
+                          )
+                      )
+                      : Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                            onPressed: () async {
+                              await userProvider.addToFavorite(event.id);
+                            },
+                            icon: const Icon(Icons.favorite_outline, color: Colors.red),
+                          )
                       ),
                     ],
                   ),

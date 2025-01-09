@@ -10,4 +10,7 @@ class ApiConstants {
   static const String verifyEmail = "/user-service/api/users/verify-email";
   static const String resendOtp = "/user-service/api/users/resend-otp";
   static const String getEvents = "/event-service/api/events";
+  static const String getFavorite = "/user-service/api/users/favorites";
+  static const String addToFavorite = "/user-service/api/users/favorites";
+  static const String removeFromFavorite = "/user-service/api/users/favorites/:eventId";
 }

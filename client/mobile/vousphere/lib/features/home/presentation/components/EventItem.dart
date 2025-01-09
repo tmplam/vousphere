@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class EventItem extends StatelessWidget {
   const EventItem({super.key, required this.event});
@@ -9,6 +11,9 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       child: GestureDetector(
@@ -77,12 +82,30 @@ class EventItem extends StatelessWidget {
                     Positioned(
                       top: 8,
                       right: 8,
-                      child: Container(
+                      child: userProvider.isFavorite(event.id)
+                      ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: Colors.red.shade50
+                            color: Colors.red.shade50,
                           ),
-                          child: IconButton(onPressed: () {}, icon: Icon(Icons.favorite, color: Colors.red,))
+                          child: IconButton(
+                            onPressed: () async {
+                              userProvider.removeFromFavorite(event.id);
+                            },
+                            icon: const Icon(Icons.favorite, color: Colors.red,),
+                          )
+                      )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                              onPressed: () async {
+                                userProvider.addToFavorite(event.id);
+                              },
+                              icon: const Icon(Icons.favorite_border_outlined, color: Colors.red,),
+                          )
                       ),
                     ),
                   ],

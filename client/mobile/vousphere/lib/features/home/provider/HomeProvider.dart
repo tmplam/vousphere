@@ -39,7 +39,6 @@ class HomeProvider with ChangeNotifier {
                 response.data["data"]["data"].map((item) => Event.fromJson(item))
             )
         );
-
         notifyListeners();
       }
     }

@@ -10,8 +10,8 @@ class Event {
   DateTime endTime;
   Brand brand;
   List<Map<String, dynamic>> voucherTypes;
-  int totalVouchers;
-  int totalPublishedVouchers;
+  dynamic totalVouchers;
+  dynamic totalPublishedVouchers;
   List<Map<String, dynamic>> games;
   Map<String, dynamic>? item;
   bool isFavorite;
@@ -43,10 +43,10 @@ class Event {
       startTime: DateTime.parse(json['startTime']),
       endTime: DateTime.parse(json['endTime']),
       brand: Brand.fromJson(json['brand'] as Map<String, dynamic>),
-      voucherTypes: List<Map<String, dynamic>>.from(json['voucherTypes']),
-      totalVouchers: json['totalVouchers'] as int,
-      totalPublishedVouchers: json['totalPublishedVouchers'] as int,
-      games: List<Map<String, dynamic>>.from(json['games']),
+      voucherTypes: json['voucherTypes'] != null ? List<Map<String, dynamic>>.from(json['voucherTypes']) : [],
+      totalVouchers: json['totalVouchers'],
+      totalPublishedVouchers: json['totalPublishedVouchers'],
+      games: json['games'] != null ? List<Map<String, dynamic>>.from(json['games']) : [],
       item: json['item'],
       isFavorite: true,
     );

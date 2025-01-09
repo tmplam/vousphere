@@ -19,7 +19,6 @@ class EventDetailPage extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.bold, color: Colors.blue.shade700),
         ),
-        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
         leading: IconButton(
