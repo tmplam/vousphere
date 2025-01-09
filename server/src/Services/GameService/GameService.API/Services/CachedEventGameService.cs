@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace GameService.API.Services;
 
+
 public class CachedEventGameService(
     IEventGameService _eventGameService,
     IDistributedCache _cache) : IEventGameService
@@ -24,5 +25,19 @@ public class CachedEventGameService(
         await _cache.SetStringAsync(RedisCacheKeys.EventInfoKey(eventId), JsonSerializer.Serialize(eventInfo));
 
         return eventInfo;
+    }
+
+    public async Task<Quiz> GetQuizInfoAsync(Guid eventId, Guid quizId)
+    {
+        var cachedQuizInfo = await _cache.GetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId, quizId));
+
+        if (!string.IsNullOrEmpty(cachedQuizInfo))
+            return JsonSerializer.Deserialize<Quiz>(cachedQuizInfo)!;
+
+        var quizInfo = await _eventGameService.GetQuizInfoAsync(eventId, quizId);
+
+        await _cache.SetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId, quizId), JsonSerializer.Serialize(quizInfo));
+
+        return quizInfo;
     }
 }

@@ -3,6 +3,7 @@ using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using GameService.API.Hubs;
 using GameService.API.Services;
+using Quartz;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,28 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+
+// Background jobs
+builder.Services.AddQuartz(options =>
+{
+    options.UsePersistentStore(persistenceOptions =>
+    {
+        persistenceOptions.UsePostgres(cfg =>
+        {
+            cfg.ConnectionStringName = "Database";
+            cfg.TablePrefix = "quartz_scheduler.qrtz_";
+        },
+        dataSourceName: "GameDb");
+
+        persistenceOptions.UseNewtonsoftJsonSerializer();
+        persistenceOptions.UseProperties = true;
+    });
+});
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
+});
 
 // Add authentication and authorization
 builder.Services

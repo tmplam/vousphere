@@ -14,10 +14,10 @@ public class BrandRepository(ApplicationDbContext _dbContext) : IBrandRepository
         return await _dbContext.Set<Brand>().FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<List<Brand>> GetAllAsync(Expression<Func<Brand, bool>>? predicate = null)
+    public async Task<List<Brand>> GetAllAsync(Expression<Func<Brand, bool>> predicate, bool includeUser = false)
     {
-        return predicate == null
-            ? await _dbContext.Set<Brand>().ToListAsync()
-            : await _dbContext.Set<Brand>().Where(predicate).ToListAsync();
+        if (includeUser)
+            return await _dbContext.Set<Brand>().Include(b => b.User).Where(predicate).ToListAsync();
+        return await _dbContext.Set<Brand>().Where(predicate).ToListAsync();
     }
 }

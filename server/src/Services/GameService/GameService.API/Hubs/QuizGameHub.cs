@@ -1,23 +1,28 @@
 ﻿using BuildingBlocks.Shared.Constants;
+using GameService.API.Entities;
 using GameService.API.Services;
 using GameService.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
 namespace GameService.API.Hubs;
 
 
 [Authorize(Policy = AuthPolicy.Player)]
 public class QuizGameHub(
+    ILogger<QuizGameHub> _logger,
     IEventGameService _eventGameService,
     IDistributedCache _cache) : Hub<IQuizGameClient>
 {
     public override async Task OnConnectedAsync()
     {
         var eventIdString = Context.GetHttpContext()?.Request.Query["eventId"];
+        var quizIdString = Context.GetHttpContext()?.Request.Query["quizId"];
 
-        if (Guid.TryParse(eventIdString, out var eventId))
+        if (Guid.TryParse(eventIdString, out var eventId) &&
+            Guid.TryParse(quizIdString, out var quizId))
         {
             var eventGameInfo = await _eventGameService.GetEventInfoAsync(eventId);
 
@@ -85,6 +90,35 @@ public class QuizGameHub(
 
     public async Task SubmitAnswerAsync(string answer)
     {
-        //await Clients.Group(quizId.ToString()).SendAsync("ReceiveAnswer", userId, answer);
+        var eventIdString = Context.GetHttpContext()?.Request.Query["eventId"];
+        var quizIdString = Context.GetHttpContext()?.Request.Query["quizId"];
+        if (!Guid.TryParse(eventIdString, out var eventId) ||
+            !Guid.TryParse(quizIdString, out var quizId))
+        {
+            _logger.LogWarning("User submited wrong eventId and quizId");           
+            return;
+        }
+
+        var currentQuestionKey = RedisCacheKeys.CurrentQuizQuestionKey(eventId, quizId);
+        var questionIndexString = await _cache.GetStringAsync(currentQuestionKey);
+        if (string.IsNullOrEmpty(questionIndexString))
+        {
+            await Clients.Caller.ReceiveEventInfo("Error", "No active question.");
+            return;
+        }
+
+        int questionIndex = int.Parse(questionIndexString);
+        var quiz = await _eventGameService.GetQuizInfoAsync(eventId, quizId);
+        if (quiz == null || questionIndex >= quiz.Questions.Count)
+        {
+            await Clients.Caller.ReceiveEventInfo("Error", "Invalid question.");
+            return;
+        }
+
+        var question = quiz.Questions[questionIndex];
+
+        // Check the answer and send the result to the client
+        //bool isCorrect = question.CorrectAnswer == answer;
+        //await Clients.Caller.ReceiveQuestionAnswer(isCorrect);
     }
 }
