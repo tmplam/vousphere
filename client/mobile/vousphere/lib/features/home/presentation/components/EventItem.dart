@@ -36,6 +36,12 @@ class EventItem extends StatelessWidget {
                         height: 120,
                         width: 240,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                              fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                     Positioned(
@@ -50,7 +56,7 @@ class EventItem extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              event.day.day.toString(),
+                              event.startTime.day.toString(),
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -85,11 +91,15 @@ class EventItem extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Title
-                Text(
-                  event.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                SizedBox(
+                  width: 240,
+                  child: Text(
+                    event.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
 
@@ -99,32 +109,32 @@ class EventItem extends StatelessWidget {
                 Row(
                   children: [
                     const SizedBox(
-                      width: 100,
+                      width: 90,
                       child: Stack(
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                            backgroundImage: AssetImage('assets/icons/voucher-icon.png'),
                           ),
-                          Positioned(
-                            left: 25,
-                            child: CircleAvatar(
-                              radius: 16,
-                              backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                            ),
-                          ),
-                          Positioned(
-                            left: 50,
-                            child: CircleAvatar(
-                              radius: 16,
-                              backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                            ),
-                          ),
+                          // Positioned(
+                          //   left: 25,
+                          //   child: CircleAvatar(
+                          //     radius: 16,
+                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                          //   ),
+                          // ),
+                          // Positioned(
+                          //   left: 50,
+                          //   child: CircleAvatar(
+                          //     radius: 16,
+                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                     Text(
-                      '+${event.numberOfPeople} Going',
+                      '+${event.totalVouchers} Vouchers',
                       style: TextStyle(
                         color: Colors.blue.shade700,
                         fontWeight: FontWeight.bold,
@@ -144,7 +154,7 @@ class EventItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      event.address,
+                      event.brand.address ?? 'HCMC, Vietnam',
                     ),
                   ],
                 ),

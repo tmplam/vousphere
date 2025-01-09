@@ -48,6 +48,7 @@ flutter:
     - assets/icons/google-icon.png
     - assets/icons/flutter.png
     - assets/icons/giftbox.png
+    - assets/icons/voucher-icon.png
     - assets/start.mp4
     - assets/end.mp4
 

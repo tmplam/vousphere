@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:vousphere/features/event/presentation/EventPage.dart';
 
 class HomeSearchBox extends StatelessWidget {
-  const HomeSearchBox({super.key});
+  HomeSearchBox({super.key});
+
+  final FocusNode searchFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,17 @@ class HomeSearchBox extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.blue.shade700, width: 0.7)
               ),
             ),
+            focusNode: searchFocus,
+            onSubmitted: (value) {
+                searchFocus.unfocus();
+                if(value.trim().isEmpty) {
+                  return;
+                }
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => EventPage(keyword: value,),)
+                );
+            },
           ),
         ),
       ],

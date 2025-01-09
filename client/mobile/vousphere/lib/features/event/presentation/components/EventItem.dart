@@ -39,6 +39,12 @@ class EventItem extends StatelessWidget {
                     child: Image.network(
                       event.image,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                            fit: BoxFit.cover,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -59,7 +65,7 @@ class EventItem extends StatelessWidget {
                               maxLines: 2,
                             ),
                             Text(
-                              event.day.toIso8601String().substring(0, 10),
+                              event.startTime.toIso8601String().substring(0, 10),
                               style: const TextStyle(color: Colors.grey),
                             ),
                           ],
