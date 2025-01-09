@@ -160,6 +160,7 @@ services:
     depends_on:
       - gamedb
       - messagebroker
+      - gamedistributedcache
     ports:
       - "6003:8080"
 

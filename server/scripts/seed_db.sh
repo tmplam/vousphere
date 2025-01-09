@@ -7,6 +7,7 @@ set -e
 declare -A containers
 containers=(
     ["eventdb"]="EventDb"
+    ["gamedb"]="GameDb"
 )
 
 # Loop through each container and seed the database

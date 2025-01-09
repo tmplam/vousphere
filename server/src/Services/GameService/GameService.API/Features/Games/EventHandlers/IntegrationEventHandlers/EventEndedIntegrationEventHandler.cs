@@ -1,12 +1,16 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
 using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace GameService.API.Features.Games.EventHandlers.IntegrationEventHandlers;
 
-public class EventEndedIntegrationEventHandler : IConsumer<EventEndedIntegrationEvent>
+public class EventEndedIntegrationEventHandler(
+    ILogger<EventStartedIntegrationEventHandler> _logger,
+    IDistributedCache _cache,
+    IEventApi _eventService) : IConsumer<EventEndedIntegrationEvent>
 {
-    public Task Consume(ConsumeContext<EventEndedIntegrationEvent> context)
+    public async Task Consume(ConsumeContext<EventEndedIntegrationEvent> context)
     {
-        return Task.CompletedTask;
+        await _cache.RemoveAsync($"Event:{context.Message.EventId}");
     }
 }
