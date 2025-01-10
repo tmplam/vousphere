@@ -2,8 +2,11 @@
 
 public interface IQuizGameClient
 {
-    Task ReceiveEventInfo(string name, string description);
-    Task ReceiveQuizNumberOfPlayers(int numberOfPlayers);
-    Task ReceiveQuestion(Guid eventId, Guid quizId, string content);
-    Task ReceiveQuestionAnswer();
+    Task ReceiveQuizCountdown(int seconds);
+    Task ReceiveQuizInfo(QuizInfoDto quiz);
+    Task ReceiveQuizNumberOfPlayers(long numberOfPlayers);
+    Task ReceiveQuestion(int questionIndex);
+    Task ReceiveQuestionAnswer(int questionIndex, int correctOptionIndex);
+    Task ReceiveAnswerScore(QuizAnswerScoreDto score);
+    Task ReceiveQuizResult();
 }

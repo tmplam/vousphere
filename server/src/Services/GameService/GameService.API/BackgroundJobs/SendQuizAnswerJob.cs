@@ -1,13 +1,17 @@
 ﻿using GameService.API.Hubs;
 using GameService.API.Services;
+using GameService.API.Utilities;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using Quartz;
+using System.Text.Json;
 
 namespace GameService.API.BackgroundJobs;
 
 public class SendQuizAnswerJob(
     ILogger<SendQuizAnswerJob> _logger,
     IEventGameService _eventGameService,
+    IDistributedCache _cache,
     IHubContext<QuizGameHub, IQuizGameClient> _hubContext) : IJob
 {
     public async Task Execute(IJobExecutionContext context)
@@ -32,15 +36,29 @@ public class SendQuizAnswerJob(
 
         // Retrieve the quiz and question information from the database or cache
         var quiz = await _eventGameService.GetQuizInfoAsync(eventId, quizId);
+
         if (quiz == null || questionIndex >= quiz.Questions.Count)
         {
+            _logger.LogError("Quiz with id {quizId} not existed or question index {questionIndex} is out of range", quizId, questionIndex);
             return;
         }
 
         var question = quiz.Questions[questionIndex];
 
-        // Send the answer to all clients in the quiz group
-        await _hubContext.Clients.Group(eventId.ToString()).ReceiveQuestionAnswer();
+        var correctAnswer = question.Options
+            .Select((option, index) => new { option, index })
+            .FirstOrDefault(x => x.option.IsCorrect);
+
+        if (correctAnswer != null)
+        {
+            // Send the answer to all clients in the quiz group
+            await _hubContext.Clients.Group(eventId.ToString())
+                .ReceiveQuestionAnswer(questionIndex, correctAnswer.index);
+        }
+        else
+        {
+            _logger.LogError("Correct answer not found for question {questionIndex} in quiz {quizId}", questionIndex, quizId);
+        }
 
         // Schedule the job to send the next question
         if (questionIndex + 1 < quiz.Questions.Count)
@@ -64,6 +82,17 @@ public class SendQuizAnswerJob(
 
             var scheduler = context.Scheduler;
             await scheduler.ScheduleJob(nextQuestionJob, nextQuestionTrigger);
+        }
+        else
+        {
+            // Send the end of the quiz event to all clients in the quiz group
+            var scoresKey = RedisCacheKeys.EventQuizScoresKey(eventId);
+            var scoresString = await _cache.GetStringAsync(scoresKey);
+            var scores = string.IsNullOrEmpty(scoresString)
+                ? new QuizScoresDto()
+                : JsonSerializer.Deserialize<QuizScoresDto>(scoresString)!;
+
+            //await _hubContext.Clients.Group(eventId.ToString()).ReceiveQuizResult();
         }
     }
 }

@@ -4,6 +4,7 @@ using BuildingBlocks.Messaging.MassTransit;
 using GameService.API.Hubs;
 using GameService.API.Services;
 using Quartz;
+using StackExchange.Redis;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,10 +44,16 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Quiz>();
 }).UseLightweightSessions();
 
+// Register Redis connection multiplexer
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis")!, true);
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    //options.InstanceName = "Game"; // Differentiate different apps key
 });
 
 builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());

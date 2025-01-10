@@ -1,13 +1,17 @@
 ﻿using GameService.API.Hubs;
 using GameService.API.Services;
+using GameService.API.Utilities;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using Quartz;
+using System.Text.Json;
 
 namespace GameService.API.BackgroundJobs;
 
 public class SendQuizQuestionJob(
     ILogger<SendQuizQuestionJob> _logger,
     IEventGameService _eventGameService,
+    IDistributedCache _cache,
     IHubContext<QuizGameHub, IQuizGameClient> _hubContext) : IJob
 {
     public async Task Execute(IJobExecutionContext context)
@@ -37,10 +41,17 @@ public class SendQuizQuestionJob(
             return;
         }
 
-        var question = quiz.Questions[questionIndex];
+        //var question = quiz.Questions[questionIndex];
 
-        // Send the question to all clients in the quiz group
-        await _hubContext.Clients.Group(eventId.ToString()).ReceiveQuestion(eventId, quiz.Id, question.Content);
+        // Send the question index to all clients in the quiz group
+        await _hubContext.Clients.Group(eventId.ToString()).ReceiveQuestion(questionIndex);
+
+        var currentQuestion = new CurrentQuestionDto
+        {
+            Index = questionIndex,
+            StartTime = DateTimeOffset.UtcNow
+        };
+        await _cache.SetStringAsync(RedisCacheKeys.CurrentQuizQuestionKey(eventId), JsonSerializer.Serialize(currentQuestion));
 
         // Schedule the job to send the answer after the question duration
         var answerJobData = new JobDataMap

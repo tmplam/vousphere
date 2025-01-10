@@ -29,14 +29,14 @@ public class CachedEventGameService(
 
     public async Task<Quiz> GetQuizInfoAsync(Guid eventId, Guid quizId)
     {
-        var cachedQuizInfo = await _cache.GetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId, quizId));
+        var cachedQuizInfo = await _cache.GetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId));
 
         if (!string.IsNullOrEmpty(cachedQuizInfo))
             return JsonSerializer.Deserialize<Quiz>(cachedQuizInfo)!;
 
         var quizInfo = await _eventGameService.GetQuizInfoAsync(eventId, quizId);
 
-        await _cache.SetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId, quizId), JsonSerializer.Serialize(quizInfo));
+        await _cache.SetStringAsync(RedisCacheKeys.EventQuizInfoKey(eventId), JsonSerializer.Serialize(quizInfo));
 
         return quizInfo;
     }
