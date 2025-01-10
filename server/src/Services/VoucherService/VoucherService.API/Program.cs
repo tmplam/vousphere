@@ -1,4 +1,6 @@
 using BuildingBlocks.Cors;
+using BuildingBlocks.Messaging.MassTransit;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,8 @@ builder.Services.AddMarten(options =>
     options.Schema.For<ItemPiece>();
     options.Schema.For<Transaction>();
 }).UseLightweightSessions();
+
+builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
 builder.Services

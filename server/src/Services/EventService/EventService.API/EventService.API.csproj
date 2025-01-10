@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Events\EventHandlers\DomainEventHandlers\" />
+  </ItemGroup>
+
 </Project>

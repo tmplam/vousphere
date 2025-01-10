@@ -1,4 +1,6 @@
 using BuildingBlocks.Messaging.MassTransit;
+using MediaService.API.BackgroundJobs;
+using Quartz;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -37,6 +39,24 @@ builder.Services.AddScoped<IFileStorageService, AzureFileStorageService>(provide
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("AzureBlobStorage")!;
     return new AzureFileStorageService(connectionString);
+});
+
+// Background jobs
+builder.Services.AddQuartz(config =>
+{
+    var jobKey = new JobKey("clear-draft-medias-job");
+
+    config.AddJob<ClearDraftMediasJob>(opts => opts.WithIdentity(jobKey));
+
+    config.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("clear-draft-medias-job-trigger")
+        .WithCronSchedule("0 0 * * * ?")); // Runs every 1 hour
+});
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
 });
 
 // Add authentication and authorization
