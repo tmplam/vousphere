@@ -10,11 +10,9 @@ class Event {
   DateTime endTime;
   Brand brand;
   List<Map<String, dynamic>> voucherTypes;
-  dynamic totalVouchers;
-  dynamic totalPublishedVouchers;
+  int totalVouchers;
+  int totalPublishedVouchers;
   List<Map<String, dynamic>> games;
-  Map<String, dynamic>? item;
-  bool isFavorite;
 
   Event({
     required this.id,
@@ -29,50 +27,27 @@ class Event {
     required this.totalVouchers,
     required this.totalPublishedVouchers,
     required this.games,
-    required this.item,
-    required this.isFavorite,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      image: json['image'] as String,
-      status: json['status'] as String,
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      brand: Brand.fromJson(json['brand'] as Map<String, dynamic>),
-      voucherTypes: json['voucherTypes'] != null ? List<Map<String, dynamic>>.from(json['voucherTypes']) : [],
-      totalVouchers: json['totalVouchers'],
-      totalPublishedVouchers: json['totalPublishedVouchers'],
-      games: json['games'] != null ? List<Map<String, dynamic>>.from(json['games']) : [],
-      item: json['item'],
-      isFavorite: true,
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      image: json['image'] ?? '',
+      status: json['status'] ?? '',
+      startTime:
+          DateTime.parse(json['startTime'] ?? DateTime.now().toIso8601String()),
+      endTime:
+          DateTime.parse(json['endTime'] ?? DateTime.now().toIso8601String()),
+      brand: Brand.fromJson(json['brand'] ?? {}),
+      voucherTypes: List<Map<String, dynamic>>.from(
+          json['voucherTypes']?.map((item) => item as Map<String, dynamic>) ??
+              []), 
+      totalVouchers: json['totalVouchers'] ?? 0,
+      totalPublishedVouchers: json['totalPublishedVouchers'] ?? 0,
+      games: List<Map<String, dynamic>>.from(
+          json['games']?.map((item) => item as Map<String, dynamic>) ?? []),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'image': image,
-      'status': status,
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime.toIso8601String(),
-      'brand': brand.toJson(),
-      'voucherTypes': voucherTypes,
-      'totalVouchers': totalVouchers,
-      'totalPublishedVouchers': totalPublishedVouchers,
-      'games': games,
-      'item': item,
-      'isFavorite': isFavorite,
-    };
-  }
-
-  @override
-  String toString() {
-    return toJson().toString();
   }
 }

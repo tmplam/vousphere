@@ -5,10 +5,8 @@ import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/data/models/Event.dart';
 
 class EventProvider with ChangeNotifier {
-
   EventProvider({required this.keyword});
   String keyword;
-
 
   List<Event> events = [];
   bool isLoading = false;
@@ -21,6 +19,7 @@ class EventProvider with ChangeNotifier {
     isLoading = value;
     notifyListeners();
   }
+
   void clearListEvent() {
     events.clear();
     page = 1;
@@ -39,36 +38,27 @@ class EventProvider with ChangeNotifier {
   Future<void> loadEvent() async {
     // await Future.delayed(Duration(seconds: 3));
     try {
-      final response = await apiService.dio.get(
-          ApiConstants.getEvents,
+      final response = await apiService.dio.get(ApiConstants.getEvents,
           queryParameters: {
             "page": page,
             "perPage": 20,
             "keyword": keyword,
           },
-          options: Options(
-              extra: {
-                "requireToken": true,
-              }
-          )
-      );
-      if(response.statusCode == 200) {
+          options: Options(extra: {
+            "requireToken": true,
+          }));
+      if (response.statusCode == 200) {
         page = response.data["data"]["page"];
         totalPage = response.data["data"]["totalPage"];
         totalEvents = response.data["data"]["total"];
-        events.addAll(
-            List<Event>.from(
-                response.data["data"]["data"].map((item) => Event.fromJson(item))
-            )
-        );
+        events.addAll(List<Event>.from(
+            response.data["data"]["data"].map((item) => Event.fromJson(item))));
         setLoading(false);
         notifyListeners();
       }
-    }
-    catch(e) {
+    } catch (e) {
       print("Error when load event");
       print(e);
     }
-
   }
 }
