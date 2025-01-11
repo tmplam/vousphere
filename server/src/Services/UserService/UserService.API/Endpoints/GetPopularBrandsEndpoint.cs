@@ -1,5 +1,4 @@
 ﻿using UserService.Application.Dtos;
-using UserService.Application.Features.Users.Queries.GetBrands;
 using UserService.Application.Features.Users.Queries.GetPopularBrands;
 
 namespace UserService.API.Endpoints;

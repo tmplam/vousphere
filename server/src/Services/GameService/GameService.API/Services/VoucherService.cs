@@ -1,7 +1,17 @@
-﻿namespace GameService.API.Services;
+﻿using BuildingBlocks.Http.Dtos.Events;
+using BuildingBlocks.Messaging.IntegrationEvents;
+using GameService.API.Utilities;
+using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
+
+namespace GameService.API.Services;
+
 
 public class VoucherService(
-    IEventGameService _eventGameService,)
+    IEventGameService _eventGameService,
+    IPublishEndpoint _publishEndpoint,
+    IDistributedCache _cache)
     : IVoucherService
 {
     public async Task<GeneratedVoucher> DistributeVoucherAsync(Guid eventId, string gameId, Guid userId)
@@ -35,23 +45,25 @@ public class VoucherService(
 
         if (choices.Count > 0)
         {
-            return choices[random.Next(choices.Count)];
+            var selectedVoucher = choices[random.Next(choices.Count)];
+            await UpdateCacheAndSendIntegrationEventAsync(eventInfo, selectedVoucher, gameId, userId);
+            return selectedVoucher;
         }
 
         return new GeneratedVoucher();
     }
 
-    public async Task<List<GeneratedVoucher>> DistributeVoucherListAsync(Guid eventId, int quantity, string gameId)
+    public async Task<List<GeneratedVoucher>> DistributeVoucherListAsync(Guid eventId, string gameId, List<Guid> userIds)
     {
         var random = new Random();
 
         var eventInfo = await _eventGameService.GetEventInfoAsync(eventId);
         if (eventInfo == null)
-            return Enumerable.Repeat(new GeneratedVoucher(), quantity).ToList();
+            return Enumerable.Repeat(new GeneratedVoucher(), userIds.Count).ToList();
 
         var game = eventInfo.Games.FirstOrDefault(g => g.GameId == gameId);
         if (game == null)
-            return Enumerable.Repeat(new GeneratedVoucher(), quantity).ToList();
+            return Enumerable.Repeat(new GeneratedVoucher(), userIds.Count).ToList();
 
         var voucherTypes = eventInfo.VoucherTypes;
         var item = eventInfo.Item;
@@ -77,16 +89,69 @@ public class VoucherService(
         }
 
 
-        while (result.Count < quantity && choices.Count > 0)
+        while (result.Count < userIds.Count && choices.Count > 0)
         {
             var index = random.Next(choices.Count);
-            result.Add(choices[index]);
+            var selectedVoucher = choices[index];
+            result.Add(selectedVoucher);
             choices.RemoveAt(index);
+
+            // Update the cache and send integration event for each user
+            await UpdateCacheAndSendIntegrationEventAsync(
+                eventInfo, 
+                selectedVoucher, 
+                gameId, 
+                userIds[result.Count - 1]);
         }
 
-        while (result.Count < quantity)
+        while (result.Count < userIds.Count)
             result.Add(new GeneratedVoucher());
 
         return result;
+    }
+
+    private async Task UpdateCacheAndSendIntegrationEventAsync(
+        InternalEventInfoDto eventInfo, 
+        GeneratedVoucher selectedVoucher,
+        string gameId,
+        Guid userId)
+    {
+        if (selectedVoucher.VoucherTypeId.HasValue)
+        {
+            var voucherType = eventInfo.VoucherTypes.FirstOrDefault(vt => vt.Id == selectedVoucher.VoucherTypeId.Value);
+            if (voucherType != null)
+            {
+                voucherType.Remaining--;
+
+                // Update the cache
+                await _cache.SetStringAsync(RedisCacheKeys.EventInfoKey(eventInfo.EventId), JsonSerializer.Serialize(eventInfo));
+
+                // Send integration event
+                var voucherCreatedEvent = new VoucherCreatedIntegrationEvent
+                {
+                    VoucherId = Guid.NewGuid(),
+                    OwnerId = userId,
+                    EventId = eventInfo.EventId,
+                    GameId = gameId,
+                    Discount = voucherType.Discount,
+                    IssuedAt = DateTimeOffset.UtcNow,
+                };
+
+                await _publishEndpoint.Publish(voucherCreatedEvent);
+            }
+        }
+        else if (selectedVoucher.PieceIndex.HasValue)
+        {
+            // Send integration event
+            var itemPieceCreatedEvent = new ItemPieceCreatedIntegrationEvent
+            {
+                OwnerId = userId,
+                EventId = eventInfo.EventId,
+                GameId = gameId,
+                PieceIndex = selectedVoucher.PieceIndex.Value,
+            };
+
+            await _publishEndpoint.Publish(itemPieceCreatedEvent);
+        }
     }
 }

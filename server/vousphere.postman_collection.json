@@ -335,6 +335,40 @@
 							"response": []
 						},
 						{
+							"name": "Get popular brands",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/brands/popular?page=1&perPage=5&keyword=",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"brands",
+										"popular"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										},
+										{
+											"key": "keyword",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Get user by id",
 							"request": {
 								"method": "GET",
@@ -448,7 +482,7 @@
 							"response": []
 						}
 					],
-					"description": "**Admin account:**\n\n- [admin@gmail.com](https://mailto:admin@gmail.com)\n    \n- admin123@\n    \n\n**User status:**\n\n- _Created_\n    \n- _UpdateInfoRequired_ (for Brand after verifying email)\n    \n- _Verified_ (for Player after verifying email or Brand after updating Brand info)\n    \n- _Blocked_\n    \n\n**User role:**\n\n- Player\n    \n- Brand\n    \n- Admin"
+					"description": "**Admin account:**\n\n- [admin@gmail.com](https://mailto:admin@gmail.com)\n    \n- admin123@\n    \n\n**User status:**\n\n- _Created_\n    \n- _UpdateInfoRequired_ (for Brand after verifying email)\n    \n- _Verified_ (for Player after verifying email or Brand after updating Brand info)\n    \n- _Blocked_\n    \n\n**User role:**\n\n- _Player_\n    \n- _Brand_\n    \n- _Admin_"
 				},
 				{
 					"name": "Game",
@@ -821,6 +855,39 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Play game",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/game-service/api/games/:gameId/play?eventId=019439ae-a665-4847-b0fe-fe3064ff408c",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"game-service",
+										"api",
+										"games",
+										":gameId",
+										"play"
+									],
+									"query": [
+										{
+											"key": "eventId",
+											"value": "019439ae-a665-4847-b0fe-fe3064ff408c"
+										}
+									],
+									"variable": [
+										{
+											"key": "gameId",
+											"value": "shaking-game"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1112,7 +1179,7 @@
 							"response": []
 						}
 					],
-					"description": "Event status:\n\n- Created\n    \n- Pending\n    \n- Rejected\n    \n- Happening\n    \n- Ended"
+					"description": "**Event status:**\n\n- _Created_\n    \n- _Pending_\n    \n- _Rejected_\n    \n- _Happening_\n    \n- _Ended_"
 				},
 				{
 					"name": "Voucher",

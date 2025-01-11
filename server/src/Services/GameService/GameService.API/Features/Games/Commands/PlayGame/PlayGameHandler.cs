@@ -1,9 +1,6 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
 using GameService.API.Services;
-using GameService.API.Utilities;
 using MassTransit;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
 
 namespace GameService.API.Features.Games.Commands.PlayGame;
 
@@ -30,9 +27,8 @@ public class PlayGameHandler(
     IUserApi _userService,
     IClaimService _claimService,
     IVoucherService _voucherService,
-    IDistributedCache _cache,
-    IPublishEndpoint _publishEndpoint) : 
-    ICommandHandler<PlayGameCommand, PlayGameResult>
+    IPublishEndpoint _publishEndpoint) 
+    : ICommandHandler<PlayGameCommand, PlayGameResult>
 {
     public async Task<PlayGameResult> Handle(PlayGameCommand command, CancellationToken cancellationToken)
     {
@@ -52,31 +48,27 @@ public class PlayGameHandler(
         if (!remainedTurn)
             throw new BadRequestException("You have no turn to play game");
 
-        var voucher = await _voucherService.RandomVoucherAsync(eventInfo.EventId, game.GameId);
+        var userPlayedGameEvent = new UserPlayedGameIntegrationEvent
+        {
+            UserId = userId,
+            GameId = game.GameId,
+            EventId = eventInfo.EventId,
+            PlayedAt = DateTimeOffset.UtcNow
+        };
+
+        await _publishEndpoint.Publish(userPlayedGameEvent);
+        var voucher = await _voucherService.DistributeVoucherAsync(eventInfo.EventId, game.GameId, userId);
 
         if (voucher.VoucherTypeId.HasValue)
         {
-            var voucherType = eventInfo.VoucherTypes.FirstOrDefault(vt => vt.Id == voucher.VoucherTypeId);
-            voucherType!.Remaining--;
-            await _cache.SetStringAsync(RedisCacheKeys.EventInfoKey(eventInfo.EventId), JsonSerializer.Serialize(eventInfo));
-
-            var voucherCreatedMessage = new VoucherCreatedIntegrationEvent
-            {
-                OwnerId = userId,
-                EventId = eventInfo.EventId,
-                GameId = game.GameId,
-                VoucherId = voucherType.Id,
-                Discount = voucherType.Discount,
-                IssuedAt = DateTimeOffset.UtcNow
-            };
-            await _publishEndpoint.Publish(voucherCreatedMessage);
-
-            return new PlayGameResult(voucherType?.Discount);
+            var voucherType = eventInfo.VoucherTypes.FirstOrDefault(vt => vt.Id == voucher.VoucherTypeId.Value);
+            if (voucherType == null)
+                throw new BadRequestException("Voucher type not found");
+            return new PlayGameResult(voucherType.Discount, -1);
         }
-
-        if (voucher.PieceIndex.HasValue)
+        else if (voucher.PieceIndex.HasValue)
         {
-            return new PlayGameResult(null, voucher.PieceIndex.Value);
+            return new PlayGameResult(0, voucher.PieceIndex.Value);
         }
 
         return new PlayGameResult();
