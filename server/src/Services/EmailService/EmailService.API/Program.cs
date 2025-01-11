@@ -10,7 +10,7 @@ builder.Services.ConfigureOptions<EmailSenderOptionsSetup>();
 builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
 
 // Add database and message broker
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "email-service", Assembly.GetExecutingAssembly());
 
 // Add exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();

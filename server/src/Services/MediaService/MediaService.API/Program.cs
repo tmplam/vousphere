@@ -32,7 +32,7 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Media>();
 }).UseLightweightSessions();
 
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "media-service", Assembly.GetExecutingAssembly());
 
 builder.Services.AddScoped<IFileStorageService, AzureFileStorageService>(provider =>
 {

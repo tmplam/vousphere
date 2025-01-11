@@ -14,4 +14,5 @@ class ApiConstants {
   static const String addToFavorite = "/user-service/api/users/favorites";
   static const String removeFromFavorite =
       "/user-service/api/users/favorites/:eventId";
+  static const String getPopularBrand = '/user-service/api/brands/popular';
 }

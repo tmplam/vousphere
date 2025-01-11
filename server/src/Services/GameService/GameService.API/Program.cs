@@ -56,7 +56,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
 
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "game-service", Assembly.GetExecutingAssembly());
 
 // Background jobs
 builder.Services.AddQuartz(options =>

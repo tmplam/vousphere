@@ -10,27 +10,27 @@ class SignInWithGoogleButton extends StatelessWidget {
     clientId: 'client id'
   );
 
-  Future<void> getGoogleAuthToken() async {
-    try {
-      print('>>> hahahaha');
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      print('>>> account ${account}');
-      if (account != null) {
-        final GoogleSignInAuthentication auth = await account.authentication;
-        print('>>> idToken ${auth.idToken}');
-        print('>>> accessToken ${auth.idToken}');
-      }
-    } catch (error) {
-      print('Google Sign-In failed: $error');
-    }
-  }
+  // Future<void> getGoogleAuthToken() async {
+  //   try {
+  //     print('>>> hahahaha');
+  //     final GoogleSignInAccount? account = await _googleSignIn.signIn();
+  //     print('>>> account ${account}');
+  //     if (account != null) {
+  //       final GoogleSignInAuthentication auth = await account.authentication;
+  //       print('>>> idToken ${auth.idToken}');
+  //       print('>>> accessToken ${auth.idToken}');
+  //     }
+  //   } catch (error) {
+  //     print('Google Sign-In failed: $error');
+  //   }
+  // }
 
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        await getGoogleAuthToken();
+        // await getGoogleAuthToken();
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(5),

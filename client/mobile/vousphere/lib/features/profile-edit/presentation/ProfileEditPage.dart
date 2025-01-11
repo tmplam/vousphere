@@ -231,10 +231,18 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               children: [
                 ClipOval(
                   child: Image.network(
-                    user.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/022/385/025/small_2x/a-cute-surprised-black-haired-anime-girl-under-the-blooming-sakura-ai-generated-photo.jpg',
+                    user.image ?? '',
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/avatars/avatar0.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 20,),

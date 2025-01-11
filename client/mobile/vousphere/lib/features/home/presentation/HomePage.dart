@@ -5,6 +5,7 @@ import 'package:vousphere/features/home/presentation/components/EventList.dart';
 import 'package:vousphere/features/home/presentation/components/HomeFilter.dart';
 import 'package:vousphere/features/home/presentation/components/HomeSearchBox.dart';
 import 'package:vousphere/features/home/presentation/components/InviteFriendItem.dart';
+import 'package:vousphere/features/home/presentation/components/PopularBrandList.dart';
 import 'package:vousphere/features/home/provider/HomeProvider.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,7 +54,15 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10,),
                 const InviteFriendItem(),
                 const SizedBox(height: 10,),
-
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Popular brands', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                  ],
+                ),
+                const SizedBox(height: 4,),
+                const PopularBrandList(),
+                const SizedBox(height: 10,),
               ],
             ),
           ),

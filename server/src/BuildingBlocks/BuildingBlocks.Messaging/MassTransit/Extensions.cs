@@ -7,11 +7,15 @@ namespace BuildingBlocks.Messaging.MassTransit;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration, Assembly? assembly = null)
+    public static IServiceCollection AddMessageBroker(
+        this IServiceCollection services, 
+        IConfiguration configuration,
+        string serviceQueueName,
+        Assembly? assembly = null)
     {
         services.AddMassTransit(config =>
         {
-            config.SetKebabCaseEndpointNameFormatter();
+            config.SetEndpointNameFormatter(new DefaultEndpointNameFormatter(serviceQueueName, false));
 
             if (assembly is not null) config.AddConsumers(assembly);
 

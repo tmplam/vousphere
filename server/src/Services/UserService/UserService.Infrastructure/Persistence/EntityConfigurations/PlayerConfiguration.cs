@@ -14,6 +14,10 @@ internal sealed class PlayerConfiguration : IEntityTypeConfiguration<Player>
             .HasKey(u => u.UserId);
 
         builder
+            .Property(p => p.NumberOfPlays)
+            .HasDefaultValue(10);
+
+        builder
             .HasOne(p => p.User)
             .WithOne(u => u.Player)
             .HasForeignKey<Player>(p => p.UserId);

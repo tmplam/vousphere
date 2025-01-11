@@ -171,9 +171,10 @@ class EventItem extends StatelessWidget {
                 // Location
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.location_on,
                       size: 20,
+                      color: Colors.blue.shade700,
                     ),
                     const SizedBox(width: 4),
                     Text(
