@@ -88,3 +88,9 @@ export function printTimeNoSecond(date: Date) {
     const minuteLabel = minute > 9 ? minute : "0" + minute;
     return `${hourLabel}:${minuteLabel}`;
 }
+
+export const convertToVietnamTimezone = (datetime: string, timezone: number): string => {
+    const date = new Date(datetime);
+    date.setHours(date.getHours() + timezone);
+    return date.toISOString().slice(0, 16);
+};
