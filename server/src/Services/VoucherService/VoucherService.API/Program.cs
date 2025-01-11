@@ -1,3 +1,4 @@
+using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
@@ -46,15 +47,18 @@ builder.Services
 
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
-builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 // Add services
 builder.Services.AddScoped<IVoucherUtility, VoucherUtility>();
 
-
 // Add CORS
 builder.Services.AddAllowAllCors();
+
+
+builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
+
 
 
 var app = builder.Build();

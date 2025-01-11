@@ -26,6 +26,7 @@ public class ItemPieceCreatedIntegrationEventHandler(
             {
                 Id = Guid.NewGuid(),
                 OwnerId = context.Message.OwnerId,
+                BrandId = context.Message.BrandId,
                 EventId = context.Message.EventId,
                 GameId = context.Message.GameId,
                 PieceIndex = context.Message.PieceIndex,

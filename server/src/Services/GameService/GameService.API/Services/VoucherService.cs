@@ -138,6 +138,7 @@ public class VoucherService(
                 {
                     VoucherId = voucherType.Id,
                     OwnerId = userId,
+                    BrandId = eventInfo.BrandId,
                     EventId = eventInfo.EventId,
                     GameId = gameId,
                     Discount = voucherType.Discount,
@@ -154,6 +155,7 @@ public class VoucherService(
             {
                 OwnerId = userId,
                 EventId = eventInfo.EventId,
+                BrandId = eventInfo.BrandId,
                 GameId = gameId,
                 PieceIndex = selectedVoucher.PieceIndex.Value,
             };

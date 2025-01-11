@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Vouchers\Commands\" />
     <Folder Include="Vouchers\EventHandlers\DomainEventHandlers\" />
-    <Folder Include="Vouchers\Queries\" />
   </ItemGroup>
 
 </Project>

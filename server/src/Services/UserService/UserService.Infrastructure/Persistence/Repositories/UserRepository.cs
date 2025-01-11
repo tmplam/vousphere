@@ -1,8 +1,10 @@
-﻿using BuildingBlocks.Shared;
+﻿using BuildingBlocks.Auth.Enums;
+using BuildingBlocks.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using UserService.Application.Repositories;
 using UserService.Domain.Entities;
+using UserService.Domain.Enums;
 
 namespace UserService.Infrastructure.Persistence.Repositories;
 
@@ -39,6 +41,20 @@ public class UserRepository(ApplicationDbContext _dbContext) : IUserRepository
         if (includeBrand)
             query = query.Include(user => user.Brand);
 
+        var data = await query.Skip((page - 1) * perPage).Take(perPage).ToListAsync();
+
+        return PaginationResult<User>.Create(page, perPage, total, totalPages, data);
+    }
+
+    public async Task<PaginationResult<User>> GetBrandsAsync(Expression<Func<User, bool>> predicate, int page = 1, int perPage = 5)
+    {
+        var query = _dbContext.Set<User>()
+            .Where(u => u.Role == UserRole.Brand && u.Status == UserStatus.Verified)
+            .Include(user => user.Brand)
+            .Where(predicate);
+
+        var total = await query.CountAsync();
+        var totalPages = (int)Math.Ceiling(total / (double)perPage);
         var data = await query.Skip((page - 1) * perPage).Take(perPage).ToListAsync();
 
         return PaginationResult<User>.Create(page, perPage, total, totalPages, data);
