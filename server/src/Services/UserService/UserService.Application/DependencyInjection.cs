@@ -21,7 +21,7 @@ public static class DependencyInjection
         });
 
         // Add database and message broker
-        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
+        services.AddMessageBroker(configuration, "user-service", Assembly.GetExecutingAssembly());
 
         // Servives configuration
         services.ConfigureOptions<InternalServiceOptionsSetup>();

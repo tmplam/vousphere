@@ -43,6 +43,9 @@ public class VoucherService(
             for (var i = 0; i < item.NumberPieces; i++)
                 choices.Add(new GeneratedVoucher { PieceIndex = i });
 
+        // Shuffle the choice list
+        choices = choices.OrderBy(x => random.Next()).ToList();
+
         if (choices.Count > 0)
         {
             var selectedVoucher = choices[random.Next(choices.Count)];
@@ -85,9 +88,13 @@ public class VoucherService(
         if (game.PopUpItemsEnabled && item != null)
         {
             for (var i = 0; i < item.NumberPieces; i++)
-                choices.Add(new GeneratedVoucher { PieceIndex = i });
+                choices.AddRange(Enumerable.Repeat(
+                    new GeneratedVoucher { PieceIndex = i },
+                    10));
         }
 
+        // Shuffle the choice list
+        choices = choices.OrderBy(x => random.Next()).ToList();
 
         while (result.Count < userIds.Count && choices.Count > 0)
         {
@@ -129,7 +136,7 @@ public class VoucherService(
                 // Send integration event
                 var voucherCreatedEvent = new VoucherCreatedIntegrationEvent
                 {
-                    VoucherId = Guid.NewGuid(),
+                    VoucherId = voucherType.Id,
                     OwnerId = userId,
                     EventId = eventInfo.EventId,
                     GameId = gameId,

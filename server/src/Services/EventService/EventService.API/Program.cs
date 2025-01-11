@@ -35,7 +35,7 @@ builder.Services.AddMarten(options =>
         .NgramIndex(e => e.Description);
 }).UseLightweightSessions();
 
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "event-service", Assembly.GetExecutingAssembly());
 
 // Background jobs
 builder.Services.AddQuartz(options =>

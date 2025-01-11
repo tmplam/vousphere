@@ -33,7 +33,7 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Transaction>();
 }).UseLightweightSessions();
 
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "voucher-service", Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
 builder.Services

@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Users\EventHandlers\IntegrationEventHandlers\" />
     <Folder Include="Features\Users\EventHandlers\DomainEventHandlers\" />
   </ItemGroup>
 

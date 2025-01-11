@@ -42,7 +42,7 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Notification>();
 }).UseLightweightSessions();
 
-builder.Services.AddMessageBroker(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.AddMessageBroker(builder.Configuration, "notification-service", Assembly.GetExecutingAssembly());
 
 // Add authentication and authorization
 builder.Services
