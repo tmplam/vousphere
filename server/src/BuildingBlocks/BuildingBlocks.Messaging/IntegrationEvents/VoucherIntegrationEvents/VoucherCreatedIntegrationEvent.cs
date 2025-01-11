@@ -5,8 +5,7 @@ public class VoucherCreatedIntegrationEvent : IntegrationEvent
     public Guid VoucherId { get; set; }
     public Guid OwnerId { get; set; }
     public Guid EventId { get; set; }
-    public Guid GameId { get; set; }
+    public string GameId { get; set; } = string.Empty;
     public double Discount { get; set; }
-    public string Code { get; set; } = string.Empty;
     public DateTimeOffset IssuedAt { get; set; }
 }

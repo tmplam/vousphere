@@ -13,4 +13,7 @@ public interface IUserApi
 
     [Get("/api/users/favorites/{eventId}/user-ids")]
     Task<List<Guid>> GetFavoriteUserIdsAsync(Guid eventId);
+
+    [Get("/api/users/{userId}/check-remain-turn")]
+    Task<bool> CheckUserRemainTurnAsync(Guid userId);
 }

@@ -1,6 +1,7 @@
 using BuildingBlocks.Cors;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
+using VoucherService.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,11 @@ builder.Services
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
+
+
+// Add services
+builder.Services.AddScoped<IVoucherUtility, VoucherUtility>();
+
 
 // Add CORS
 builder.Services.AddAllowAllCors();

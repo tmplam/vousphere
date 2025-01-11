@@ -41,6 +41,10 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
         RuleFor(e => e.VoucherTypes)
             .NotEmpty().WithMessage("Event must have at least one voucher");
 
+        RuleFor(e => e.VoucherTypes)
+            .Must(types => types.Select(t => t.Discount).Distinct().Count() == types.Count)
+            .WithMessage("Voucher types must have unique discount");
+
         RuleForEach(e => e.VoucherTypes).ChildRules(voucher =>
         {
             voucher.RuleFor(v => v.Discount)

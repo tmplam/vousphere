@@ -99,6 +99,9 @@ builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
 
 builder.Services.AddMediaServiceClient();
 builder.Services.AddEventServiceClient();
+builder.Services.AddUserServiceClient();
+
+builder.Services.AddScoped<IVoucherService, VoucherService>();
 
 builder.Services.AddScoped<IEventGameService, EventGameService>();
 builder.Services.Decorate<IEventGameService, CachedEventGameService>(); // Decorate
