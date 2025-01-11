@@ -1,5 +1,6 @@
 ﻿using UserService.Application.Dtos;
 using UserService.Application.Features.Users.Queries.GetBrands;
+using UserService.Application.Features.Users.Queries.GetPopularBrands;
 
 namespace UserService.API.Endpoints;
 
@@ -17,9 +18,9 @@ public class GetPopularBrandsEndpoint : ICarterModule
             [AsParameters] GetBrandsRequest request,
             ISender sender) =>
         {
-            var query = request.Adapt<GetBrandsQuery>();
+            var query = request.Adapt<GetPopularBrandsQuery>();
             var result = await sender.Send(query);
-            var response = result.Adapt<GetBrandsResponse>();
+            var response = result.Adapt<GetPopularBrandsResponse>();
             return Results.Ok(ApiResult.Success(response.Brands));
         });
     }
