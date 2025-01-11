@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/LoginPage.dart';
 import 'package:vousphere/features/home/presentation/HomePage.dart';
+import 'package:vousphere/features/location/LocationPage.dart';
 import 'package:vousphere/features/notification/NotificationPage.dart';
 import 'package:vousphere/features/profile/presentation/ProfilePage.dart';
 import 'package:vousphere/features/voucher/presentation/VoucherPage.dart';
@@ -51,7 +52,7 @@ class _MyMainPageState extends State<MyMainPage> {
   static const List<Widget> pageOptions = <Widget>[
     HomePage(),
     VoucherPage(),
-    Center(child: Text('Location')),
+    LocationPage(),
     ProfilePage(),
   ];
 
