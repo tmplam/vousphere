@@ -47,9 +47,9 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
     );
     const [totalItem, setTotalItem] = useState<string>(event.item?.numberPieces.toString() || "4");
     const [errorVouchers, setErrorVouchers] = useState("");
-    const [startTime, setStartTime] = useState(formatFullToSimpleDateTime(event.startTime));
+    const [startTime, setStartTime] = useState(formatFullToSimpleDateTime(new Date(event.startTime).toJSON()));
     const [errorStartTime, setErrorStartTime] = useState("");
-    const [endTime, setEndTime] = useState(formatFullToSimpleDateTime(event.endTime));
+    const [endTime, setEndTime] = useState(formatFullToSimpleDateTime(new Date(event.endTime).toJSON()));
     const [errorEndTime, setErrorEndTime] = useState("");
     const [gamesAndQuizzes, setGamesAndQuizzes] = useState<GameQuizType[]>([]);
     const [errorGames, setErrorGames] = useState("");
