@@ -154,8 +154,8 @@ const EventForm = () => {
             name,
             description,
             imageId,
-            startTime,
-            endTime,
+            startTime: new Date(startTime).toJSON(),
+            endTime: new Date(endTime).toJSON(),
             voucherTypes: vouchers,
             games: gamesAndQuizzes.map((eachGame) => {
                 return {

@@ -1,6 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BellRing } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 
 /* Khiem workspace - notification icon on top right of the header */
 

@@ -72,7 +72,7 @@ export function printDateTime(date: Date) {
 export function printTime(date: Date) {
     if (!date) return "";
     const hour = date.getHours();
-    const hourLabel = hour > 12 ? hour : "0" + hour;
+    const hourLabel = hour > 9 ? hour : "0" + hour;
     const minute = date.getMinutes();
     const minuteLabel = minute > 9 ? minute : "0" + minute;
     const second = date.getSeconds();

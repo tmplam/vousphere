@@ -186,8 +186,8 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
             name,
             description,
             imageId: imageId ? imageId : event.imageId,
-            startTime,
-            endTime,
+            startTime: new Date(startTime).toJSON(),
+            endTime: new Date(endTime).toJSON(),
             voucherTypes: vouchers,
             games: gamesAndQuizzes.map((eachGame) => {
                 return {

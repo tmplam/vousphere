@@ -63,9 +63,9 @@ export default function Event() {
                     <PartyPopper />
                 </AnimationButton>
             </div>
-            <div className="flex flex-wrap gap-4 justify-center xl:justify-start">
+            <div className="flex flex-wrap lg:gap-x-6 gap-y-4 justify-center xl:justify-start pb-10">
                 {myEvents?.data!.map((event, index) => (
-                    <Link key={index} href={`/counterpart/event/detail/${event.id}`} className="flex-grow-0">
+                    <Link key={index} href={`/counterpart/event/detail/${event.id}`} className="">
                         <EventCard key={index} event={event} />
                     </Link>
                 ))}

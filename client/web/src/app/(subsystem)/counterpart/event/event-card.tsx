@@ -6,11 +6,11 @@ import { Calendar, Clock, Star, Ticket } from "lucide-react";
 
 const EventCard = ({ event }: { event: EventGameType }) => {
     return (
-        <div className="min-w-[290px] max-w-80 dark:bg-slate-800 rounded-xl border border-gray-200 overflow-hidden mx-auto">
+        <div className="w-[21rem] sm:w-[23rem] lg:w-[23rem] dark:bg-slate-800 rounded-xl border border-gray-200 overflow-hidden mx-auto flex-[1]">
             <img className="w-full h-48 object-cover border-b border-b-gray-200" src={event.image} alt="Event image" />
             <div className="p-3 pt-2 bg-slate-200 dark:bg-slate-800 space-y-1">
                 <h2 className="text-xl font-semibold mb-2 line-clamp-2 min-h-14">{event.name}</h2>
-                <div className="flex gap-1">
+                <div className="flex gap-6 sm:gap-4">
                     <div className="w-28">
                         <div className="flex items-center gap-1 ">
                             <Star className="inline w-6" size={18} />
@@ -28,7 +28,7 @@ const EventCard = ({ event }: { event: EventGameType }) => {
                         </div>
                     </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-6 sm:gap-4">
                     <div className="w-28">
                         <div className="flex items-center gap-1">
                             <Star className="inline w-6" size={18} />
