@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vousphere/data/models/Brand.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/home/presentation/components/EventItem.dart';
 import 'package:vousphere/features/home/provider/HomeProvider.dart';

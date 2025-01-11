@@ -51,6 +51,15 @@ flutter:
     - assets/icons/flutter.png
     - assets/icons/giftbox.png
     - assets/icons/voucher-icon.png
+    - assets/brands/brand1.jpg
+    - assets/brands/brand2.jpg
+    - assets/brands/brand3.jpg
+    - assets/brands/brand4.jpg
+    - assets/brands/brand0.jpg
+    - assets/avatars/avatar0.png
+    - assets/avatars/avatar1.png
+    - assets/avatars/avatar2.png
+    - assets/avatars/avatar3.png
     - assets/start.mp4
     - assets/end.mp4
 
