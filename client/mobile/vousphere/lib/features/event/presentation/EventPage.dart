@@ -1,44 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/features/event/presentation/components/SearchBox.dart';
 import 'package:vousphere/features/event/presentation/components/EventList.dart';
+import 'package:vousphere/features/event/presentation/components/TotalEvent.dart';
+import 'package:vousphere/features/event/provider/EventProvider.dart';
 
-class EventPage extends StatefulWidget {
-  const EventPage({super.key});
+class EventPage extends StatelessWidget {
+  const EventPage({super.key, required this.keyword});
 
-  @override
-  State<EventPage> createState() => _EventPageState();
-}
+  final String keyword;
 
-class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'Events',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+    return ChangeNotifierProvider(
+      create: (_) => EventProvider(keyword: keyword),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            'Events',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: Column(
-          children: [
-            SizedBox(height: 10,),
-            SearchBox(),
-            SizedBox(height: 10,),
-            Expanded(child: EventList())
-          ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            children: [
+              const SizedBox(height: 10,),
+              SearchBox(),
+              const SizedBox(height: 10,),
+              const TotalEvent(),
+              const SizedBox(height: 10,),
+              const Expanded(child: EventList())
+            ],
+          ),
         ),
       ),
     );

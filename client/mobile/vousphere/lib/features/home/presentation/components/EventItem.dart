@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class EventItem extends StatelessWidget {
   const EventItem({super.key, required this.event});
@@ -9,6 +11,9 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       child: GestureDetector(
@@ -36,6 +41,12 @@ class EventItem extends StatelessWidget {
                         height: 120,
                         width: 240,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                              fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                     Positioned(
@@ -50,7 +61,7 @@ class EventItem extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              event.day.day.toString(),
+                              event.startTime.day.toString(),
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -71,12 +82,30 @@ class EventItem extends StatelessWidget {
                     Positioned(
                       top: 8,
                       right: 8,
-                      child: Container(
+                      child: userProvider.isFavorite(event.id)
+                      ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: Colors.red.shade50
+                            color: Colors.red.shade50,
                           ),
-                          child: IconButton(onPressed: () {}, icon: Icon(Icons.favorite, color: Colors.red,))
+                          child: IconButton(
+                            onPressed: () async {
+                              userProvider.removeFromFavorite(event.id);
+                            },
+                            icon: const Icon(Icons.favorite, color: Colors.red,),
+                          )
+                      )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                              onPressed: () async {
+                                userProvider.addToFavorite(event.id);
+                              },
+                              icon: const Icon(Icons.favorite_border_outlined, color: Colors.red,),
+                          )
                       ),
                     ),
                   ],
@@ -85,11 +114,15 @@ class EventItem extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Title
-                Text(
-                  event.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                SizedBox(
+                  width: 240,
+                  child: Text(
+                    event.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
 
@@ -99,32 +132,32 @@ class EventItem extends StatelessWidget {
                 Row(
                   children: [
                     const SizedBox(
-                      width: 100,
+                      width: 90,
                       child: Stack(
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                            backgroundImage: AssetImage('assets/icons/voucher-icon.png'),
                           ),
-                          Positioned(
-                            left: 25,
-                            child: CircleAvatar(
-                              radius: 16,
-                              backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                            ),
-                          ),
-                          Positioned(
-                            left: 50,
-                            child: CircleAvatar(
-                              radius: 16,
-                              backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                            ),
-                          ),
+                          // Positioned(
+                          //   left: 25,
+                          //   child: CircleAvatar(
+                          //     radius: 16,
+                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                          //   ),
+                          // ),
+                          // Positioned(
+                          //   left: 50,
+                          //   child: CircleAvatar(
+                          //     radius: 16,
+                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                     Text(
-                      '+${event.numberOfPeople} Going',
+                      '+${event.totalVouchers} Vouchers',
                       style: TextStyle(
                         color: Colors.blue.shade700,
                         fontWeight: FontWeight.bold,
@@ -144,7 +177,7 @@ class EventItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      event.address,
+                      event.brand.address ?? 'HCMC, Vietnam',
                     ),
                   ],
                 ),

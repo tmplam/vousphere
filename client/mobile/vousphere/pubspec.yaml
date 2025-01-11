@@ -29,6 +29,8 @@ dependencies:
   just_audio: ^0.9.18
   video_player: ^2.2.19
   intl: ^0.17.0
+  dotted_border: ^2.0.0
+  glassmorphism: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +50,7 @@ flutter:
     - assets/icons/google-icon.png
     - assets/icons/flutter.png
     - assets/icons/giftbox.png
+    - assets/icons/voucher-icon.png
     - assets/start.mp4
     - assets/end.mp4
 
