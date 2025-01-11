@@ -11,4 +11,5 @@ public enum NotificationType
     EventRejected = 6,
     GameUpdated = 7,
     VoucherReceived = 8,
+    ItemPieceReceived = 9,
 }
