@@ -21,6 +21,7 @@ public class VoucherCreatedIntegrationEventHandler(
             code = _voucherUtility.GenerateVoucherCode();
         }
 
+        var IssuedAt = DateTimeOffset.UtcNow;
         var voucher = new Voucher
         {
             Id = Guid.NewGuid(),
@@ -30,8 +31,8 @@ public class VoucherCreatedIntegrationEventHandler(
             GameId = context.Message.GameId,
             Code = code,
             Discount = context.Message.Discount,
-            IssuedAt = context.Message.IssuedAt,
-            ExpiredAt = context.Message.IssuedAt.AddDays(30)
+            IssuedAt = IssuedAt,
+            ExpiredAt = IssuedAt.AddDays(30)
         };
 
         _session.Store(voucher);

@@ -9,4 +9,5 @@ public class ItemPiece
     public string GameId { get; set; } = null!;
     public int PieceIndex { get; set; }
     public int Count { get; set; }
+    public DateTimeOffset IssuedAt { get; set; } = DateTimeOffset.UtcNow;
 }

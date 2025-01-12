@@ -8,14 +8,14 @@ namespace VoucherService.API.Vouchers.Queries.GetUserVouchers;
 
 public record GetUserVouchersQuery(
     int Page = 1,
-    int PerPage = 10) : IQuery<GetUserVoucherResult>;
-public record GetUserVoucherResult(PaginationResult<Voucher> Vouchers);
+    int PerPage = 10) : IQuery<GetUserVouchersResult>;
+public record GetUserVouchersResult(PaginationResult<Voucher> Vouchers);
 
 public class GetUserVouchersHandler(
     IDocumentSession _session,
-    IClaimService _claimService) : IQueryHandler<GetUserVouchersQuery, GetUserVoucherResult>
+    IClaimService _claimService) : IQueryHandler<GetUserVouchersQuery, GetUserVouchersResult>
 {
-    public async Task<GetUserVoucherResult> Handle(GetUserVouchersQuery query, CancellationToken cancellationToken)
+    public async Task<GetUserVouchersResult> Handle(GetUserVouchersQuery query, CancellationToken cancellationToken)
     {
         var userId = Guid.Parse(_claimService.GetUserId());
 
@@ -27,7 +27,7 @@ public class GetUserVouchersHandler(
             .OrderByDescending(v => v.IssuedAt)
             .ToPagedListAsync(query.Page, query.PerPage, cancellationToken);
 
-        return new GetUserVoucherResult(
+        return new GetUserVouchersResult(
             PaginationResult<Voucher>.Create(
                 vouchers.PageNumber,
                 vouchers.PageSize,

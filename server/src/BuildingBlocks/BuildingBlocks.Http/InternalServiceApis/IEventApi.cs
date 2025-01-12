@@ -13,4 +13,7 @@ public interface IEventApi
 
     [Get("/api/events/{eventId}/internal-info")]
     Task<InternalEventInfoDto> GetInternalEventInfoAsync(Guid eventId);
+
+    [Post("/api/events/events-info")]
+    Task<Dictionary<Guid, EventInfoDto>> GetEventsInfoAsync(params IEnumerable<Guid> eventIds);
 }
