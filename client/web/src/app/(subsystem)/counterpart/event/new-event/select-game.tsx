@@ -88,11 +88,11 @@ export default function SelectGameModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="max-w-[90vw] sm:max-w-85 md:max-w-[75vw] lg:max-w-[70vw] xl:max-w-[65vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
+            <DialogContent className="max-w-[90vw] sm:max-w-85 md:max-w-[75vw] lg:max-w-[70vw] xl:max-w-[65vw] max-h-[93vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
                 <DialogHeader>
                     <DialogTitle className="text-center text-2xl">SELECT GAME</DialogTitle>
                 </DialogHeader>
-                <div className="w-full overflow-y-auto py-4">
+                <div className="w-full overflow-y-auto pb-4">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 h-[30vh] p-3">
                         <RenderGameQuizList
                             gameQuizList={gameQuizList}
@@ -102,7 +102,7 @@ export default function SelectGameModal({
                             setQuizCollection={setQuizCollection}
                         />
                     </div>
-                    <div className="flex justify-center items-center mt-20">
+                    <div className="flex justify-center items-center mt-28">
                         <AnimationColorfulButton className="py-[.37rem] px-3" type="submit" onClick={handleAddingGames}>
                             Add games
                         </AnimationColorfulButton>

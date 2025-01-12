@@ -182,6 +182,8 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                 ? { imageId: event.item!.imageId, numberPieces: event.item!.numberPieces.toString() }
                 : null
             : null;
+        const startIn2min = new Date(startTime);
+        startIn2min.setMinutes(startIn2min.getMinutes() + 2);
         const eventData = {
             name,
             description,
@@ -193,6 +195,7 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                 return {
                     gameId: eachGame.game!.id,
                     popUpItemsEnabled: eachGame.popUpItemsEnabled,
+                    startTime: startIn2min.toJSON(),
                     quizzCollectionId: eachGame.quiz?.id || null,
                 };
             }),
