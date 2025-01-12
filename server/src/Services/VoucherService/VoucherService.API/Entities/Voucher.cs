@@ -12,7 +12,7 @@ public class Voucher
     public double Discount { get; set; }
     public string Code { get; set; } = string.Empty;
     public VoucherStatus Status { get; set; } = VoucherStatus.Active;
-    public DateTimeOffset IssuedAt { get; set; }
+    public DateTimeOffset IssuedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset ExpiredAt { get; set; }
     public DateTimeOffset? RedeemedAt { get; set; } = null;
 }

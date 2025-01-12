@@ -22,6 +22,7 @@ public class ItemPieceCreatedIntegrationEventHandler(
         }
         else
         {
+            var IssueAt = DateTimeOffset.UtcNow;
             var itemPiece = new ItemPiece
             {
                 Id = Guid.NewGuid(),
@@ -30,6 +31,7 @@ public class ItemPieceCreatedIntegrationEventHandler(
                 EventId = context.Message.EventId,
                 GameId = context.Message.GameId,
                 PieceIndex = context.Message.PieceIndex,
+                IssuedAt = IssueAt,
                 Count = 1
             };
             _session.Store(itemPiece);

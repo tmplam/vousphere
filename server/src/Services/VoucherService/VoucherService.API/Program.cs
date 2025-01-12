@@ -1,5 +1,7 @@
 using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
+using BuildingBlocks.Http.InternalServiceApis;
+using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
 using VoucherService.API.Services;
@@ -49,6 +51,13 @@ builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+
+// Internal servives call configuration
+builder.Services.ConfigureOptions<InternalServiceOptionsSetup>();
+
+builder.Services.AddMediaServiceClient();
+builder.Services.AddEventServiceClient();
+builder.Services.AddUserServiceClient();
 
 // Add services
 builder.Services.AddScoped<IVoucherUtility, VoucherUtility>();
