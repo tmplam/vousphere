@@ -161,7 +161,7 @@ const EventForm = () => {
                 return {
                     gameId: eachGame.game!.id,
                     popUpItemsEnabled: eachGame.popUpItemsEnabled,
-                    quizzCollectionId: eachGame.quiz?.id,
+                    quizzCollectionId: eachGame.quiz?.id || null,
                 };
             }),
             item: collectItem,
