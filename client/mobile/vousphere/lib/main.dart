@@ -5,6 +5,7 @@ import 'package:vousphere/features/auth/presentation/LoginPage.dart';
 import 'package:vousphere/features/home/presentation/HomePage.dart';
 import 'package:vousphere/features/location/LocationPage.dart';
 import 'package:vousphere/features/notification/NotificationPage.dart';
+import 'package:vousphere/features/notification/provider/NotificationProvider.dart';
 import 'package:vousphere/features/profile/presentation/ProfilePage.dart';
 import 'package:vousphere/features/voucher/presentation/VoucherPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
@@ -15,10 +16,19 @@ void main() async {
   ApiService apiService = ApiService();
   await apiService.init();
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => UserProvider(apiService),
-    child: const MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(apiService),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationProvider(apiService),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -90,7 +100,11 @@ class _MyMainPageState extends State<MyMainPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const NotificationPage(),
+                      builder: (context) => ChangeNotifierProvider.value(
+                        value: Provider.of<NotificationProvider>(context,
+                            listen: true),
+                        child: const NotificationPage(),
+                      ),
                     ),
                   );
                 },

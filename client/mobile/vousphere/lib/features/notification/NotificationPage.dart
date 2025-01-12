@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:vousphere/data/models/Notification.dart';
+import 'package:vousphere/features/notification/provider/NotificationProvider.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -9,145 +12,47 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  late List<Map<String, dynamic>> _notifications;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _notifications = [
-      {
-        'id': 'guid-1',
-        'type': 'GAME_EVENT',
-        'title': 'New Game Event: Lucky Shake 🎮',
-        'message':
-            'Coffee House just launched a new shake game event with prizes up to 500K VND',
-        'data': {
-          'eventId': 'evt-123',
-          'brandName': 'Coffee House',
-          'startTime':
-              DateTime.now().add(const Duration(hours: 2)).toIso8601String(),
-          'endTime':
-              DateTime.now().add(const Duration(days: 7)).toIso8601String(),
-          'totalPrizes': '500.000 VND',
-          'gameType': 'SHAKE_GAME',
-        },
-        'createdAt': DateTime.now()
-            .subtract(const Duration(minutes: 5))
-            .toIso8601String(),
-        'isSeen': false,
-        'priority': 'high',
-      },
-      {
-        'id': 'guid-2',
-        'type': 'VOUCHER_RECEIVED',
-        'title': 'Congratulations! New Voucher Received 🎁',
-        'message': 'You won a 50% discount voucher from Pizza Express',
-        'data': {
-          'voucherId': 'VC789012',
-          'brandName': 'Pizza Express',
-          'value': '50%',
-          'expiryDate':
-              DateTime.now().add(const Duration(days: 30)).toIso8601String(),
-          'qrCode': 'qr_data_here',
-          'usageType': 'OFFLINE',
-          'status': 'ACTIVE'
-        },
-        'createdAt':
-            DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
-        'isSeen': false,
-        'priority': 'high',
-      },
-      {
-        'id': 'guid-3',
-        'type': 'ITEM_GIFT',
-        'title': 'New Gift Received! 🎉',
-        'message':
-            'Your friend Minh has sent you a Gold Token for the Lucky Draw game',
-        'data': {
-          'fromUser': 'Minh',
-          'fromUserId': 'user123',
-          'itemId': 'item789',
-          'itemName': 'Gold Token',
-          'gameId': 'game456',
-          'gameName': 'Lucky Draw'
-        },
-        'createdAt':
-            DateTime.now().subtract(const Duration(hours: 5)).toIso8601String(),
-        'isSeen': true,
-        'priority': 'medium',
-      },
-      {
-        'id': 'guid-4',
-        'type': 'GAME_TURNS',
-        'title': 'Free Game Turns! 🎮',
-        'message': 'You received 5 free game turns for sharing on Facebook',
-        'data': {
-          'turnsReceived': 5,
-          'reason': 'FACEBOOK_SHARE',
-          'totalTurns': 15,
-          'gameId': 'game456',
-          'gameName': 'Lucky Draw'
-        },
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-        'isSeen': true,
-        'priority': 'low',
-      },
-      {
-        'id': 'guid-5',
-        'type': 'VOUCHER_EXPIRING',
-        'title': 'Voucher Expiring Soon! ⚠️',
-        'message': 'Your Coffee House voucher will expire in 24 hours',
-        'data': {
-          'voucherId': 'VC123456',
-          'brandName': 'Coffee House',
-          'value': '100.000 VND',
-          'expiryDate':
-              DateTime.now().add(const Duration(days: 1)).toIso8601String(),
-          'qrCode': 'qr_data_here',
-          'usageType': 'OFFLINE',
-          'status': 'ACTIVE'
-        },
-        'createdAt':
-            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
-        'isSeen': true,
-        'priority': 'high',
-      },
-    ];
-  }
 
-  void _markAsSeen(String notificationId) {
-    setState(() {
-      final index = _notifications.indexWhere((n) => n['id'] == notificationId);
-      if (index != -1) {
-        _notifications[index] = {
-          ..._notifications[index],
-          'isSeen': true,
-        };
+    // Load initial notifications
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<NotificationProvider>();
+      provider.clearNotifications();
+      provider.loadNotifications();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationProvider>().loadNotifications();
+    });
+
+    // Add scroll listener for pagination
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        final provider = context.read<NotificationProvider>();
+        if (provider.page < provider.totalPage && !provider.isLoading) {
+          provider.page++;
+          provider.loadNotifications();
+        }
       }
     });
   }
 
-  void _markAllAsSeen() {
-    setState(() {
-      _notifications = _notifications
-          .map((notification) => {
-                ...notification,
-                'isSeen': true,
-              })
-          .toList();
-    });
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  void _deleteNotification(String notificationId) {
-    setState(() {
-      _notifications.removeWhere((n) => n['id'] == notificationId);
-    });
+  void _handleNotificationTap(NotificationModel notification) {
+    context.read<NotificationProvider>().markAsSeen(notification.id);
+    _showNotificationDialog(notification);
   }
 
-  void _handleNotificationTap(Map<String, dynamic> notification) {
-    _markAsSeen(notification['id']);
-
+  void _showNotificationDialog(NotificationModel notification) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -173,14 +78,14 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                   child: Row(
                     children: [
-                      _buildNotificationIcon(notification['type']),
+                      _buildNotificationIcon(notification.type),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              notification['title'],
+                              notification.title,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -188,7 +93,8 @@ class _NotificationPageState extends State<NotificationPage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              _formatDate(notification['createdAt']),
+                              _formatDate(
+                                  notification.createdAt.toIso8601String()),
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 12,
@@ -197,7 +103,8 @@ class _NotificationPageState extends State<NotificationPage> {
                           ],
                         ),
                       ),
-                      _buildPriorityBadge(notification['priority']),
+                      _buildPriorityBadge(
+                          notification.data['priority'] ?? 'low'),
                     ],
                   ),
                 ),
@@ -206,7 +113,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    notification['message'],
+                    notification.message,
                     style: const TextStyle(
                       fontSize: 16,
                       height: 1.5,
@@ -239,7 +146,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      ...notification['data'].entries.map((entry) => Padding(
+                      ...notification.data.entries.map((entry) => Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,79 +229,116 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   PreferredSizeWidget _buildAppBar() {
-    final unreadCount = _notifications.where((n) => !n['isSeen']).length;
-
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.white,
-      title: Row(
-        children: [
-          const Text(
-            'Notifications',
-            style: TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w600,
-              fontSize: 24,
-            ),
-          ),
-          if (unreadCount > 0) ...[
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.blue[600],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$unreadCount',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+      title: Consumer<NotificationProvider>(
+        builder: (context, provider, child) {
+          final unreadCount =
+              provider.notifications.where((n) => !n.isSeen).length;
+
+          return Row(
+            children: [
+              const Text(
+                'Notifications',
+                style: TextStyle(
+                  color: Colors.black87,
                   fontWeight: FontWeight.w600,
+                  fontSize: 24,
                 ),
               ),
-            ),
-          ],
-        ],
+              if (unreadCount > 0) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[600],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '$unreadCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          );
+        },
       ),
       actions: [
-        if (unreadCount > 0)
-          TextButton.icon(
-            icon: const Icon(Icons.done_all, color: Colors.blue),
-            label: const Text(
-              '',
-              style: TextStyle(color: Colors.blue),
-            ),
-            onPressed: _markAllAsSeen,
-          ),
-        IconButton(
-          icon: const Icon(Icons.filter_list, color: Colors.black87),
-          onPressed: () {
-            // Handle filter
+        Consumer<NotificationProvider>(
+          builder: (context, provider, child) {
+            final unreadCount =
+                provider.notifications.where((n) => !n.isSeen).length;
+
+            return Row(
+              children: [
+                if (unreadCount > 0)
+                  TextButton.icon(
+                    icon: const Icon(Icons.done_all, color: Colors.blue),
+                    label: const Text(
+                      '',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onPressed: () => provider.markAllAsSeen(),
+                  ),
+                IconButton(
+                  icon: const Icon(Icons.filter_list, color: Colors.black87),
+                  onPressed: () {
+                    // Handle filter
+                  },
+                  tooltip: 'Filter notifications',
+                ),
+              ],
+            );
           },
-          tooltip: 'Filter notifications',
         ),
       ],
     );
   }
 
   Widget _buildBody() {
-    return _notifications.isEmpty
-        ? _buildEmptyState()
-        : RefreshIndicator(
-            onRefresh: () async {
-              // Handle refresh
-              await Future.delayed(const Duration(seconds: 1));
+    return Consumer<NotificationProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading && provider.notifications.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (provider.notifications.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            provider.clearNotifications();
+            await provider.loadNotifications();
+          },
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemCount:
+                provider.notifications.length + (provider.isLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == provider.notifications.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              return _buildNotificationCard(
+                  context, provider.notifications[index]);
             },
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: _notifications.length,
-              itemBuilder: (context, index) {
-                final notification = _notifications[index];
-                return _buildNotificationCard(context, notification);
-              },
-            ),
-          );
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildEmptyState() {
@@ -427,7 +371,7 @@ class _NotificationPageState extends State<NotificationPage> {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
-              // Handle refresh
+              context.read<NotificationProvider>().loadNotifications();
             },
             icon: const Icon(Icons.refresh),
             label: const Text('Refresh'),
@@ -444,131 +388,72 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Widget _buildNotificationCard(
-      BuildContext context, Map<String, dynamic> notification) {
-    return Dismissible(
-      key: Key(notification['id']),
-      background: _buildDismissBackground(),
-      secondaryBackground: _buildDeleteBackground(),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          _markAsSeen(notification['id']);
-          return false;
-        } else {
-          final shouldDelete = await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Delete Notification'),
-                content: const Text(
-                    'Are you sure you want to delete this notification?'),
-                actions: [
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () => Navigator.of(context).pop(false),
-                  ),
-                  TextButton(
-                    child: const Text('Delete'),
-                    onPressed: () => Navigator.of(context).pop(true),
-                  ),
-                ],
-              );
-            },
-          );
-          if (shouldDelete == true) {
-            _deleteNotification(notification['id']);
-          }
-          return false;
-        }
-      },
-      child: Card(
-        elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
-          ),
+      BuildContext context, NotificationModel notification) {
+    return Card(
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Colors.grey[200]!,
+          width: 1,
         ),
-        child: InkWell(
-          onTap: () => _handleNotificationTap(notification),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: notification['isSeen'] ? Colors.white : Colors.blue[50],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildNotificationIcon(notification['type']),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                notification['title'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: notification['isSeen']
-                                      ? FontWeight.w500
-                                      : FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
+      ),
+      child: InkWell(
+        onTap: () => _handleNotificationTap(notification),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: notification.isSeen ? Colors.white : Colors.blue[50],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildNotificationIcon(notification.type),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              notification.title,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: notification.isSeen
+                                    ? FontWeight.w500
+                                    : FontWeight.w600,
+                                color: Colors.black87,
                               ),
                             ),
-                            _buildPriorityBadge(notification['priority']),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          notification['message'],
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            height: 1.4,
                           ),
+                          _buildPriorityBadge(
+                              notification.data['priority'] ?? 'low'),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        notification.message,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          height: 1.4,
                         ),
-                        const SizedBox(height: 8),
-                        _buildNotificationFooter(notification),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildNotificationFooter(notification),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildDismissBackground() {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: 20),
-      color: Colors.green[400],
-      child: const Icon(
-        Icons.check,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildDeleteBackground() {
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 20),
-      color: Colors.red[400],
-      child: const Icon(
-        Icons.delete_outline,
-        color: Colors.white,
       ),
     );
   }
@@ -645,16 +530,13 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       child: Text(
         priority.toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
+        style:
+            TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: color),
       ),
     );
   }
 
-  Widget _buildNotificationFooter(Map<String, dynamic> notification) {
+  Widget _buildNotificationFooter(NotificationModel notification) {
     return Row(
       children: [
         Icon(
@@ -664,14 +546,14 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         const SizedBox(width: 4),
         Text(
-          _formatDate(notification['createdAt']),
+          _formatDate(notification.createdAt.toIso8601String()),
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[500],
           ),
         ),
         const Spacer(),
-        if (!notification['isSeen'])
+        if (!notification.isSeen)
           Container(
             width: 8,
             height: 8,
