@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/User.dart';
 import 'package:vousphere/features/profile-edit/presentation/ProfileEditPage.dart';
+import 'package:vousphere/features/profile/presentation/dialogs/AddPlayTurnDialog.dart';
 import 'package:vousphere/features/profile/presentation/dialogs/LogoutDialog.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
@@ -13,22 +14,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   void logout() async {
     bool? status = await showDialog(
-        context: context,
-        builder: (context) => const LogoutDialog()
-    );
-    if(status != null && status!) {
-      UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+        context: context, builder: (context) => const LogoutDialog());
+    if (status != null && status!) {
+      UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
       await userProvider.logout();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
     User user = userProvider.user;
 
     return Container(
@@ -62,25 +61,37 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Text(
                   user.name,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const ProfileEditPage(),));
-                    },
-                    icon: const Icon(Icons.edit),
-                    tooltip: "Edit your profile",
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const ProfileEditPage(),
+                        ));
+                  },
+                  icon: const Icon(Icons.edit),
+                  tooltip: "Edit your profile",
                 ),
               ],
             ),
             const SizedBox(height: 15),
             Row(
               children: [
-                const SizedBox(width: 10,),
-                Icon(Icons.date_range, color: Colors.black.withOpacity(0.6),),
-                const SizedBox(width: 6,),
+                const SizedBox(
+                  width: 10,
+                ),
+                Icon(
+                  Icons.date_range,
+                  color: Colors.black.withOpacity(0.6),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
                 Text(
                   user.player?['dateOfBirth'] ?? 'Date of birth',
                   style: const TextStyle(color: Colors.black54, fontSize: 16),
@@ -90,9 +101,16 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 5),
             Row(
               children: [
-                const SizedBox(width: 10,),
-                Icon(Icons.phone, color: Colors.black.withOpacity(0.6),),
-                const SizedBox(width: 6,),
+                const SizedBox(
+                  width: 10,
+                ),
+                Icon(
+                  Icons.phone,
+                  color: Colors.black.withOpacity(0.6),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
                 Text(
                   user.phoneNumber.isNotEmpty ? user.phoneNumber : 'Phone',
                   style: const TextStyle(color: Colors.black54, fontSize: 16),
@@ -102,9 +120,16 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 5),
             Row(
               children: [
-                const SizedBox(width: 10,),
-                Icon(Icons.mail, color: Colors.black.withOpacity(0.6),),
-                const SizedBox(width: 6,),
+                const SizedBox(
+                  width: 10,
+                ),
+                Icon(
+                  Icons.mail,
+                  color: Colors.black.withOpacity(0.6),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
                 Text(
                   user.email,
                   style: const TextStyle(color: Colors.black54, fontSize: 16),
@@ -112,15 +137,17 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: 20),
-            const Divider(color: Colors.grey,),
+            const Divider(
+              color: Colors.grey,
+            ),
             ListTile(
                 onTap: () {},
-                leading: Icon(Icons.airplane_ticket_outlined, color: Colors.blue.shade700),
+                leading: Icon(Icons.airplane_ticket_outlined,
+                    color: Colors.blue.shade700),
                 title: const Text('My Vouchers'),
                 splashColor: Colors.blue.shade50,
                 selectedColor: Colors.blue.shade50,
-                hoverColor: Colors.blue.shade50
-            ),
+                hoverColor: Colors.blue.shade50),
             ListTile(
               onTap: () {
                 showModalBottomSheet(
@@ -132,10 +159,10 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.add, color: Colors.blue.shade700),
               title: const Text('Add Play Turn'),
             ),
-			
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.extension_outlined, color: Colors.blue.shade700),
+              leading:
+                  Icon(Icons.extension_outlined, color: Colors.blue.shade700),
               title: const Text('Puzzle Collection'),
             ),
             ListTile(
@@ -145,7 +172,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.favorite_border_outlined, color: Colors.blue.shade700),
+              leading: Icon(Icons.favorite_border_outlined,
+                  color: Colors.blue.shade700),
               title: const Text('Your favorite'),
             ),
             ListTile(
@@ -160,12 +188,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.manage_accounts_outlined, color: Colors.blue.shade700),
+              leading: Icon(Icons.manage_accounts_outlined,
+                  color: Colors.blue.shade700),
               title: const Text('Support'),
             ),
             ListTile(
               onTap: () {},
-              leading: Icon(Icons.settings_outlined, color: Colors.blue.shade700),
+              leading:
+                  Icon(Icons.settings_outlined, color: Colors.blue.shade700),
               title: const Text('Setting'),
             ),
             ListTile(
@@ -173,7 +203,6 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.logout, color: Colors.blue.shade700),
               title: const Text('Logout'),
             ),
-
           ],
         ),
       ),
