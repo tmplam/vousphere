@@ -37,7 +37,7 @@ public class VoucherService(
 
         if (voucherTypes != null)
             foreach (var voucherType in voucherTypes.Where(t => t.Remaining > 0))
-                choices.Add(new GeneratedVoucher { VoucherTypeId = voucherType.Id });
+                choices.Add(new GeneratedVoucher { VoucherTypeId = voucherType.Id, Discount = voucherType.Discount });
 
         if (game.PopUpItemsEnabled && item != null)
             for (var i = 0; i < item.NumberPieces; i++)
@@ -80,7 +80,7 @@ public class VoucherService(
             {
                 choices.AddRange(
                     Enumerable.Repeat(
-                        new GeneratedVoucher { VoucherTypeId = voucherType.Id } , 
+                        new GeneratedVoucher { VoucherTypeId = voucherType.Id, Discount = voucherType.Discount } , 
                         voucherType.Remaining));
             }
         }
@@ -105,9 +105,9 @@ public class VoucherService(
 
             // Update the cache and send integration event for each user
             await UpdateCacheAndSendIntegrationEventAsync(
-                eventInfo, 
-                selectedVoucher, 
-                gameId, 
+                eventInfo,
+                selectedVoucher,
+                gameId,
                 userIds[result.Count - 1]);
         }
 

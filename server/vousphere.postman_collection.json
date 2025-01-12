@@ -369,6 +369,48 @@
 							"response": []
 						},
 						{
+							"name": "Get near by brands",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/user-service/api/brands/near-by?latitude=112&longitude=121&radius=15&page=1&perPage=5",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"user-service",
+										"api",
+										"brands",
+										"near-by"
+									],
+									"query": [
+										{
+											"key": "latitude",
+											"value": "112"
+										},
+										{
+											"key": "longitude",
+											"value": "121"
+										},
+										{
+											"key": "radius",
+											"value": "15"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Get user by id",
 							"request": {
 								"method": "GET",
@@ -862,7 +904,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{yarp_base_url}}/game-service/api/games/:gameId/play?eventId=019439ae-a665-4847-b0fe-fe3064ff408c",
+									"raw": "{{yarp_base_url}}/game-service/api/games/:gameId/play?eventId=01942224-6cd5-42e7-9a4d-c588248a6352",
 									"host": [
 										"{{yarp_base_url}}"
 									],
@@ -876,7 +918,7 @@
 									"query": [
 										{
 											"key": "eventId",
-											"value": "019439ae-a665-4847-b0fe-fe3064ff408c"
+											"value": "01942224-6cd5-42e7-9a4d-c588248a6352"
 										}
 									],
 									"variable": [
@@ -1183,7 +1225,37 @@
 				},
 				{
 					"name": "Voucher",
-					"item": []
+					"item": [
+						{
+							"name": "Get user vouchers",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_base_url}}/voucher-service/api/vouchers?page=1&perPage=5",
+									"host": [
+										"{{yarp_base_url}}"
+									],
+									"path": [
+										"voucher-service",
+										"api",
+										"vouchers"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Notification",
@@ -1364,7 +1436,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "{{vault:admin-authorization-secret}}",
+						"value": "{{vault:player-authorization-secret}}",
 						"type": "string"
 					}
 				]

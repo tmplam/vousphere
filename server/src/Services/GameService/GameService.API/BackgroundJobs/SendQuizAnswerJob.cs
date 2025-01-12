@@ -1,17 +1,17 @@
 ﻿using GameService.API.Hubs;
 using GameService.API.Services;
-using GameService.API.Utilities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using Quartz;
-using System.Text.Json;
 
 namespace GameService.API.BackgroundJobs;
+
 
 public class SendQuizAnswerJob(
     ILogger<SendQuizAnswerJob> _logger,
     IEventGameService _eventGameService,
     IDistributedCache _cache,
+    IVoucherService _voucherService,
     IHubContext<QuizGameHub, IQuizGameClient> _hubContext) : IJob
 {
     public async Task Execute(IJobExecutionContext context)
@@ -85,14 +85,26 @@ public class SendQuizAnswerJob(
         }
         else
         {
-            // Send the end of the quiz event to all clients in the quiz group
-            var scoresKey = RedisCacheKeys.EventQuizScoresKey(eventId);
-            var scoresString = await _cache.GetStringAsync(scoresKey);
-            var scores = string.IsNullOrEmpty(scoresString)
-                ? new QuizScoresDto()
-                : JsonSerializer.Deserialize<QuizScoresDto>(scoresString)!;
+            // Schedule the job to send the quiz result
+            var quizEndedJobData = new JobDataMap
+            {
+                { "eventId", eventId.ToString() },
+                { "quizId", quizId.ToString() },
+            };
 
-            //await _hubContext.Clients.Group(eventId.ToString()).ReceiveQuizResult();
+            var scheduler = context.Scheduler;
+
+            var quizEndedJob = JobBuilder.Create<QuizEndedJob>()
+                .WithIdentity($"quiz-ended-{quizId}", "quiz-ended")
+                .SetJobData(quizEndedJobData)
+                .Build();
+
+            var quizEndedTrigger = TriggerBuilder.Create()
+                .WithIdentity($"trigger-quiz-ended-{quizId}", "quiz-ended")
+                .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Second))
+                .Build();
+
+            await scheduler.ScheduleJob(quizEndedJob, quizEndedTrigger);
         }
     }
 }

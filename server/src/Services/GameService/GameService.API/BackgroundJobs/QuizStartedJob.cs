@@ -40,9 +40,9 @@ public class QuizStartedJob(
         // Schedule the job to send the first question
         var jobData = new JobDataMap
         {
-            { "eventId", eventId },
-            { "quizId", quizId },
-            { "questionIndex", 0 }
+            { "eventId", eventId.ToString() },
+            { "quizId", quizId.ToString() },
+            { "questionIndex", 0.ToString() }
         };
 
         var job = JobBuilder.Create<SendQuizQuestionJob>()

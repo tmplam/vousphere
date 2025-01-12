@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using GameService.API.Utilities;
 using MassTransit;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -11,6 +12,8 @@ public class EventEndedIntegrationEventHandler(
 {
     public async Task Consume(ConsumeContext<EventEndedIntegrationEvent> context)
     {
-        await _cache.RemoveAsync($"Event:{context.Message.EventId}");
+        _logger.LogInformation("Event with id {EventId} ended", context.Message.EventId);
+
+        await _cache.RemoveAsync(RedisCacheKeys.EventInfoKey(context.Message.EventId));
     }
 }

@@ -8,5 +8,5 @@ public interface IQuizGameClient
     Task ReceiveQuestion(int questionIndex);
     Task ReceiveQuestionAnswer(int questionIndex, int correctOptionIndex);
     Task ReceiveAnswerScore(QuizAnswerScoreDto score);
-    Task ReceiveQuizResult();
+    Task ReceiveQuizResult(double? discount = 0, int? pieceIndex = -1);
 }

@@ -3,5 +3,7 @@
 public class GeneratedVoucher
 {
     public Guid? VoucherTypeId { get; set; } = null;
+    public double? Discount { get; set; } = null;
+
     public int? PieceIndex { get; set; } = null;
 }

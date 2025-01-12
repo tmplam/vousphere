@@ -28,6 +28,7 @@ public class QuizGameHub(
             if (eventGameInfo == null ||
                 !eventGameInfo.Games.Any(g => g.GameId == GameIdentifiers.QuizGameId))
             {
+                _logger.LogWarning("Event {eventId} not containing quiz game", eventId);
                 Context.Abort();
                 return;
             }
@@ -35,6 +36,7 @@ public class QuizGameHub(
             var quizInfo = eventGameInfo.Games.First(g => g.GameId == GameIdentifiers.QuizGameId);
             if (quizInfo.StartTime == null)
             {
+                _logger.LogWarning("Quiz start time is missing for event {eventId}", eventId);
                 Context.Abort();
                 return;
             }
@@ -44,6 +46,7 @@ public class QuizGameHub(
             var maxAllowTime = quizInfo.StartTime.Value;
             if (currentTime < minAllowTime || currentTime > maxAllowTime)
             {
+                _logger.LogWarning("User {userId} tried to connect to quiz game {eventId} outside the allowed time", Context.UserIdentifier, eventId);
                 Context.Abort();
                 return;
             }
@@ -65,6 +68,7 @@ public class QuizGameHub(
         }
         else
         {
+            _logger.LogWarning("User {userId} tried to connect to quiz game with invalid eventId", Context.UserIdentifier);
             Context.Abort();
             return;
         }
