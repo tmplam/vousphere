@@ -4,7 +4,8 @@ public interface IQuizGameClient
 {
     Task ReceiveQuizCountdown(int seconds);
     Task ReceiveQuizInfo(QuizInfoDto quiz);
-    Task ReceiveQuizNumberOfPlayers(long numberOfPlayers);
+    Task ReceiveNewPlayerJoined(string playerId, string playerName);
+    Task ReceivePlayerLeft(string playerId);
     Task ReceiveQuestion(int questionIndex);
     Task ReceiveQuestionAnswer(int questionIndex, int correctOptionIndex);
     Task ReceiveAnswerScore(QuizAnswerScoreDto score);

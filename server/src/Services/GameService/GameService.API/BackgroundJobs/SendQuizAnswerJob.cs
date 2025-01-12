@@ -101,7 +101,7 @@ public class SendQuizAnswerJob(
 
             var quizEndedTrigger = TriggerBuilder.Create()
                 .WithIdentity($"trigger-quiz-ended-{quizId}", "quiz-ended")
-                .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Second))
+                .StartAt(DateBuilder.FutureDate(8, IntervalUnit.Second))
                 .Build();
 
             await scheduler.ScheduleJob(quizEndedJob, quizEndedTrigger);

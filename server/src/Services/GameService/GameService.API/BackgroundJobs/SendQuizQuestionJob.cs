@@ -68,7 +68,7 @@ public class SendQuizQuestionJob(
 
         var answerTrigger = TriggerBuilder.Create()
             .WithIdentity($"trigger-send-quiz-answer-{quizId}-{questionIndex}", "quiz-answers")
-            .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Second))
+            .StartAt(DateBuilder.FutureDate(14, IntervalUnit.Second))
             .Build();
 
         var scheduler = context.Scheduler;

@@ -4,7 +4,6 @@ using GameService.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
 using System.Text.Json;
 
 namespace GameService.API.Hubs;
@@ -14,8 +13,7 @@ namespace GameService.API.Hubs;
 public class QuizGameHub(
     ILogger<QuizGameHub> _logger,
     IEventGameService _eventGameService,
-    IDistributedCache _cache,
-    IConnectionMultiplexer _redisConnection) : Hub<IQuizGameClient>
+    IDistributedCache _cache) : Hub<IQuizGameClient>
 {
     public override async Task OnConnectedAsync()
     {
@@ -58,11 +56,7 @@ public class QuizGameHub(
 
             await Groups.AddToGroupAsync(Context.ConnectionId, eventId.ToString());
 
-            // Increment the number of players
-            IDatabase _redisDatabase = _redisConnection.GetDatabase();
-            var numberOfPlayersKey = RedisCacheKeys.EventQuizNumberOfPlayersKey(eventId);
-            var numberOfPlayers = await _redisDatabase.StringIncrementAsync(numberOfPlayersKey);
-            await Clients.Group(eventId.ToString()).ReceiveQuizNumberOfPlayers(numberOfPlayers);
+            await Clients.Group(eventId.ToString()).ReceiveNewPlayerJoined(Context.UserIdentifier!, Context.User!.Identity?.Name!);
 
             await base.OnConnectedAsync();
         }
@@ -82,10 +76,7 @@ public class QuizGameHub(
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, eventId.ToString());
 
             // Decrement the number of players
-            IDatabase _redisDatabase = _redisConnection.GetDatabase();
-            var numberOfPlayersKey = RedisCacheKeys.EventQuizNumberOfPlayersKey(eventId);
-            var numberOfPlayers = await _redisDatabase.StringDecrementAsync(numberOfPlayersKey);
-            await Clients.Group(eventId.ToString()).ReceiveQuizNumberOfPlayers(numberOfPlayers);
+            await Clients.Group(eventId.ToString()).ReceivePlayerLeft(Context.UserIdentifier!);
 
             await base.OnDisconnectedAsync(exception);
         }
