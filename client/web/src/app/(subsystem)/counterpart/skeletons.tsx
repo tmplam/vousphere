@@ -48,7 +48,7 @@ export function GameItemSkeleton() {
 export function MyEventsSkeleton({ amount = 4 }: { amount?: number }) {
     return (
         <>
-            <div className="min-w-[310px] max-w-80 dark:bg-slate-800 rounded-xl border border-gray-100 overflow-hidden mx-auto md:mx-0">
+            <div className="w-[21rem] sm:w-[23rem] lg:w-[23rem] dark:bg-slate-800 rounded-xl border border-gray-100 overflow-hidden mx-auto md:mx-0">
                 <Skeleton className="w-full h-48 object-cover" />
                 <div className="p-4 pt-2 bg-slate-200 dark:bg-slate-800 space-y-1">
                     <Skeleton className="text-xl font-semibold mb-2 line-clamp-2 min-h-14" />

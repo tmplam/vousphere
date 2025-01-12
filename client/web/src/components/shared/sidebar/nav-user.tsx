@@ -59,7 +59,7 @@ export function NavUser() {
                                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">{userAuth.name || "Unknown"}</span>
+                                <span className="truncate font-semibold">{userAuth.name || "Admin"}</span>
                                 <span className="truncate text-xs">{userAuth.email}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />
@@ -78,18 +78,18 @@ export function NavUser() {
                                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">{userAuth.name || "Unknown"}</span>
+                                    <span className="truncate font-semibold">{userAuth.name || "Admin"}</span>
                                     <span className="truncate text-xs">{userAuth.email || "Unknown"}</span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem className="cursor-pointer">
+                            {/* <DropdownMenuItem className="cursor-pointer">
                                 <BadgeCheck />
                                 Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
+                            </DropdownMenuItem> */}
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/notification")}>
                                 <Bell />
                                 Notifications
                             </DropdownMenuItem>

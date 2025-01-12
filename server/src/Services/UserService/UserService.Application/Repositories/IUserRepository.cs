@@ -13,4 +13,9 @@ public interface IUserRepository
         int perPage = 5, 
         bool includePlayer = false,
         bool includeBrand = false);
+
+    Task<PaginationResult<User>> GetBrandsAsync(
+        Expression<Func<User, bool>> predicate,
+        int page = 1,
+        int perPage = 5);
 }

@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import { AnimationButton } from "@/components/shared/custom-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,14 +55,14 @@ export default function ViewUser({ children, user }: { children: React.ReactNode
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="flex justify-center items-center gap-5">
+                    {/* <div className="flex justify-center items-center gap-5">
                         <Button className="bg-sky-500 text-white text-md" onClick={() => handleActiveUser(user)}>
                             Activate user
                         </Button>
                         <Link href={`/admin/users/view/${user.id}`}>
                             <AnimationButton className="px-4 py-[.37rem]">View and Update</AnimationButton>
                         </Link>
-                    </div>
+                    </div> */}
                 </DialogContent>
             </Dialog>
         </>

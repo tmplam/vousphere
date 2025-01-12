@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { defaultEventImage, defaultGameImage, defaultVoucherImage } from "@/lib/utils";
+import { convertToVietnamTimezone, defaultEventImage, defaultGameImage, defaultVoucherImage } from "@/lib/utils";
 import { EventGameType, VoucherAmount, VoucherEventItemType, VoucherEventType } from "@/schema/event.schema";
 import { GameAndQuizListType, GameType } from "@/schema/game.schema";
 import { CircleX, Info, Plus, Trash, Trash2 } from "lucide-react";
@@ -47,9 +47,9 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
     );
     const [totalItem, setTotalItem] = useState<string>(event.item?.numberPieces.toString() || "4");
     const [errorVouchers, setErrorVouchers] = useState("");
-    const [startTime, setStartTime] = useState(formatFullToSimpleDateTime(event.startTime));
+    const [startTime, setStartTime] = useState(convertToVietnamTimezone(event.startTime, 7));
     const [errorStartTime, setErrorStartTime] = useState("");
-    const [endTime, setEndTime] = useState(formatFullToSimpleDateTime(event.endTime));
+    const [endTime, setEndTime] = useState(convertToVietnamTimezone(event.endTime, 7));
     const [errorEndTime, setErrorEndTime] = useState("");
     const [gamesAndQuizzes, setGamesAndQuizzes] = useState<GameQuizType[]>([]);
     const [errorGames, setErrorGames] = useState("");
@@ -186,8 +186,8 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
             name,
             description,
             imageId: imageId ? imageId : event.imageId,
-            startTime,
-            endTime,
+            startTime: new Date(startTime).toJSON(),
+            endTime: new Date(endTime).toJSON(),
             voucherTypes: vouchers,
             games: gamesAndQuizzes.map((eachGame) => {
                 return {

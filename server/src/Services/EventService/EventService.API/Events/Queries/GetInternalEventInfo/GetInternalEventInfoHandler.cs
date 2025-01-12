@@ -3,6 +3,7 @@
 public record GetInternalEventInfoQuery(Guid EventId) : IQuery<GetInternalEventInfoResult>;
 public record GetInternalEventInfoResult(
     Guid EventId,
+    Guid BrandId,
     string Status,
     IEnumerable<VoucherType> VoucherTypes,
     IEnumerable<EventGame> Games,
@@ -22,6 +23,7 @@ public class GetInternalEventInfoHandler(
 
         var result = new GetInternalEventInfoResult(
             existingEvent.Id,
+            existingEvent.BrandId,
             existingEvent.Status.ToString(),
             existingEvent.VoucherTypes,
             existingEvent.Games,

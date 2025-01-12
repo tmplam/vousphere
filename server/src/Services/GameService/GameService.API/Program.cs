@@ -44,13 +44,6 @@ builder.Services.AddMarten(options =>
     options.Schema.For<Quiz>();
 }).UseLightweightSessions();
 
-// Register Redis connection multiplexer
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-{
-    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis")!, true);
-    return ConnectionMultiplexer.Connect(configuration);
-});
-
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");

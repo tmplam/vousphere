@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Messaging.IntegrationEvents;
 using MassTransit;
+using VoucherService.API.Enums;
 using VoucherService.API.Services;
 
 namespace VoucherService.API.Vouchers.EventHandlers.IntegrationEventHandlers;
@@ -10,13 +11,24 @@ public class VoucherCreatedIntegrationEventHandler(
 {
     public async Task Consume(ConsumeContext<VoucherCreatedIntegrationEvent> context)
     {
+        var code = _voucherUtility.GenerateVoucherCode();
+
+        while (await _session.Query<Voucher>().AnyAsync(x =>
+            x.BrandId == context.Message.BrandId &&
+            x.Code == code && 
+            x.Status == VoucherStatus.Active))
+        {
+            code = _voucherUtility.GenerateVoucherCode();
+        }
+
         var voucher = new Voucher
         {
             Id = Guid.NewGuid(),
+            BrandId = context.Message.BrandId,
             EventId = context.Message.EventId,
             OwnerId = context.Message.OwnerId,
             GameId = context.Message.GameId,
-            Code = _voucherUtility.GenerateVoucherCode(),
+            Code = code,
             Discount = context.Message.Discount,
             IssuedAt = context.Message.IssuedAt,
             ExpiredAt = context.Message.IssuedAt.AddDays(30)

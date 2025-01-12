@@ -29,17 +29,17 @@ export const counterpartNavMain = [
         title: "Subscription",
         url: "/counterpart/subscription",
         icon: SubscriptIcon,
-        items: [
-            {
-                title: "My subscription",
-                url: "/counterpart/subscription",
-                icon: SubscriptIcon,
-            },
-            // {
-            //     title: "Register subscription",
-            //     url: "/counterpart/subscription/subscribe",
-            //     icon: SubscriptIcon,
-            // },
-        ],
+        // items: [
+        //     {
+        //         title: "My subscription",
+        //         url: "/counterpart/subscription",
+        //         icon: SubscriptIcon,
+        //     },
+        //     {
+        //         title: "Register subscription",
+        //         url: "/counterpart/subscription/subscribe",
+        //         icon: SubscriptIcon,
+        //     },
+        // ],
     },
 ];

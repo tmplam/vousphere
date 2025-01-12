@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export const defaultAvatar = "https://wutheringlab.com/wp-content/uploads/Shorekeeper-icon.webp";
+export const defaultAvatar = "https://icons.veryicon.com/png/o/miscellaneous/two-color-webpage-small-icon/user-244.png";
 export const defaultGameImage =
     "https://t4.ftcdn.net/jpg/04/42/21/53/360_F_442215355_AjiR6ogucq3vPzjFAAEfwbPXYGqYVAap.jpg";
 export const defaultVoucherImage = "https://agencyvn.com/wp-content/uploads/2019/05/Voucher-l%C3%A0-g%C3%AC.jpg";
@@ -72,7 +72,7 @@ export function printDateTime(date: Date) {
 export function printTime(date: Date) {
     if (!date) return "";
     const hour = date.getHours();
-    const hourLabel = hour > 12 ? hour : "0" + hour;
+    const hourLabel = hour > 9 ? hour : "0" + hour;
     const minute = date.getMinutes();
     const minuteLabel = minute > 9 ? minute : "0" + minute;
     const second = date.getSeconds();
@@ -88,3 +88,9 @@ export function printTimeNoSecond(date: Date) {
     const minuteLabel = minute > 9 ? minute : "0" + minute;
     return `${hourLabel}:${minuteLabel}`;
 }
+
+export const convertToVietnamTimezone = (datetime: string, timezone: number): string => {
+    const date = new Date(datetime);
+    date.setHours(date.getHours() + timezone);
+    return date.toISOString().slice(0, 16);
+};

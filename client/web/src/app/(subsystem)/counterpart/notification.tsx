@@ -2,9 +2,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { BellRing } from "lucide-react";
 import Link from "next/link";
 
-/* Khiem workspace - notification icon on top right of the header for Admin*/
+/* Khiem workspace - notification icon on top right of the header for Counterpart*/
 
-export default function AdminNotification({ children }: { children: React.ReactNode }) {
+export default function CounterpartNotification({ children }: { children: React.ReactNode }) {
     // Define state, actions here
     return (
         <div className="p-0">

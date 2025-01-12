@@ -16,17 +16,37 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimationButton } from "@/components/shared/custom-button";
 import { callCreateSubscriptionRequest } from "@/apis/event-api";
+import { MySubscriptionSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
+import { useCachedUserInfo } from "@/lib/react-query/userCache";
 
 export function SubscriptionForm() {
     const [loading, setLoading] = useState(false);
+    const { data: userAuth, isLoading, isFetching, refetch } = useCachedUserInfo();
+    if (isLoading || isFetching) return <MySubscriptionSkeleton />;
+    if (userAuth?.brand) {
+        return (
+            <>
+                <div className="p-3 shadow-md border border-gray-100 rounded-md dark:bg-slate-800 bg-white w-full">
+                    <div className="flex items-center justify-center gap-3 min-h-[20rem] flex-col w-full">
+                        <p className="text-center px-6">You already have a subscription!</p>
+                        <AnimationButton className="py-[.37rem] px-3">
+                            <Link href="/counterpart/subscription" className="text-white">
+                                My subscription
+                            </Link>
+                        </AnimationButton>
+                    </div>
+                </div>
+            </>
+        );
+    }
     const { toast } = useToast();
     const router = useRouter();
     const createSubscriptionForm = useForm<SubscriptionRequestDTO>({
         resolver: zodResolver(SubscriptionRequestSchema),
         defaultValues: {
-            name: "Alysa Kendall",
-            address: "123 Main Street, Anytown, USA",
-            phoneNumber: "1234567890",
+            name: "",
+            address: "",
+            phoneNumber: "",
             domain: "food",
         },
     });
@@ -42,7 +62,7 @@ export function SubscriptionForm() {
                     className: "bg-lime-500 text-white",
                 });
                 createSubscriptionForm.reset();
-                router.push("/counterpart/subscription");
+                router.push("/counterpart/subscription?rf=true");
             } else {
                 toast({
                     description: "Failed to subscribe. Please try again",

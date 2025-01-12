@@ -37,36 +37,63 @@ public class ApproveEventHandler(
         // Schedule a job to start the event
         var scheduler = await _schedulerFactory.GetScheduler();
 
+        var startJobKey = new JobKey($"event-started-{existingEvent.Id}", "events-started");
+        var startTriggerKey = new TriggerKey($"trigger-event-started-{existingEvent.Id}", "events-started");
+
         var startJobData = new JobDataMap
         {
             { "eventId", existingEvent.Id.ToString() }
         };
 
         var startJob = JobBuilder.Create<EventStartedJob>()
-            .WithIdentity($"event-started-{existingEvent.Id}", "events-started")
+            .WithIdentity(startJobKey)
             .SetJobData(startJobData)
             .Build();
 
         var startTrigger = TriggerBuilder.Create()
-            .WithIdentity($"trigger-event-started-{existingEvent.Id}", "events-started")
+            .WithIdentity(startTriggerKey)
             .StartAt(existingEvent.StartTime)
             .Build();
 
+        if (await scheduler.CheckExists(startJobKey))
+        {
+            await scheduler.AddJob(startJob, replace: true);
+            await scheduler.RescheduleJob(startTriggerKey, startTrigger);
+        }
+        else
+        {
+            await scheduler.ScheduleJob(startJob, startTrigger);
+        }
+
+
         // Schedule a job to end the event
+        var endJobKey = new JobKey($"event-ended-{existingEvent.Id}", "events-ended");
+        var endTriggerKey = new TriggerKey($"trigger-event-ended-{existingEvent.Id}", "events-ended");
+
         var endJobData = new JobDataMap
         {
             { "eventId", existingEvent.Id.ToString() }
         };
 
         var endJob = JobBuilder.Create<EventEndedJob>()
-            .WithIdentity($"event-ended-{existingEvent.Id}", "events-ended")
+            .WithIdentity(endJobKey)
             .SetJobData(endJobData)
             .Build();
 
         var endTrigger = TriggerBuilder.Create()
-            .WithIdentity($"trigger-event-ended-{existingEvent.Id}", "events-ended")
+            .WithIdentity(endTriggerKey)
             .StartAt(existingEvent.EndTime)
             .Build();
+
+        if (await scheduler.CheckExists(endJobKey))
+        {
+            await scheduler.AddJob(endJob, replace: true);
+            await scheduler.RescheduleJob(endTriggerKey, endTrigger);
+        }
+        else
+        {
+            await scheduler.ScheduleJob(endJob, endTrigger);
+        }
 
         // Send notification to the brand
         var eventApprovedEvent = new EventApprovedIntegrationEvent
