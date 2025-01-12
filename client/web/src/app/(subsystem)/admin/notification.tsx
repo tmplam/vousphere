@@ -2,9 +2,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { BellRing } from "lucide-react";
 import Link from "next/link";
 
-/* Khiem workspace - notification icon on top right of the header */
+/* Khiem workspace - notification icon on top right of the header for Admin*/
 
-export default function Notification({ children }: { children: React.ReactNode }) {
+export default function AdminNotification({ children }: { children: React.ReactNode }) {
+    // Define state, actions here
     return (
         <div className="p-0">
             <Popover>
@@ -19,6 +20,7 @@ export default function Notification({ children }: { children: React.ReactNode }
                         </div>
                     </div>
                 </PopoverTrigger>
+                {/* Render the two newest notifications below */}
                 <PopoverContent className="mt-2 min-w-[23rem] p-0 border border-gray-200">
                     <p className="text-center font-semibold pt-1 border-b border-b-gray-200">Notification</p>
                     <ul className="py-1">

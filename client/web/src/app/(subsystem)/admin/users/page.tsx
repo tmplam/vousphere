@@ -126,11 +126,11 @@ export default function UserManagement() {
         <div className="rounded-sm">
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl md:text-4xl font-bold text-gradient">User Management</h1>
-                <CreateUserDialog>
+                {/* <CreateUserDialog>
                     <AnimationButton className="py-[.37rem] px-3 flex items-center">
                         Create User <UserPlus2 size={20} />
                     </AnimationButton>
-                </CreateUserDialog>
+                </CreateUserDialog> */}
             </div>
             <div className="flex items-center justify-between my-2 gap-4">
                 <DropdownMenu>
@@ -200,7 +200,7 @@ export default function UserManagement() {
                         {currentUsers.data.map((user, index) => (
                             <TableRow key={user.id}>
                                 <TableCell>{index + 1}</TableCell>
-                                <TableCell className="font-medium">{user.name}</TableCell>
+                                <TableCell className="font-medium">{user.name || "Admin"}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{resolveRoleBadge(user.role)}</TableCell>
                                 <TableCell className="content-center">{getUserStatusBadge(user.status)}</TableCell>
@@ -226,7 +226,14 @@ export default function UserManagement() {
                                             </DialogHeader>
                                             <DialogFooter>
                                                 <DialogClose asChild>
-                                                    <Button onClick={() => handleStatusChange(user.id, !user.status)}>
+                                                    <Button
+                                                        onClick={() => handleStatusChange(user.id, !user.status)}
+                                                        className={
+                                                            user.status != "Blocked"
+                                                                ? "cancel-btn-color"
+                                                                : "bg-lime-500"
+                                                        }
+                                                    >
                                                         {user.status != "Blocked" ? "Suspend" : "Activate"}
                                                     </Button>
                                                 </DialogClose>

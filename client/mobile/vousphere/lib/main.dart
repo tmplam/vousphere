@@ -13,7 +13,6 @@ import 'package:vousphere/shared/widgets/CustomNavigationBar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ApiService apiService = ApiService();
-  // make sure to load the token from security storage
   await apiService.init();
 
   runApp(ChangeNotifierProvider(
@@ -25,7 +24,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
