@@ -15,4 +15,8 @@ class ApiConstants {
   static const String removeFromFavorite =
       "/user-service/api/users/favorites/:eventId";
   static const String getPopularBrand = '/user-service/api/brands/popular';
+
+  // Siglr
+  static const String baseUrlSiglr = "ws://192.168.1.103:6000";
+  
 }
