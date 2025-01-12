@@ -6,7 +6,7 @@ import { DarkModeToggle } from "@/components/utility/mode-toggle";
 import { AuthenticatedRoute, ROLE_COUNTERPART } from "@/components/shared/authenticatedRoutes";
 import Footer from "@/components/shared/footer";
 import { Bell } from "lucide-react";
-import Notification from "@/app/(subsystem)/admin/notification";
+import CounterpartNotification from "@/app/(subsystem)/counterpart/notification";
 
 /**
  * @description Layout for dashboard, contains sidebar and main content
@@ -29,9 +29,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <div className="px-3 sm:px-8 flex justify-between items-center py-2 mb-3 border-b bg-white dark:bg-slate-800 dark:border-b-gray-50">
                         <SidebarTrigger />
                         <div className="flex items-center gap-5">
-                            <Notification>
+                            <CounterpartNotification>
                                 <Bell size={22} />
-                            </Notification>
+                            </CounterpartNotification>
                             <DarkModeToggle />
                         </div>
                     </div>

@@ -22,7 +22,15 @@ import { UserType } from "@/schema/user.schema";
 import { callUpdateSubscriptionRequest } from "@/apis/event-api";
 import { useRouter } from "next/navigation";
 
-export function UpdateSubscriptionForm({ subscription, back }: { subscription: UserType; back: () => void }) {
+export function UpdateSubscriptionForm({
+    subscription,
+    back,
+    refetchData,
+}: {
+    subscription: UserType;
+    back: () => void;
+    refetchData: () => void;
+}) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
@@ -49,7 +57,8 @@ export function UpdateSubscriptionForm({ subscription, back }: { subscription: U
                     className: "bg-lime-500 text-white",
                 });
                 updateSubscriptionForm.reset();
-                window.location.reload();
+                refetchData();
+                back();
             } else {
                 toast({
                     description: "Failed to update subscription. Please try again",

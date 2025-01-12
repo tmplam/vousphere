@@ -3,20 +3,25 @@
 import { getBadge } from "@/app/(subsystem)/admin/games/[id]/badge-ui";
 import { MySubscriptionSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import { UpdateSubscriptionForm } from "@/app/(subsystem)/counterpart/subscription/subscribe/update-subscribe-form";
-import ErrorPage from "@/app/error";
 import { AnimationButton } from "@/components/shared/custom-button";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import ViewMap from "@/lib/leaflet/ViewMap";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { UserType } from "@/schema/user.schema";
+import { useCachedUserInfo } from "@/lib/react-query/userCache";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function MySubscription() {
     const [update, setUpdate] = useState<boolean>(false);
-    const userAuth = useAppSelector((state) => state.userState).user as UserType;
-    if (!userAuth.brand || userAuth.brand.address == "" || userAuth.brand.domain == "")
+    const searchParams = useSearchParams();
+    const { data: userAuth, isLoading, isFetching, refetch } = useCachedUserInfo();
+    useEffect(() => {
+        const rf = searchParams.get("rf");
+        if (rf) {
+            refetch();
+        }
+    }, []);
+    if (isLoading || isFetching) return <MySubscriptionSkeleton />;
+    if (!userAuth?.brand || userAuth!.brand.address == "" || userAuth!.brand.domain == "")
         return (
             <>
                 <div className="flex items-center justify-between mb-6">
@@ -52,7 +57,7 @@ export default function MySubscription() {
                                 </p>
                                 <div className="py-1 flex items-center gap-3">
                                     <b className="font-semibold">Domain: </b>
-                                    <span className={getBadge()}>{userAuth.brand!.domain}</span>
+                                    <span className={getBadge()}>{userAuth!.brand!.domain}</span>
                                 </div>
                                 <div className="py-1 flex items-center gap-3">
                                     <b className="font-semibold">Phone number: </b>
@@ -60,14 +65,14 @@ export default function MySubscription() {
                                 </div>
                                 <div className="py-1">
                                     <b className="font-semibold">Address: </b>
-                                    {userAuth.brand!.address}
+                                    {userAuth!.brand!.address}
                                 </div>
                             </div>
                             <div className="map w-full mx-auto flex-[1] min-h-[15rem] flex-shrink-0 lg:basis-[30rem] md:min-h-[20rem]">
                                 <ViewMap
                                     location={{
-                                        lat: userAuth.brand!.latitude,
-                                        lng: userAuth.brand!.longitude,
+                                        lat: userAuth!.brand!.latitude,
+                                        lng: userAuth!.brand!.longitude,
                                     }}
                                 />
                             </div>
@@ -85,7 +90,11 @@ export default function MySubscription() {
                     </div>
                 </>
             ) : (
-                <UpdateSubscriptionForm subscription={userAuth} back={() => setUpdate(!update)} />
+                <UpdateSubscriptionForm
+                    subscription={userAuth!}
+                    back={() => setUpdate(!update)}
+                    refetchData={refetch}
+                />
             )}
         </>
     );
