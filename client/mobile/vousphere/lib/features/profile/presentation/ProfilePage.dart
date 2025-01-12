@@ -122,6 +122,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 hoverColor: Colors.blue.shade50
             ),
             ListTile(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const AddPlayTurnDialog(),
+                );
+              },
+              leading: Icon(Icons.add, color: Colors.blue.shade700),
+              title: const Text('Add Play Turn'),
+            ),
+			
+            ListTile(
               onTap: () {},
               leading: Icon(Icons.extension_outlined, color: Colors.blue.shade700),
               title: const Text('Puzzle Collection'),
