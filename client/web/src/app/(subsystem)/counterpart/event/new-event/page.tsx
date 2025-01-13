@@ -150,6 +150,8 @@ const EventForm = () => {
         )
             ? { imageId: imageItemId!, numberPieces: totalItem }
             : null;
+        const startIn2min = new Date(startTime);
+        startIn2min.setMinutes(startIn2min.getMinutes() + 2);
         const eventData = {
             name,
             description,
@@ -161,7 +163,8 @@ const EventForm = () => {
                 return {
                     gameId: eachGame.game!.id,
                     popUpItemsEnabled: eachGame.popUpItemsEnabled,
-                    quizzCollectionId: eachGame.quiz?.id,
+                    startTime: startIn2min.toJSON(),
+                    quizzCollectionId: eachGame.quiz?.id || null,
                 };
             }),
             item: collectItem,
