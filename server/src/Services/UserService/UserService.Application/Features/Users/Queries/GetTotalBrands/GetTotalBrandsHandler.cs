@@ -1,9 +1,13 @@
-﻿namespace UserService.Application.Features.Users.Queries.GetTotalBrands;
+﻿using BuildingBlocks.Auth.Enums;
 
-internal sealed class GetTotalBrandsHandler : IQueryHandler<GetTotalBrandsQuery, GetTotalBrandsResult>
+namespace UserService.Application.Features.Users.Queries.GetTotalBrands;
+
+internal sealed class GetTotalBrandsHandler(
+    IUserRepository _userRepository) : IQueryHandler<GetTotalBrandsQuery, GetTotalBrandsResult>
 {
-    public Task<GetTotalBrandsResult> Handle(GetTotalBrandsQuery query, CancellationToken cancellationToken)
+    public async Task<GetTotalBrandsResult> Handle(GetTotalBrandsQuery query, CancellationToken cancellationToken)
     {
-        return Task.FromResult(new GetTotalBrandsResult(0));
+        var totalBrands = await _userRepository.CountAsync(x => x.Role == UserRole.Brand);
+        return new GetTotalBrandsResult(totalBrands);
     }
 }

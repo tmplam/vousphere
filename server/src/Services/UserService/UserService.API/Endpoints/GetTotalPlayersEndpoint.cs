@@ -1,16 +1,16 @@
 ﻿using BuildingBlocks.Auth.Constants;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.Features.Users.Queries.GetTotalBrands;
+using UserService.Application.Features.Users.Queries.GetTotalPlayers;
 
 namespace UserService.API.Endpoints;
 
-public class GetTotalBrandsEndpoint : ICarterModule
+public class GetTotalPlayersEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/brands/total-brands", async ([FromServices] ISender sender) =>
+        app.MapGet("/api/players/total-players", async ([FromServices] ISender sender) =>
         {
-            var query = new GetTotalBrandsQuery();
+            var query = new GetTotalPlayersQuery();
             var result = await sender.Send(query);
 
             return Results.Ok(ApiResult.Success(result));
