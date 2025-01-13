@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { defaultGameImage, defaultVoucherImage } from "@/lib/utils";
+import { addTime, defaultGameImage, defaultVoucherImage, formatFullToSimpleDateTime } from "@/lib/utils";
 import { VoucherAmount, VoucherRequest } from "@/schema/event.schema";
 import { GameType, QuizType } from "@/schema/game.schema";
 import { Info, Plus, Trash, Trash2 } from "lucide-react";
@@ -24,6 +24,7 @@ import { useState } from "react";
 export type GameQuizType = {
     game: GameType;
     quiz: QuizType | null;
+    startTime: string | null;
     popUpItemsEnabled: boolean;
 };
 
@@ -40,6 +41,9 @@ const EventForm = () => {
     const [totalItem, setTotalItem] = useState("4");
     const [errorVouchers, setErrorVouchers] = useState("");
     const [startTime, setStartTime] = useState("");
+    const [startTimeQuiz, setStartTimeQuiz] = useState<string>(
+        formatFullToSimpleDateTime(addTime(new Date(), 7, 1).toJSON())
+    );
     const [errorStartTime, setErrorStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [errorEndTime, setErrorEndTime] = useState("");
@@ -104,6 +108,14 @@ const EventForm = () => {
             setErrorGamesAndQuizzes("You still not specify any game yet");
             return false;
         }
+        for (let i = 0; i < gamesAndQuizzes.length; i++) {
+            if (gamesAndQuizzes[i].quiz) {
+                if (startTime > startTimeQuiz) {
+                    setErrorGamesAndQuizzes("Start time of quiz must be after the start time of event");
+                    return false;
+                }
+            }
+        }
         setErrorGamesAndQuizzes("");
         return true;
     };
@@ -130,6 +142,7 @@ const EventForm = () => {
 
     const isValidate = () => {
         let result = true;
+        result &&= validateGames();
         result &&= validateImage();
         result &&= validateImageItem();
         result &&= validateName();
@@ -137,7 +150,6 @@ const EventForm = () => {
         result &&= validateStartTime();
         result &&= validateEndTime();
         result &&= validateVouchers();
-        result &&= validateGames();
         return result;
     };
 
@@ -161,7 +173,8 @@ const EventForm = () => {
                 return {
                     gameId: eachGame.game!.id,
                     popUpItemsEnabled: eachGame.popUpItemsEnabled,
-                    quizzCollectionId: eachGame.quiz?.id,
+                    startTime: new Date(startTimeQuiz).toJSON(),
+                    quizzCollectionId: eachGame.quiz?.id || null,
                 };
             }),
             item: collectItem,
@@ -219,6 +232,10 @@ const EventForm = () => {
 
     const addGamesAndQuizzes = (newGamesAndQuizzes: GameQuizType[]) => {
         setErrorGamesAndQuizzes("");
+        const idx = newGamesAndQuizzes.findIndex((eg) => eg.quiz);
+        if (idx !== -1) {
+            newGamesAndQuizzes[idx].startTime = startTimeQuiz;
+        }
         setGamesAndQuizzes([...newGamesAndQuizzes]);
     };
 
@@ -497,6 +514,8 @@ const EventForm = () => {
                                 <SelectGameModal
                                     gamesAndQuizzes={gamesAndQuizzes}
                                     onAddingGamesAndQuizzes={addGamesAndQuizzes}
+                                    startTimeQuiz={startTimeQuiz}
+                                    setTimeQuiz={setStartTimeQuiz}
                                 >
                                     <Button variant={"outline"} className="rounded-full border-gray-300">
                                         Add game <Plus />
@@ -597,16 +616,25 @@ function GameQuizItem({
                     dangerouslySetInnerHTML={{ __html: item.game.description }}
                     className="text-xs line-clamp-2 min-h-[1.8rem]"
                 ></span>
-                <span className="text-xs font-semibold">
-                    Allow trading:
-                    <span
-                        className={`px-1 py-[1px] rounded-sm text-[.7rem] ml-1 font-semibold ${
-                            item.popUpItemsEnabled ? "border text-gradient border-gray-200" : "bg-red-500 text-white"
-                        }`}
-                    >
-                        {item.popUpItemsEnabled ? "Yes" : "No"}
+                <div className="flex gap-x-5 flex-wrap">
+                    <span className="text-xs font-semibold">
+                        Allow trading:
+                        <span
+                            className={`px-1 py-[1px] rounded-sm text-[.7rem] ml-1 font-semibold ${
+                                item.popUpItemsEnabled
+                                    ? "border text-gradient border-gray-200"
+                                    : "bg-red-500 text-white"
+                            }`}
+                        >
+                            {item.popUpItemsEnabled ? "Yes" : "No"}
+                        </span>
                     </span>
-                </span>
+                    {item.quiz && (
+                        <span className="text-xs">
+                            <b className="mr-1">Start time:</b> {item.startTime}
+                        </span>
+                    )}
+                </div>
                 {item.quiz && (
                     <span className="text-xs font-semibold">
                         Quiz: <span className="text-gradient">{item.quiz.name}</span>

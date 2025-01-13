@@ -16,10 +16,9 @@ import AnimationColorfulButton, { AnimationButton } from "@/components/shared/cu
 import { useState } from "react";
 import { SelectGameSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import { useCachedGameAndQuizListQuery } from "@/lib/react-query/eventCache";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { set } from "date-fns";
 import { GameQuizType } from "@/app/(subsystem)/counterpart/event/new-event/page";
 import { defaultGameImage } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 const QUIZ_TYPE = "Quiz";
 
@@ -27,10 +26,14 @@ export default function SelectGameModal({
     children,
     gamesAndQuizzes,
     onAddingGamesAndQuizzes,
+    startTimeQuiz,
+    setTimeQuiz,
 }: {
     children: React.ReactNode;
     gamesAndQuizzes: GameQuizType[];
     onAddingGamesAndQuizzes: (game: GameQuizType[]) => void;
+    startTimeQuiz: string;
+    setTimeQuiz: (time: string) => void;
 }) {
     const [selectedGames, setSelectedGames] = useState<GameQuizType[]>(gamesAndQuizzes);
     const { toast } = useToast();
@@ -51,7 +54,6 @@ export default function SelectGameModal({
         });
         setOpen(false);
     };
-
     const handleSelectedGames = (gameItem: GameType) => {
         const existGameIndex = selectedGames.findIndex((game) => game.game.id === gameItem.id);
         if (existGameIndex !== -1) {
@@ -65,7 +67,12 @@ export default function SelectGameModal({
                     defaultQuiz = gameQuizList.quizzes![0];
                 }
             }
-            const selectedGame: GameQuizType = { game: { ...gameItem }, quiz: defaultQuiz, popUpItemsEnabled: false };
+            const selectedGame: GameQuizType = {
+                game: { ...gameItem },
+                quiz: defaultQuiz,
+                startTime: startTimeQuiz,
+                popUpItemsEnabled: false,
+            };
             setSelectedGames([...selectedGames, selectedGame]);
         }
     };
@@ -88,11 +95,11 @@ export default function SelectGameModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="max-w-[90vw] sm:max-w-85 md:max-w-[75vw] lg:max-w-[70vw] xl:max-w-[65vw] max-h-[88vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
+            <DialogContent className="max-w-[90vw] sm:max-w-85 md:max-w-[75vw] lg:max-w-[70vw] xl:max-w-[65vw] max-h-[93vh] border border-gray-300 overflow-y-auto py-4 rounded-lg">
                 <DialogHeader>
                     <DialogTitle className="text-center text-2xl">SELECT GAME</DialogTitle>
                 </DialogHeader>
-                <div className="w-full overflow-y-auto py-4">
+                <div className="w-full overflow-y-auto pb-4">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 h-[30vh] p-3">
                         <RenderGameQuizList
                             gameQuizList={gameQuizList}
@@ -100,9 +107,11 @@ export default function SelectGameModal({
                             handleSelectedGames={handleSelectedGames}
                             setAllowTrading={setAllowTrading}
                             setQuizCollection={setQuizCollection}
+                            startTimeQuiz={startTimeQuiz}
+                            setTimeQuiz={setTimeQuiz}
                         />
                     </div>
-                    <div className="flex justify-center items-center mt-20">
+                    <div className="flex justify-center items-center mt-28">
                         <AnimationColorfulButton className="py-[.37rem] px-3" type="submit" onClick={handleAddingGames}>
                             Add games
                         </AnimationColorfulButton>
@@ -119,6 +128,8 @@ function RenderGameQuizList({
     handleSelectedGames,
     setAllowTrading,
     setQuizCollection,
+    startTimeQuiz,
+    setTimeQuiz,
 }: {
     gameQuizList: {
         games: GameType[] | null;
@@ -128,8 +139,11 @@ function RenderGameQuizList({
     handleSelectedGames: (gameItem: GameType) => void;
     setAllowTrading: (value: boolean, gameItem: GameType) => void;
     setQuizCollection: (quizId: string, gameItem: GameType) => void;
+    startTimeQuiz: string;
+    setTimeQuiz: (value: string) => void;
 }) {
     const [isSelected, setIsSelected] = useState(false);
+    const [errorStartTime, setErrorStartTime] = useState("");
     const isSelectedGameQuiz = (item: GameType) => {
         return selectedGames.some((game) => game.game.id === item.id);
     };
@@ -190,20 +204,35 @@ function RenderGameQuizList({
                                         </div>
                                     </div>
                                     {gameItem.type === QUIZ_TYPE && (
-                                        <select
-                                            id="quizList"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-[.3rem] dark:bg-black dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            onChange={(e) => {
-                                                setQuizCollection(e.target.value, gameItem);
-                                            }}
-                                            defaultValue={getDefaultQuizValue(gameItem)}
-                                        >
-                                            {gameQuizList.quizzes!.map((quiz, idx) => (
-                                                <option key={idx} value={quiz.id}>
-                                                    {quiz.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <>
+                                            <select
+                                                id="quizList"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-[.3rem] dark:bg-black dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                onChange={(e) => {
+                                                    setQuizCollection(e.target.value, gameItem);
+                                                }}
+                                                defaultValue={getDefaultQuizValue(gameItem)}
+                                            >
+                                                {gameQuizList.quizzes!.map((quiz, idx) => (
+                                                    <option key={idx} value={quiz.id}>
+                                                        {quiz.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="flex items-center gap-1 mt-2">
+                                                <span>Time: </span>
+                                                <Input
+                                                    type="datetime-local"
+                                                    value={startTimeQuiz}
+                                                    onChange={(e) => {
+                                                        setTimeQuiz(e.target.value);
+                                                    }}
+                                                    required
+                                                    className="border p-2 rounded-md bg-white dark:bg-black border-gray-300"
+                                                />
+                                            </div>
+                                            {errorStartTime && <p className="text-red-500">{errorStartTime}</p>}
+                                        </>
                                     )}
                                 </div>
                             </>

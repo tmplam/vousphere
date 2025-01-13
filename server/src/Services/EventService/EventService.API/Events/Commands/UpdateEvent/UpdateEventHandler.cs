@@ -173,6 +173,7 @@ public class UpdateEventHandler(
         {
             GameId = g.GameId,
             PopUpItemsEnabled = g.PopUpItemsEnabled,
+            StartTime = g.StartTime,
             QuizzCollectionId = g.QuizzCollectionId,
         }).ToList();
 

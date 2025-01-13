@@ -65,7 +65,8 @@ export function getQueryParams<T>(params: Params, key: string): T {
     return typeof value === "string" ? (value as T) : (value[0] as T);
 }
 
-export function printDateTime(date: Date) {
+export function printDateTime(date: Date | null | undefined) {
+    if (!date) return "N/A";
     return date.toLocaleString();
 }
 
@@ -83,7 +84,7 @@ export function printTime(date: Date) {
 export function printTimeNoSecond(date: Date) {
     if (!date) return "";
     const hour = date.getHours();
-    const hourLabel = hour > 12 ? hour : "0" + hour;
+    const hourLabel = hour > 9 ? hour : "0" + hour;
     const minute = date.getMinutes();
     const minuteLabel = minute > 9 ? minute : "0" + minute;
     return `${hourLabel}:${minuteLabel}`;
@@ -93,4 +94,16 @@ export const convertToVietnamTimezone = (datetime: string, timezone: number): st
     const date = new Date(datetime);
     date.setHours(date.getHours() + timezone);
     return date.toISOString().slice(0, 16);
+};
+
+export const formatFullToSimpleDateTime = (fullDatetime: string): string => {
+    const date = new Date(fullDatetime);
+    return date.toISOString().slice(0, 16);
+};
+
+export const addTime = (date: Date, hours: number = 0, minutes: number = 0, seconds: number = 0): Date => {
+    date.setHours(date.getHours() + hours);
+    date.setMinutes(date.getMinutes() + minutes);
+    date.setSeconds(date.getSeconds() + seconds);
+    return date;
 };

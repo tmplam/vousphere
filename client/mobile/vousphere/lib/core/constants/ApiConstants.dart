@@ -16,10 +16,15 @@ class ApiConstants {
   static const String removeFromFavorite =
       "/user-service/api/users/favorites/:eventId";
   static const String getPopularBrand = '/user-service/api/brands/popular';
+
   static const String getNearbyBrand = '/user-service/api/brands/near-by';
+
+  // Siglr
+  static String baseUrlSiglr = "ws://192.168.1.105:6000";
 
   static Future<void> loadBaseUrl() async {
     const storage = FlutterSecureStorage();
-    baseUrl = await storage.read(key: "baseUrl") ?? "http://192.168.1.103:6000";
+    baseUrl = await storage.read(key: "baseUrl") ?? "http://192.168.1.105:6000";
+    baseUrlSiglr = baseUrl.replaceFirst('http', 'ws');
   }
 }

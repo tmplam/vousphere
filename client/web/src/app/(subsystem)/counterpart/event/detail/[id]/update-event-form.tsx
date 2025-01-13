@@ -15,18 +15,18 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { convertToVietnamTimezone, defaultEventImage, defaultGameImage, defaultVoucherImage } from "@/lib/utils";
+import {
+    addTime,
+    convertToVietnamTimezone,
+    defaultEventImage,
+    defaultGameImage,
+    defaultVoucherImage,
+} from "@/lib/utils";
 import { EventGameType, VoucherAmount, VoucherEventItemType, VoucherEventType } from "@/schema/event.schema";
 import { GameAndQuizListType, GameType } from "@/schema/game.schema";
 import { CircleX, Info, Plus, Trash, Trash2 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const formatFullToSimpleDateTime = (fullDatetime: string): string => {
-    const date = new Date(fullDatetime);
-    return date.toISOString().slice(0, 16);
-};
 
 const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetchData?: boolean) => void }) => {
     const [name, setName] = useState(event.name);
@@ -50,6 +50,11 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
     const [startTime, setStartTime] = useState(convertToVietnamTimezone(event.startTime, 7));
     const [errorStartTime, setErrorStartTime] = useState("");
     const [endTime, setEndTime] = useState(convertToVietnamTimezone(event.endTime, 7));
+    const quizGameItem = event.games.find((g) => g.quizzCollectionId);
+    const currentStartTimeQuiz = quizGameItem
+        ? convertToVietnamTimezone(quizGameItem.startTime, 7)
+        : addTime(new Date(), 10).toJSON();
+    const [startTimeQuiz, setStartTimeQuiz] = useState<string>(currentStartTimeQuiz);
     const [errorEndTime, setErrorEndTime] = useState("");
     const [gamesAndQuizzes, setGamesAndQuizzes] = useState<GameQuizType[]>([]);
     const [errorGames, setErrorGames] = useState("");
@@ -72,7 +77,10 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                 console.log(gameQuiz);
                 const game = result?.games?.find((g) => g.id === gameQuiz.gameId)!;
                 const quiz = result?.quizzes?.find((q) => q.id === gameQuiz.quizzCollectionId) || null;
-                return { game, quiz, popUpItemsEnabled: gameQuiz.popUpItemsEnabled };
+                let startTimeQ = gameQuiz.startTime
+                    ? convertToVietnamTimezone(gameQuiz.startTime, 7)
+                    : addTime(new Date(), 10).toJSON();
+                return { game, quiz, startTime: startTimeQ, popUpItemsEnabled: gameQuiz.popUpItemsEnabled };
             });
             setGamesAndQuizzes(savedGamesAndQuizzes);
             setHasFetched(true);
@@ -128,8 +136,16 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
 
     const validateGames = () => {
         if (!gamesAndQuizzes || gamesAndQuizzes.length === 0) {
-            setErrorVouchers("You still not specify any game yet");
+            setErrorGames("You still not specify any game yet");
             return false;
+        }
+        for (let i = 0; i < gamesAndQuizzes.length; i++) {
+            if (gamesAndQuizzes[i].quiz) {
+                if (startTime > startTimeQuiz) {
+                    setErrorGames("Start time of quiz must be after the start time of event");
+                    return false;
+                }
+            }
         }
         setErrorGames("");
         return true;
@@ -193,7 +209,8 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                 return {
                     gameId: eachGame.game!.id,
                     popUpItemsEnabled: eachGame.popUpItemsEnabled,
-                    quizzCollectionId: eachGame.quiz?.id,
+                    startTime: new Date(startTimeQuiz).toJSON(),
+                    quizzCollectionId: eachGame.quiz?.id || null,
                 };
             }),
             item: collectItem,
@@ -250,14 +267,19 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
     };
 
     const addGamesAndQuizzes = (newGamesAndQuizzes: GameQuizType[]) => {
-        console.log(newGamesAndQuizzes);
+        const idx = newGamesAndQuizzes.findIndex((eg) => eg.quiz);
+        if (idx !== -1) {
+            newGamesAndQuizzes[idx].startTime = startTimeQuiz;
+        }
         setGamesAndQuizzes([...newGamesAndQuizzes]);
+        if (errorGames) setErrorGames("");
     };
 
     const removeGameAndQuiz = (index: number) => {
         const newGameQuizList = [...gamesAndQuizzes];
         newGameQuizList.splice(index, 1);
         setGamesAndQuizzes(newGameQuizList);
+        if (errorGames) setErrorGames("");
     };
 
     async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
@@ -564,6 +586,8 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                                     <SelectGameModal
                                         gamesAndQuizzes={gamesAndQuizzes}
                                         onAddingGamesAndQuizzes={addGamesAndQuizzes}
+                                        startTimeQuiz={startTimeQuiz}
+                                        setTimeQuiz={setStartTimeQuiz}
                                     >
                                         <Button variant={"outline"} className="rounded-full border-gray-300">
                                             Add game <Plus />
@@ -571,9 +595,7 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                                     </SelectGameModal>
                                 )}
                             </div>
-                            {errorVouchers && vouchers.length === 0 && (
-                                <p className="text-red-500 text-sm">{errorVouchers}</p>
-                            )}
+                            {errorGames && <p className="text-red-500 text-sm">{errorGames}</p>}
                         </div>
                     </div>
                 </div>
@@ -666,16 +688,25 @@ function GameQuizItem({
                     dangerouslySetInnerHTML={{ __html: item.game.description }}
                     className="text-xs line-clamp-2 min-h-[1.8rem]"
                 ></span>
-                <span className="text-xs font-semibold">
-                    Allow trading:
-                    <span
-                        className={`px-1 py-[1px] rounded-sm text-[.7rem] ml-1 ${
-                            item.popUpItemsEnabled ? "border text-gradient border-gray-200" : "bg-red-500 text-white"
-                        }`}
-                    >
-                        {item.popUpItemsEnabled ? "Yes" : "No"}
+                <div className="flex gap-x-5 flex-wrap">
+                    <span className="text-xs font-semibold">
+                        Allow trading:
+                        <span
+                            className={`px-1 py-[1px] rounded-sm text-[.7rem] ml-1 font-semibold ${
+                                item.popUpItemsEnabled
+                                    ? "border text-gradient border-gray-200"
+                                    : "bg-red-500 text-white"
+                            }`}
+                        >
+                            {item.popUpItemsEnabled ? "Yes" : "No"}
+                        </span>
                     </span>
-                </span>
+                    {item.quiz && (
+                        <span className="text-xs">
+                            <b className="mr-1">Start time:</b> {item.startTime}
+                        </span>
+                    )}
+                </div>
                 {item.quiz && (
                     <span className="text-xs font-semibold">
                         Quiz: <span className="text-gradient">{item.quiz.name}</span>

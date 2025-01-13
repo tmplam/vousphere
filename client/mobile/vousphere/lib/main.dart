@@ -89,39 +89,96 @@ class _MyMainPageState extends State<MyMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _getTitle(selectedIndex),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+      appBar: AppBar(
+        title: Text(
+          _getTitle(selectedIndex),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.blue.shade700,
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider.value(
-                        value: Provider.of<NotificationProvider>(context,
-                            listen: true),
-                        child: const NotificationPage(),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: Provider.of<NotificationProvider>(context,
+                              listen: true),
+                          child: const NotificationPage(),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.notifications),
-              ),
-            )
-          ],
-        ),
-        body: Container(
-          width: double.infinity,
-          color: Colors.white,
-          child: pageOptions.elementAt(selectedIndex),
-        ),
-        bottomNavigationBar: CustomNavigationBar(
-            currentIndex: selectedIndex, onDestinationSelected: onItemTapped));
+                    );
+                  },
+                  icon: const Icon(Icons.notifications),
+                ),
+                Consumer<NotificationProvider>(
+                  builder: (context, provider, child) {
+                    return provider.unreadCount > 0
+                        ? Positioned(
+                            right: 1,
+                            top: 2,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade600,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1.5,
+                                ),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  provider.unreadCount > 99
+                                      ? '99+'
+                                      : '${provider.unreadCount}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox
+                            .shrink(); // More efficient than empty Container
+                  },
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+        width: double.infinity,
+        color: Colors.white,
+        child: pageOptions.elementAt(selectedIndex),
+      ),
+      bottomNavigationBar: CustomNavigationBar(
+        currentIndex: selectedIndex,
+        onDestinationSelected: onItemTapped,
+      ),
+    );
   }
 }
