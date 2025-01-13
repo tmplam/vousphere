@@ -1,91 +1,66 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:intl/intl.dart';
-import 'package:vousphere/features/game/Dialog/GameOverDialog.dart';
-
-// Model Classes
-class QuizInfo {
-  final String id;
-  final String name;
-  final String description;
-  final List<Question> questions;
-
-  QuizInfo({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.questions,
-  });
-}
-
-class Question {
-  final String id;
-  final String content;
-  final List<Option> options;
-
-  Question({
-    required this.id,
-    required this.content,
-    required this.options,
-  });
-}
-
-class Option {
-  final String id;
-  final String content;
-
-  Option({
-    required this.id,
-    required this.content,
-  });
-}
-
-class Player {
-  final String id;
-  final String name;
-
-  Player({required this.id, required this.name});
-}
+import 'package:vousphere/core/constants/ApiConstants.dart';
+import 'package:vousphere/data/api/ApiService.dart';
+import 'package:vousphere/data/models/Event.dart';
+import 'package:vousphere/data/models/Game/Player.dart';
+import 'package:vousphere/data/models/Game/QuizInfo.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:io';
 
 class QuizGame extends StatefulWidget {
-  const QuizGame({Key? key}) : super(key: key);
+  final Event event;
+
+  const QuizGame({
+    Key? key,
+    required this.event,
+  }) : super(key: key);
 
   @override
   State<QuizGame> createState() => _QuizGameState();
 }
 
+enum GameState {
+  connecting,
+  waitingRoom,
+  countdown,
+  playing,
+  showingAnswer,
+  finished
+}
+
 class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
-  bool isPlaying = false;
-  bool isInWaitingRoom = false;
-  int score = 0;
+  WebSocketChannel? _channel;
+  GameState _gameState = GameState.connecting;
+  QuizInfo? quizInfo;
+  List<Player> players = [];
   int questionIndex = 0;
   int timeRemaining = 15;
+  int score = 0;
   String? selectedAnswerId;
   bool hasAnswered = false;
   Timer? _timer;
-  final audioPlayer = AudioPlayer();
   late AnimationController _timerAnimationController;
-  QuizInfo? quizInfo;
-  List<Player> players = [];
-  DateTime? gameStartTime;
-  late FlutterTts flutterTts;
-  late String formattedTime;
-  bool showCountdown = false;
+  String? correctAnswerId;
+
+  final _connectionLock = Object();
+  bool _isReconnecting = false;
+  DateTime? _lastMessageTime;
+  Timer? _heartbeatTimer;
+  Timer? _reconnectionTimer;
+  int _reconnectAttempts = 0;
+  static const int maxReconnectAttempts = 5;
+  String? token;
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
-    _initializeQuizData();
-    final now = DateTime.now();
-    final futureTime = now.add(Duration(seconds: 60));
-    // Định dạng thời gian theo định dạng HH:mm
-    formattedTime = DateFormat('HH:mm').format(futureTime);
-
-    // Khởi tạo TTS
-    flutterTts = FlutterTts();
+    _connectWebSocket();
+    _startHeartbeat();
   }
 
   void _initializeAnimations() {
@@ -95,217 +70,290 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
     );
   }
 
-  void _initializeQuizData() {
-    // Hardcoded quiz data
-    quizInfo = QuizInfo(
-      id: "01945b83-3310-40d7-acbf-13e4cbaf2fd2",
-      name: "Quiz for campaign 1",
-      description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry...",
-      questions: [
-        Question(
-          id: "f225ef85-8552-4188-9a13-9b5dbda1ce76",
-          content: "Ai là người đầu tiên chinh phục Everest",
-          options: [
-            Option(id: "b78e2408-0339-4e03-85fb-7ba6e3e04e94", content: "Huu"),
-            Option(id: "e79d0d37-d2ea-40dc-b815-1ff91a447123", content: "Lam"),
-            Option(id: "294db647-1142-4a12-b4f5-a00ab871c0da", content: "HiHi"),
-            Option(
-                id: "524709e0-4382-4384-b895-6a73413d9bdd", content: "Khiem"),
-          ],
-        ),
-        Question(
-          id: "fcb19fd7-1262-4926-972f-1ce6fc57eb2c",
-          content: "Huu sinh nam bao nhieu",
-          options: [
-            Option(id: "725bb7fa-2f6f-4c50-bffd-d83985950e1e", content: "1"),
-            Option(id: "1782c804-8aad-4bfa-b6d3-a68161970943", content: "2"),
-            Option(id: "789fa2f7-b719-4481-aeef-2f540749d29f", content: "3"),
-            Option(id: "a2ae8e38-aaef-4429-ac46-1fa493f7b538", content: "4"),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void startGame() {
-    setState(() {
-      isInWaitingRoom = true;
+  void _startHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (_gameState != GameState.connecting && _channel != null) {
+        _sendHeartbeat();
+      }
     });
-
-    // Simulate socket connection and player joining
-    _simulatePlayersJoining();
   }
 
-  void _simulatePlayersJoining() {
-    // Initial players
-    players = [
-      Player(id: "850dc338-34fc-410e-9986-240a6213a1af", name: "Poirot"),
-    ];
+  void _sendHeartbeat() {
+    try {
+      _channel?.sink.add(jsonEncode({
+            "type": 6 // Heartbeat type
+          }) +
+          '\u001e');
+    } catch (e) {
+      print('Error sending heartbeat: $e');
+    }
+  }
 
-    // Simulate new players joining
-    Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (!isInWaitingRoom) {
+  Future<void> _connectWebSocket() async {
+    synchronized(_connectionLock, () async {
+      if (_isReconnecting) return;
+      _isReconnecting = true;
+
+      try {
+        await _closeExistingConnection();
+        await apiService.loadTokens();
+        final token = apiService.token;
+
+        final uri = Uri.parse(
+                '${ApiConstants.baseUrlSiglr}/game-service/hub/games/quiz')
+            .replace(queryParameters: {'eventId': widget.event.id.toString()});
+
+        final socket = await WebSocket.connect(
+          uri.toString(),
+          headers: {'Authorization': 'Bearer $token'},
+        ).timeout(const Duration(seconds: 10));
+
+        _channel = IOWebSocketChannel(socket);
+        _channel?.sink
+            .add(jsonEncode({"protocol": "json", "version": 1}) + '\u001e');
+
+        _setupMessageListener();
+        _lastMessageTime = DateTime.now();
+        _reconnectAttempts = 0;
+
+        setState(() => _gameState = GameState.connecting);
+      } catch (e) {
+        print('WebSocket connection error: $e');
+        _handleConnectionError();
+      } finally {
+        _isReconnecting = false;
+      }
+    });
+  }
+
+  void _handleWebSocketMessage(dynamic message) {
+    try {
+      print('WebSocket Game message received: $message');
+      final cleanedMessage = message.toString().replaceAll('\u001e', '');
+      final data = jsonDecode(cleanedMessage);
+
+      if (data['type'] == 6) return; // Ignore heartbeat messages
+
+      switch (data['target']) {
+        case 'ReceiveQuizInfo':
+          final quizInfoData = data['arguments'][0];
+          setState(() {
+            quizInfo = QuizInfo.fromJson(quizInfoData);
+            _gameState = GameState.waitingRoom;
+          });
+          break;
+
+        case 'ReceiveNewPlayerJoined':
+          final playerId = data['arguments'][0];
+          final playerName = data['arguments'][1];
+          setState(() {
+            if (!players.any((p) => p.id == playerId)) {
+              players.add(Player(id: playerId, name: playerName));
+            }
+          });
+          break;
+
+        case 'ReceiveQuizCountdown':
+          setState(() {
+            timeRemaining = data['arguments'][0];
+            _gameState = GameState.countdown;
+          });
+          _startCountdownTimer();
+          break;
+
+        case 'ReceiveQuestion':
+          final newQuestionIndex = data['arguments'][0];
+          setState(() {
+            questionIndex = newQuestionIndex;
+            _gameState = GameState.playing;
+            timeRemaining = 18;
+            selectedAnswerId = null;
+            hasAnswered = false;
+            correctAnswerId = null;
+          });
+          _startQuestionTimer();
+          break;
+
+        case 'ReceiveAnswerScore':
+          if (!mounted) return;
+          final scoreData = data['arguments'][0];
+          setState(() {
+            score += (scoreData['score'] as num).toInt();
+          });
+          break;
+
+        case 'ReceiveQuestionAnswer':
+          if (!mounted) return;
+          final questionIndex = data['arguments'][0];
+          final correctOptionIndex = data['arguments'][1];
+          setState(() {
+            correctAnswerId = quizInfo
+                ?.questions[questionIndex].options[correctOptionIndex].id;
+            _gameState = GameState.showingAnswer;
+          });
+          // Wait 3 seconds before next question
+          Timer(const Duration(seconds: 3), () {
+            if (mounted) {
+              setState(() {
+                _gameState = GameState.playing;
+              });
+            }
+          });
+          break;
+
+        case 'ReceiveQuizResult':
+          if (!mounted) return;
+          final voucherPercentage = data['arguments'][0] as int?;
+          final piece = data['arguments'][1] as int?;
+          setState(() {
+            _gameState = GameState.finished;
+          });
+
+          if (piece != null) {
+            _showGameResults(null, piece);
+          } else if (voucherPercentage != null) {
+            _showGameResults(voucherPercentage, 0);
+          }
+          break;
+      }
+    } catch (e) {
+      print('Error handling WebSocket message: $e');
+    }
+  }
+
+  void _startCountdownTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
         timer.cancel();
         return;
       }
 
       setState(() {
-        players.add(Player(
-          id: DateTime.now().toString(),
-          name: "Player ${players.length + 1}",
-        ));
-      });
-    });
-
-    // Simulate quiz start after 30 seconds
-    Future.delayed(const Duration(seconds: 30), () {
-      _showQuizInfo();
-    });
-  }
-
-  void _showQuizInfo() {
-    // Simulate text-to-speech
-    audioPlayer.setAsset('assets/audio/quiz_info.mp3');
-    audioPlayer.play();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => QuizInfoCard(
-        quizInfo: quizInfo!,
-        countdown: 15,
-      ),
-    );
-
-    // Simulate quiz countdown after 30 seconds
-    Future.delayed(const Duration(seconds: 30), () {
-      Navigator.of(context).pop();
-      _startQuizCountdown();
-    });
-  }
-
-  void _startQuizCountdown() {
-    setState(() {
-      timeRemaining = 15;
-      showCountdown = true;
-    });
-
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
         if (timeRemaining > 0) {
           timeRemaining--;
         } else {
           timer.cancel();
-          _startQuiz();
         }
       });
     });
-  }
-
-  void _startQuiz() {
-    setState(() {
-      isPlaying = true;
-      isInWaitingRoom = false;
-      questionIndex = 0;
-      timeRemaining = 15;
-      selectedAnswerId = null;
-      hasAnswered = false;
-    });
-    _timerAnimationController.reset();
-    _timerAnimationController.forward();
-    _startQuestionTimer();
   }
 
   void _startQuestionTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       setState(() {
         if (timeRemaining > 0) {
           timeRemaining--;
         } else {
           timer.cancel();
-          _showAnswer();
         }
       });
     });
   }
 
-  void _selectAnswer(String answerId) {
+  void _submitAnswer(String optionId, int optionIndex) {
     if (hasAnswered) return;
 
     setState(() {
-      selectedAnswerId = answerId;
+      selectedAnswerId = optionId;
       hasAnswered = true;
     });
 
-    // Simulate answer submission
-    Future.delayed(const Duration(seconds: 2), () {
-      _showAnswer();
-    });
+    _channel?.sink.add(jsonEncode({
+          "type": 1,
+          "target": "SubmitAnswerAsync",
+          "arguments": [optionIndex]
+        }) +
+        '\u001e');
   }
 
-  void _showAnswer() {
-    // Hardcoded correct answers
-    final correctAnswers = [
-      "b78e2408-0339-4e03-85fb-7ba6e3e04e94",
-      "789fa2f7-b719-4481-aeef-2f540749d29f"
-    ];
-
-    if (selectedAnswerId == correctAnswers[questionIndex]) {
-      setState(() {
-        score += timeRemaining * 10;
-      });
-    }
-
-    Future.delayed(const Duration(seconds: 3), () {
-      if (questionIndex < quizInfo!.questions.length - 1) {
-        _nextQuestion();
-      } else {
-        _endGame();
-      }
-    });
-  }
-
-  void _nextQuestion() {
-    setState(() {
-      questionIndex++;
-      timeRemaining = 15;
-      selectedAnswerId = null;
-      hasAnswered = false;
-    });
-    _timerAnimationController.reset();
-    _timerAnimationController.forward();
-    _startQuestionTimer();
-  }
-
-  void _endGame() {
-    _timer?.cancel();
-    _timerAnimationController.reset();
-
-    // Simulate final results
-    final topPlayers = [
-      {'rank': 1, 'name': 'Player 2', 'score': 280, 'isUser': false},
-      {'rank': 2, 'name': 'You', 'score': score, 'isUser': true},
-      {'rank': 3, 'name': 'Player 1', 'score': 150, 'isUser': false},
-    ];
-
+  void _showGameResults(int? voucherPercentage, int? piece) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => GameOverDialog(
-        score: score,
-        topPlayers: topPlayers,
-        onClose: () {
-          Navigator.of(context).pop();
-          setState(() {
-            isPlaying = false;
-            score = 0;
-          });
-        },
-        hasWonPrize: score > 200,
-        prizeAmount: '\$500',
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            const Icon(Icons.celebration, color: Colors.blueAccent),
+            const SizedBox(width: 10),
+            const Text(
+              'Game Over!',
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            voucherPercentage != null
+                ? Row(
+                    children: [
+                      const Icon(Icons.card_giftcard, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'You won a $voucherPercentage% discount voucher!',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      const Icon(Icons.pie_chart, color: Colors.orange),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'You won piece ${piece ?? 0}!',
+                          style: const TextStyle(
+                            color: Colors.blueAccent,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'Close',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -326,17 +374,31 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
             children: [
               _buildHeader(),
               Expanded(
-                child: isInWaitingRoom
-                    ? _buildWaitingRoom()
-                    : isPlaying
-                        ? _buildGameScreen()
-                        : _buildStartScreen(),
+                child: _buildMainContent(),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildMainContent() {
+    switch (_gameState) {
+      case GameState.connecting:
+        return _buildConnectingScreen();
+      case GameState.waitingRoom:
+        return _buildWaitingRoom();
+      case GameState.countdown:
+        return _buildCountdownScreen();
+      case GameState.playing:
+      case GameState.showingAnswer:
+        return _buildGameScreen();
+      case GameState.finished:
+        return const Center(
+            child: Text('Game Over!',
+                style: TextStyle(color: Colors.white, fontSize: 24)));
+    }
   }
 
   Widget _buildHeader() {
@@ -353,7 +415,8 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (isPlaying)
+          if (_gameState == GameState.playing ||
+              _gameState == GameState.showingAnswer)
             Text(
               'Score: $score',
               style: const TextStyle(
@@ -366,20 +429,18 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildStartScreen() {
-    return Center(
-      child: ElevatedButton(
-        onPressed: startGame,
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+  Widget _buildConnectingScreen() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(color: Colors.white),
+          SizedBox(height: 16),
+          Text(
+            'Connecting to game server...',
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-        ),
-        child: const Text(
-          'Start Game',
-          style: TextStyle(fontSize: 20),
-        ),
+        ],
       ),
     );
   }
@@ -390,7 +451,7 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
       child: Column(
         children: [
           Text(
-            showCountdown ? '$timeRemaining ' : 'Game starts at $formattedTime',
+            'Waiting for players...',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -427,20 +488,49 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildCountdownScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Game starts in',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '$timeRemaining',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGameScreen() {
+    if (quizInfo == null) return const SizedBox();
+
     final currentQuestion = quizInfo!.questions[questionIndex];
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          AnimatedProgressBar(
-            value: timeRemaining / 15,
-            color: Colors.blue,
+          LinearProgressIndicator(
+            value: timeRemaining / 18,
+            backgroundColor: Colors.grey[300],
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
           ),
           const SizedBox(height: 8),
           Text(
-            'Time: $timeRemaining',
+            timeRemaining > 0 ? 'Time: $timeRemaining' : 'Time Out',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -474,16 +564,69 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
               itemCount: currentQuestion.options.length,
               itemBuilder: (context, index) {
                 final option = currentQuestion.options[index];
-                bool isSelected = selectedAnswerId == option.id;
+                final isSelected = selectedAnswerId == option.id;
+                final isCorrect = _gameState == GameState.showingAnswer &&
+                    option.id == correctAnswerId;
 
-                return ElevatedButton(
-                  onPressed:
-                      hasAnswered ? null : () => _selectAnswer(option.id),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isSelected ? Colors.blue : Colors.white,
-                    foregroundColor: isSelected ? Colors.white : Colors.black,
+                // Determine button style based on state
+                Color backgroundColor;
+                Color textColor;
+                BoxDecoration? decoration;
+
+                if (_gameState == GameState.showingAnswer) {
+                  if (option.id == correctAnswerId) {
+                    // Correct answer
+                    backgroundColor = Colors.white;
+                    textColor = Colors.black;
+                    decoration = BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.green, width: 2),
+                    );
+                  } else if (isSelected) {
+                    // Wrong selected answer
+                    backgroundColor = Colors.grey.withOpacity(0.5);
+                    textColor = Colors.white;
+                  } else {
+                    // Other options
+                    backgroundColor = Colors.white;
+                    textColor = Colors.black;
+                  }
+                } else {
+                  // During playing state
+                  if (isSelected) {
+                    backgroundColor = Colors.grey.withOpacity(0.5);
+                    textColor = Colors.white;
+                  } else {
+                    backgroundColor = Colors.white;
+                    textColor = Colors.black;
+                  }
+                }
+
+                return GestureDetector(
+                  onTap: (!hasAnswered || _gameState == GameState.showingAnswer)
+                      ? isSelected
+                          ? null
+                          : () => _submitAnswer(option.id, index)
+                      : null,
+                  child: Container(
+                    decoration: decoration ??
+                        BoxDecoration(
+                          color: backgroundColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                    child: Center(
+                      child: Text(
+                        option.content,
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                  child: Text(option.content),
                 );
               },
             ),
@@ -493,16 +636,85 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
     );
   }
 
+  void _setupMessageListener() {
+    _channel?.stream.listen(
+      (message) {
+        _lastMessageTime = DateTime.now();
+        _handleWebSocketMessage(message);
+      },
+      onDone: () {
+        setState(() => _gameState = GameState.connecting);
+        _handleConnectionError();
+      },
+      onError: (error) {
+        print('WebSocket error: $error');
+        setState(() => _gameState = GameState.connecting);
+        _handleConnectionError();
+      },
+      cancelOnError: true,
+    );
+  }
+
+  void _handleConnectionError() {
+    if (_reconnectAttempts < maxReconnectAttempts) {
+      _reconnectAttempts++;
+      final delay = Duration(seconds: _reconnectAttempts * 2);
+      _reconnectionTimer?.cancel();
+      _reconnectionTimer = Timer(delay, _connectWebSocket);
+    } else {
+      _showConnectionErrorDialog();
+    }
+  }
+
+  void _showConnectionErrorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Connection Error'),
+        content: const Text(
+            'Unable to connect to the game server. Please try again later.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _closeExistingConnection() async {
+    try {
+      await _channel?.sink.close();
+      _channel = null;
+    } catch (e) {
+      print('Error closing existing connection: $e');
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
+    _heartbeatTimer?.cancel();
+    _reconnectionTimer?.cancel();
     _timerAnimationController.dispose();
-    audioPlayer.dispose();
+    _closeExistingConnection();
     super.dispose();
   }
-}
 
-// UI Components
+  Future<T> synchronized<T>(
+      Object lock, Future<T> Function() computation) async {
+    try {
+      return await computation();
+    } finally {
+      // Lock is automatically released when computation completes
+    }
+  }
+}
 
 class PlayerAvatar extends StatelessWidget {
   final String name;
@@ -550,83 +762,6 @@ class PlayerAvatar extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class QuizInfoCard extends StatelessWidget {
-  final QuizInfo quizInfo;
-  final int countdown;
-
-  const QuizInfoCard({
-    Key? key,
-    required this.quizInfo,
-    required this.countdown,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              quizInfo.name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              quizInfo.description,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AnimatedProgressBar extends StatelessWidget {
-  final double value;
-  final Color color;
-
-  const AnimatedProgressBar({
-    Key? key,
-    required this.value,
-    required this.color,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 8,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
-        widthFactor: value.clamp(0.0, 1.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
-          ),
         ),
       ),
     );

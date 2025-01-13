@@ -41,7 +41,7 @@ class EventProvider with ChangeNotifier {
       final response = await apiService.dio.get(ApiConstants.getEvents,
           queryParameters: {
             "page": page,
-            "perPage": 20,
+            "perPage": 50,
             "keyword": keyword,
           },
           options: Options(extra: {
