@@ -4,7 +4,6 @@ using BuildingBlocks.Messaging.MassTransit;
 using GameService.API.Hubs;
 using GameService.API.Services;
 using Quartz;
-using StackExchange.Redis;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

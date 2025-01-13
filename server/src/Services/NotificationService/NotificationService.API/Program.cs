@@ -1,8 +1,8 @@
-using BuildingBlocks.Auth.Services;
 using BuildingBlocks.Cors;
 using BuildingBlocks.Http.InternalServiceApis;
 using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
+using NotificationService.API.Data;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -72,6 +72,11 @@ builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 // Add CORS
 builder.Services.AddAllowAllCors();
 
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<InitialData>();
+}
 
 
 var app = builder.Build();

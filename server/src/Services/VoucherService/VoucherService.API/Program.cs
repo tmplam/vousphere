@@ -4,6 +4,7 @@ using BuildingBlocks.Http.InternalServiceApis;
 using BuildingBlocks.Http.OptionsSetup;
 using BuildingBlocks.Messaging.MassTransit;
 using System.Reflection;
+using VoucherService.API.Data;
 using VoucherService.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +69,10 @@ builder.Services.AddAllowAllCors();
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<InitialData>();
+}
 
 
 var app = builder.Build();
