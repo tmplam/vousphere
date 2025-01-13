@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:vousphere/features/profile/presentation/dialogs/RequestFrienDialog.dart';
+import 'package:vousphere/features/profile/presentation/GiftPlayTurnPage.dart';
+import 'package:vousphere/features/voucher/presentation/GiftVoucherPage.dart';
+import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class AddPlayTurnDialog extends StatelessWidget {
   const AddPlayTurnDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -20,7 +27,7 @@ class AddPlayTurnDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Get More Play Turns',
+            'Play Turns',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -35,8 +42,17 @@ class AddPlayTurnDialog extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: Icon(Icons.person_add, color: Colors.blue.shade700),
-            title: const Text('Request from Friend'),
-            onTap: () => _showRequestFriendModal(context),
+            title: const Text('Give gifts to friends'),
+            onTap: () async {
+              bool? status = await Navigator.push(
+                  context,
+                  PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const GiftPlayTurnPage(),));
+              if(status != null && status == true) {
+                Fluttertoast.showToast(msg: 'Gift play turn successfully');
+                await userProvider.getUser();
+                Navigator.of(context).pop();
+              }
+            },
           ),
         ],
       ),
@@ -146,15 +162,6 @@ class AddPlayTurnDialog extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  void _showRequestFriendModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const RequestFrienDialog(),
     );
   }
 }
