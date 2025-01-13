@@ -32,15 +32,12 @@ export const getStatistics = async (): Promise<any> => {
             data: [
                 {
                     data: "12100",
-                    trending: "1230",
                 },
                 {
                     data: "12100",
-                    trending: "1230",
                 },
                 {
                     data: "12100",
-                    trending: "1230",
                 },
             ],
         };
@@ -49,6 +46,7 @@ export const getStatistics = async (): Promise<any> => {
         return null;
     }
 };
+
 
 export const getNewRegisteredUsers = async (
     time: string
