@@ -71,9 +71,9 @@ export default function EventManagement() {
         const params = new URLSearchParams(searchParams);
         params.set("page", pageNumber.toString());
         const newUrl = `${pathname}?${params.toString()}`;
-        console.log(newUrl);
         replace(newUrl);
     };
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const params = new URLSearchParams(searchParams);
         params.set("keyword", e.target.value);
