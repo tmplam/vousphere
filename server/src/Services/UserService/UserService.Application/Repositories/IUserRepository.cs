@@ -18,4 +18,6 @@ public interface IUserRepository
         Expression<Func<User, bool>> predicate,
         int page = 1,
         int perPage = 5);
+
+    Task<long> CountAsync(Expression<Func<User, bool>> predicate);
 }
