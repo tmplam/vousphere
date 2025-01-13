@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/data/models/Event.dart';
@@ -44,6 +45,8 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
   Timer? _timer;
   late AnimationController _timerAnimationController;
   String? correctAnswerId;
+  late VideoPlayerController _videoController;
+  bool _isVideoInitialized = false;
 
   final _connectionLock = Object();
   bool _isReconnecting = false;
@@ -58,9 +61,20 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _initializeVideo();
     _initializeAnimations();
     _connectWebSocket();
     _startHeartbeat();
+  }
+
+  Future<void> _initializeVideo() async {
+    _videoController = VideoPlayerController.asset('assets/start.mp4');
+    await _videoController.initialize();
+    _videoController.setLooping(true);
+    setState(() {
+      _isVideoInitialized = true;
+    });
+    _videoController.play();
   }
 
   void _initializeAnimations() {
@@ -192,7 +206,6 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
                 ?.questions[questionIndex].options[correctOptionIndex].id;
             _gameState = GameState.showingAnswer;
           });
-          // Wait 3 seconds before next question
           Timer(const Duration(seconds: 3), () {
             if (mounted) {
               setState(() {
@@ -209,7 +222,7 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
           setState(() {
             _gameState = GameState.finished;
           });
-
+          _videoController.pause(); // Pause video when game is finished
           if (piece != null) {
             _showGameResults(null, piece);
           } else if (voucherPercentage != null) {
@@ -450,6 +463,26 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
+          if (_isVideoInitialized)
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: AspectRatio(
+                aspectRatio: _videoController.value.aspectRatio,
+                child: VideoPlayer(_videoController),
+              ),
+            ),
+          const SizedBox(height: 24),
           Text(
             'Waiting for players...',
             style: const TextStyle(
@@ -489,28 +522,46 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
   }
 
   Widget _buildCountdownScreen() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Game starts in',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (_isVideoInitialized)
+          Container(
+            height: MediaQuery.of(context).size.height * 0.3,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: AspectRatio(
+              aspectRatio: _videoController.value.aspectRatio,
+              child: VideoPlayer(_videoController),
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            '$timeRemaining',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 48,
-              fontWeight: FontWeight.bold,
-            ),
+        const SizedBox(height: 24),
+        Text(
+          'Game starts in',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 24,
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          '$timeRemaining',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -523,6 +574,7 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
+          // Timer and score section
           LinearProgressIndicator(
             value: timeRemaining / 18,
             backgroundColor: Colors.grey[300],
@@ -536,7 +588,31 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
               fontSize: 24,
             ),
           ),
+
+          // Video player section
+          if (_isVideoInitialized)
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: AspectRatio(
+                aspectRatio: _videoController.value.aspectRatio,
+                child: VideoPlayer(_videoController),
+              ),
+            ),
+
           const SizedBox(height: 24),
+
+          // Question section
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -552,7 +628,10 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
               textAlign: TextAlign.center,
             ),
           ),
+
           const SizedBox(height: 24),
+
+          // Answer options grid
           Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -568,14 +647,12 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
                 final isCorrect = _gameState == GameState.showingAnswer &&
                     option.id == correctAnswerId;
 
-                // Determine button style based on state
                 Color backgroundColor;
                 Color textColor;
                 BoxDecoration? decoration;
 
                 if (_gameState == GameState.showingAnswer) {
                   if (option.id == correctAnswerId) {
-                    // Correct answer
                     backgroundColor = Colors.white;
                     textColor = Colors.black;
                     decoration = BoxDecoration(
@@ -584,23 +661,16 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
                       border: Border.all(color: Colors.green, width: 2),
                     );
                   } else if (isSelected) {
-                    // Wrong selected answer
                     backgroundColor = Colors.grey.withOpacity(0.5);
                     textColor = Colors.white;
                   } else {
-                    // Other options
                     backgroundColor = Colors.white;
                     textColor = Colors.black;
                   }
                 } else {
-                  // During playing state
-                  if (isSelected) {
-                    backgroundColor = Colors.grey.withOpacity(0.5);
-                    textColor = Colors.white;
-                  } else {
-                    backgroundColor = Colors.white;
-                    textColor = Colors.black;
-                  }
+                  backgroundColor =
+                      isSelected ? Colors.grey.withOpacity(0.5) : Colors.white;
+                  textColor = isSelected ? Colors.white : Colors.black;
                 }
 
                 return GestureDetector(
@@ -702,6 +772,7 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
     _heartbeatTimer?.cancel();
     _reconnectionTimer?.cancel();
     _timerAnimationController.dispose();
+    _videoController.dispose();
     _closeExistingConnection();
     super.dispose();
   }
