@@ -11,12 +11,14 @@ public class GetEventsInfoHandler(
 {
     public async Task<GetEventsInfoResult> Handle(GetEventsInfoQuery query, CancellationToken cancellationToken)
     {
-        var events = _session.Query<Event>()
+        var eventOrigins = await _session.Query<Event>()
             .Where(e => query.EventIds.Contains(e.Id))
-            .ProjectToType<EventDto>();
+            .ToListAsync();
 
-        if (!events.Any())
+        if (!eventOrigins.Any())
             return new GetEventsInfoResult(new Dictionary<Guid, EventDto>());
+
+        var events = eventOrigins.ToList().Adapt<List<EventDto>>();
 
         var itemImageIds = events.Select(e => e.Item != null ? e.Item.ImageId : Guid.Empty).Distinct();
 
@@ -24,11 +26,15 @@ public class GetEventsInfoHandler(
 
         foreach (var @event in events)
         {
-            if (@event.Item != null && images.ContainsKey(@event.Item.ImageId))
+            if (@event.Id == Guid.Empty)
+                continue;
+            if (@event.Item != null && @event.Item.ImageId != Guid.Empty && images.ContainsKey(@event.Item.ImageId))
                 @event.Item.Image = images[@event.Item.ImageId];
         }
 
-        var eventDictionary = events.ToDictionary(e => e.Id);
+        var eventDictionary = events
+            .Where(e => e.Id != Guid.Empty)
+            .ToDictionary(e => e.Id);
 
         return new GetEventsInfoResult(eventDictionary);
     }

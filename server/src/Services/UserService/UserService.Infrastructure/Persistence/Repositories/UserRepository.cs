@@ -59,4 +59,9 @@ public class UserRepository(ApplicationDbContext _dbContext) : IUserRepository
 
         return PaginationResult<User>.Create(page, perPage, total, totalPages, data);
     }
+
+    public async Task<long> CountAsync(Expression<Func<User, bool>> predicate)
+    {
+        return await _dbContext.Set<User>().LongCountAsync(predicate);
+    }
 }
