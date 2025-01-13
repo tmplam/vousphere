@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vousphere/core/constants/ApiConstants.dart';
 import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/auth/presentation/LoginPage.dart';
 import 'package:vousphere/features/home/presentation/HomePage.dart';
@@ -13,8 +14,10 @@ import 'package:vousphere/shared/widgets/CustomNavigationBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ApiConstants.loadBaseUrl();
   ApiService apiService = ApiService();
   await apiService.init();
+
 
   runApp(
     MultiProvider(

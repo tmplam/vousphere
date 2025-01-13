@@ -1,6 +1,7 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 class ApiConstants {
-  // static const String baseUrl = "http://localhost:6000";
-  static const String baseUrl = "http://192.168.1.103:6000";
+  static String baseUrl = "http://192.168.1.103:6000";
   static const String login = "/user-service/api/users/sign-in";
   static const String register = "/user-service/api/users/sign-up";
   static const String getProfile = "/user-service/api/users/profile";
@@ -15,4 +16,10 @@ class ApiConstants {
   static const String removeFromFavorite =
       "/user-service/api/users/favorites/:eventId";
   static const String getPopularBrand = '/user-service/api/brands/popular';
+  static const String getNearbyBrand = '/user-service/api/brands/near-by';
+
+  static Future<void> loadBaseUrl() async {
+    const storage = FlutterSecureStorage();
+    baseUrl = await storage.read(key: "baseUrl") ?? "http://192.168.1.103:6000";
+  }
 }

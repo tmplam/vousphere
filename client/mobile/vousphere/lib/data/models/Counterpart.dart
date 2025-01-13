@@ -1,3 +1,5 @@
+import 'package:vousphere/data/models/Brand.dart';
+
 class Counterpart {
   final String id;
   final String name;
@@ -7,7 +9,7 @@ class Counterpart {
   final String status;
   final String? imageId;
   final String? image;
-  final Map<String, dynamic>? brand;
+  final Brand? brand;
 
   Counterpart({
     required this.id,
@@ -31,7 +33,7 @@ class Counterpart {
       status: json['status'] as String,
       imageId: json['imageId'],
       image: json['image'],
-      brand: json['brand']
+      brand: json['brand'] != null ? Brand.fromJson(json['brand']) : null
     );
   }
 
