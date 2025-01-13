@@ -149,7 +149,7 @@ public class QuizGameHub(
 
             // Calculate score
             int baseScore = 1000;
-            score = Math.Max(100, (int)(baseScore * (10 - timeTaken) / 10));
+            score = Math.Max(100, (int)(baseScore * (18 - timeTaken) / 18));
         }
 
         var answerScore = new QuizAnswerScoreDto
