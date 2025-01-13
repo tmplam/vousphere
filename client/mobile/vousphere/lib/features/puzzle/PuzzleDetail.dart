@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vousphere/data/models/PuzzleItem.dart';
 import 'package:vousphere/features/puzzle/EmailShareDialog.dart';
-import 'package:vousphere/features/puzzle/PuzzleItem.dart';
 
 class PuzzleDetail extends StatefulWidget {
   final PuzzleItem puzzle;
@@ -15,13 +15,11 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
   Set<int> selectedPieces = {};
   Set<int> sharedPieces = {};
 
-  // Calculate position and size for each puzzle piece
   Widget _buildPuzzlePiece(
       int index, bool isUnlocked, bool isSelected, bool isShared) {
     final int rows = widget.puzzle.totalPieces == 4 ? 2 : 3;
     final int cols = widget.puzzle.totalPieces == 4 ? 2 : 3;
 
-    // Calculate the position of this piece in the grid
     final int row = index ~/ cols;
     final int col = index % cols;
 
@@ -49,7 +47,6 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
               borderRadius: BorderRadius.circular(10),
               child: Stack(
                 children: [
-                  // Image piece with custom painting
                   AspectRatio(
                     aspectRatio: 1,
                     child: ClipRect(
@@ -102,7 +99,56 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
     );
   }
 
-  void _showShareOptions() {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.puzzle.name),
+        elevation: 0,
+        actions: [
+          if (selectedPieces.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () => _showShareOptions(context),
+            ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              widget.puzzle.description,
+              style: Theme.of(context).textTheme.bodyMedium,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: widget.puzzle.totalPieces == 4 ? 2 : 3,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: widget.puzzle.totalPieces,
+              itemBuilder: (context, index) {
+                final isUnlocked = widget.puzzle.unlockedPieces.contains(index);
+                final isSelected = selectedPieces.contains(index);
+                final isShared = sharedPieces.contains(index);
+
+                return _buildPuzzlePiece(
+                    index, isUnlocked, isSelected, isShared);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showShareOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -137,7 +183,7 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
                 title: const Text('Share Selected Pieces'),
                 onTap: () {
                   Navigator.pop(context);
-                  _handleShareProcess();
+                  _handleShareProcess(context);
                 },
               ),
             ],
@@ -147,7 +193,7 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
     );
   }
 
-  void _handleShareProcess() {
+  void _handleShareProcess(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) => EmailShareDialog(
@@ -172,38 +218,5 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
         );
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.puzzle.name),
-        elevation: 0,
-        actions: [
-          if (selectedPieces.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.share),
-              onPressed: _showShareOptions,
-            ),
-        ],
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.puzzle.totalPieces == 4 ? 2 : 3,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: widget.puzzle.totalPieces,
-        itemBuilder: (context, index) {
-          final isUnlocked = widget.puzzle.unlockedPieces.contains(index);
-          final isSelected = selectedPieces.contains(index);
-          final isShared = sharedPieces.contains(index);
-
-          return _buildPuzzlePiece(index, isUnlocked, isSelected, isShared);
-        },
-      ),
-    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:vousphere/features/profile-edit/presentation/ProfileEditPage.dar
 import 'package:vousphere/features/profile/presentation/dialogs/AddPlayTurnDialog.dart';
 import 'package:vousphere/features/profile/presentation/dialogs/LogoutDialog.dart';
 import 'package:vousphere/features/puzzle/PuzzleCollection.dart';
+import 'package:vousphere/features/puzzle/provider/PuzzleProvider.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -161,13 +162,13 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text('Add Play Turn'),
             ),
             ListTile(
-              onTap: () async {
-                await Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const PuzzleClollection(),
-                    ));
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PuzzleCollection(),
+                  ),
+                );
               },
               leading:
                   Icon(Icons.extension_outlined, color: Colors.blue.shade700),

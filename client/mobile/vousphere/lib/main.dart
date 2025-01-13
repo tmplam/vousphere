@@ -8,6 +8,7 @@ import 'package:vousphere/features/location/LocationPage.dart';
 import 'package:vousphere/features/notification/NotificationPage.dart';
 import 'package:vousphere/features/notification/provider/NotificationProvider.dart';
 import 'package:vousphere/features/profile/presentation/ProfilePage.dart';
+import 'package:vousphere/features/puzzle/provider/PuzzleProvider.dart';
 import 'package:vousphere/features/voucher/presentation/VoucherPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 import 'package:vousphere/shared/widgets/CustomNavigationBar.dart';
@@ -18,7 +19,6 @@ void main() async {
   ApiService apiService = ApiService();
   await apiService.init();
 
-
   runApp(
     MultiProvider(
       providers: [
@@ -27,6 +27,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => NotificationProvider(apiService),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PuzzleProvider(apiService),
         ),
       ],
       child: const MyApp(),

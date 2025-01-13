@@ -464,31 +464,18 @@ class _NotificationPageState extends State<NotificationPage> {
     Color backgroundColor;
 
     switch (type) {
-      case 'ORDER':
-        icon = Icons.shopping_bag_outlined;
-        color = Colors.purple[700]!;
-        backgroundColor = Colors.purple[50]!;
-        break;
-      case 'PROMO':
+      case 'VoucherReceived':
         icon = Icons.local_offer_outlined;
         color = Colors.green[600]!;
         backgroundColor = Colors.green[50]!;
         break;
-      case 'ACHIEVEMENT':
-        icon = Icons.emoji_events_outlined;
-        color = Colors.amber[700]!;
-        backgroundColor = Colors.amber[50]!;
-        break;
-      case 'DELIVERY':
+
+      case 'ItemPieceReceived':
         icon = Icons.local_shipping_outlined;
         color = Colors.blue[600]!;
         backgroundColor = Colors.blue[50]!;
         break;
-      case 'SYSTEM':
-        icon = Icons.security_outlined;
-        color = Colors.red[600]!;
-        backgroundColor = Colors.red[50]!;
-        break;
+
       default:
         icon = Icons.notifications_outlined;
         color = Colors.grey[600]!;

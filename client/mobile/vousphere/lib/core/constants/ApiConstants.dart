@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiConstants {
-  static String baseUrl = "http://192.168.1.103:6000";
+  static String baseUrl = "http://192.168.1.105:6000";
   static const String login = "/user-service/api/users/sign-in";
   static const String register = "/user-service/api/users/sign-up";
   static const String getProfile = "/user-service/api/users/profile";
