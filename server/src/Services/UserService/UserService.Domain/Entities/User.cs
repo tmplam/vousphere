@@ -6,6 +6,7 @@ namespace UserService.Domain.Entities;
 public class User : AuthUser
 {
     public UserStatus Status { get; set; } = UserStatus.Created;
+    public DateTimeOffset RegisteredAt { get; set; } = DateTimeOffset.UtcNow;
     public Guid? ImageId { get; set; } = null;
 
     public Player? Player { get; set; }
