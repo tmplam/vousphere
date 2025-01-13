@@ -7,6 +7,9 @@ xmlns:tools="http://schemas.android.com/tools"
    
     <queries>
         <package android:name="com.facebook.katana" />
+         <intent>
+    <action android:name="android.intent.action.TTS_SERVICE" />
+  </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
