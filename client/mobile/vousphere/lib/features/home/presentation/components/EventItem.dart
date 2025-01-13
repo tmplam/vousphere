@@ -11,16 +11,21 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
-    
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
+
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       child: GestureDetector(
         onTap: () async {
           await Navigator.push(
               context,
-              PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => EventDetailPage(event: event,),));
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    EventDetailPage(
+                  event: event,
+                ),
+              ));
         },
         child: Card(
           shape: RoundedRectangleBorder(
@@ -43,8 +48,8 @@ class EventItem extends StatelessWidget {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
-                              fit: BoxFit.cover,
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                            fit: BoxFit.cover,
                           );
                         },
                       ),
@@ -53,7 +58,8 @@ class EventItem extends StatelessWidget {
                       top: 8,
                       left: 8,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -83,30 +89,34 @@ class EventItem extends StatelessWidget {
                       top: 8,
                       right: 8,
                       child: userProvider.isFavorite(event.id)
-                      ? Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.red.shade50,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              userProvider.removeFromFavorite(event.id);
-                            },
-                            icon: const Icon(Icons.favorite, color: Colors.red,),
-                          )
-                      )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                          ),
-                          child: IconButton(
-                              onPressed: () async {
-                                userProvider.addToFavorite(event.id);
-                              },
-                              icon: const Icon(Icons.favorite_border_outlined, color: Colors.red,),
-                          )
-                      ),
+                          ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.red.shade50,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  userProvider.removeFromFavorite(event.id);
+                                },
+                                icon: const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                ),
+                              ))
+                          : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  userProvider.addToFavorite(event.id);
+                                },
+                                icon: const Icon(
+                                  Icons.favorite_border_outlined,
+                                  color: Colors.red,
+                                ),
+                              )),
                     ),
                   ],
                 ),
@@ -132,12 +142,13 @@ class EventItem extends StatelessWidget {
                 Row(
                   children: [
                     const SizedBox(
-                      width: 90,
+                      width: 40, 
                       child: Stack(
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundImage: AssetImage('assets/icons/voucher-icon.png'),
+                            backgroundImage:
+                                AssetImage('assets/icons/voucher-icon.png'),
                           ),
                           // Positioned(
                           //   left: 25,
