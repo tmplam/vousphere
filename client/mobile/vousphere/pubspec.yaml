@@ -43,6 +43,7 @@ dependencies:
   flutter_tts: ^3.3.0
   lottie: ^2.3.2
   confetti: ^0.7.0
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:
