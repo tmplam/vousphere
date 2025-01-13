@@ -92,6 +92,7 @@ export type VoucherEventItemType = {
 export type GameQuizItemType = {
     gameId: string;
     popUpItemsEnabled: boolean;
+    startTime: string;
     quizzCollectionId: string | null;
 };
 
