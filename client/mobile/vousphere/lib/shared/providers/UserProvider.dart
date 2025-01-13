@@ -17,25 +17,22 @@ class UserProvider extends ChangeNotifier {
   }
 
   bool isAuthenticated = false;
-  User user = User('id', 'name', 'email', 'phone', 'status', 'role', 'image', 'imageId', {});
+  User user = User(
+      'id', 'name', 'email', 'phone', 'status', 'role', 'image', 'imageId', {});
   List<Event> favoriteEvents = [];
-
 
   void setIsAuthenticated(bool value) {
     this.isAuthenticated = value;
   }
 
-
   Future<void> getUser() async {
     await _apiService.loadTokens();
     try {
       // call api to get info of authenticated user
-      final response = await _apiService.dio.get(
-          ApiConstants.getProfile,
+      final response = await _apiService.dio.get(ApiConstants.getProfile,
           options: Options(
             extra: {'requireToken': true},
-          )
-      );
+          ));
 
       if (response.statusCode == 200) {
         user = User.fromJson(response.data['data']);
@@ -54,8 +51,7 @@ class UserProvider extends ChangeNotifier {
         } else {
           print("Error message: ${e.message}");
         }
-      }
-      else {
+      } else {
         print(e);
       }
     }
@@ -68,24 +64,18 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getFavoriteEvents() async {
     try {
       // call api to get list favorite
       favoriteEvents.clear();
-      final response = await _apiService.dio.get(
-          ApiConstants.getFavorite,
+      final response = await _apiService.dio.get(ApiConstants.getFavorite,
           options: Options(
             extra: {'requireToken': true},
-          )
-      );
+          ));
 
       if (response.statusCode == 200) {
-        favoriteEvents.addAll(
-            List<Event>.from(
-                response.data["data"]["data"].map((item) => Event.fromJson(item))
-            )
-        );
+        favoriteEvents.addAll(List<Event>.from(
+            response.data["data"]["data"].map((item) => Event.fromJson(item))));
       }
       notifyListeners();
     } catch (e) {
@@ -96,35 +86,30 @@ class UserProvider extends ChangeNotifier {
         } else {
           print("Error message: ${e.message}");
         }
-      }
-      else {
+      } else {
         print(e);
       }
     }
   }
 
-
   bool isFavorite(String id) {
-    for(Event event in favoriteEvents) {
-      if(event.id == id) {
+    for (Event event in favoriteEvents) {
+      if (event.id == id) {
         return true;
       }
     }
     return false;
   }
 
-
   Future<void> addToFavorite(String id) async {
     try {
-      final response = await _apiService.dio.post(
-          ApiConstants.addToFavorite,
+      final response = await _apiService.dio.post(ApiConstants.addToFavorite,
           data: {
             "eventId": id,
           },
           options: Options(
             extra: {'requireToken': true},
-          )
-      );
+          ));
 
       await getFavoriteEvents();
     } catch (e) {
@@ -135,8 +120,7 @@ class UserProvider extends ChangeNotifier {
         } else {
           print("Error message: ${e.message}");
         }
-      }
-      else {
+      } else {
         print(e);
       }
     }
@@ -144,12 +128,11 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> removeFromFavorite(String id) async {
     try {
-      final response = await _apiService.dio.delete(
-          ApiConstants.removeFromFavorite.replaceFirst(":eventId", id),
-          options: Options(
-            extra: {'requireToken': true},
-          )
-      );
+      final response = await _apiService.dio
+          .delete(ApiConstants.removeFromFavorite.replaceFirst(":eventId", id),
+              options: Options(
+                extra: {'requireToken': true},
+              ));
 
       await getFavoriteEvents();
     } catch (e) {
@@ -160,11 +143,23 @@ class UserProvider extends ChangeNotifier {
         } else {
           print("Error message: ${e.message}");
         }
-      }
-      else {
+      } else {
         print(e);
       }
     }
   }
 
+  // turn
+
+  int get remainingPlays {
+    if (user.player != null && user.player!.containsKey('numberOfPlays')) {
+      return user.player!['numberOfPlays'] as int;
+    }
+    return 0;
+  }
+
+  Future<void> updateNumberOfPlays() async {
+    await getUser(); 
+    notifyListeners();
+  }
 }

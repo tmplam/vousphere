@@ -480,7 +480,7 @@ class EventDetailPage extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ShakeGame()),
+                    MaterialPageRoute(builder: (context) => ShakeGame(event: event)),
                   );
                 },
               ),
