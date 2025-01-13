@@ -45,6 +45,12 @@ class _VoucherListState extends State<VoucherList> {
       );
     }
 
+    if(voucherProvider.vouchers.isEmpty) {
+      return Center(
+        child: Text('There is no voucher', style: TextStyle(color: Colors.blue.shade700, fontSize: 16),),
+      );
+    }
+
     return ListView.builder(
         shrinkWrap: true,
         itemCount: voucherProvider.vouchers.length,

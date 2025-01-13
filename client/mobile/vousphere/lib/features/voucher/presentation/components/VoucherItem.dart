@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/data/models/Voucher.dart';
 import 'package:vousphere/features/voucher-detail/presentation/VoucherDetailPage.dart';
+import 'package:vousphere/features/voucher/presentation/GiftVoucherPage.dart';
 import 'package:vousphere/features/voucher/presentation/dialog/VoucherUsageDialog.dart';
 import 'package:vousphere/features/voucher/provider/VoucherProvider.dart';
 
@@ -125,8 +127,20 @@ class _VoucherItemState extends State<VoucherItem> {
                         const SizedBox(height: 4,),
                         Row(
                           children: [
-                            Text('Discount:   '),
-                            Text('${widget.voucher.discount}%', style: TextStyle(color: Colors.blue.shade600),)
+                            const Text('Discount: '),
+                            Text('${widget.voucher.discount}%', style: TextStyle(color: Colors.blue.shade600),),
+                            const Expanded(child: Text('')),
+                            TextButton(
+                                onPressed: () async {
+                                  bool? status = await Navigator.push(
+                                      context,
+                                      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => GiftVoucherPage(voucher: widget.voucher,),));
+                                  if(status != null && status == true) {
+                                    Fluttertoast.showToast(msg: 'Gift voucher successfully');
+                                    await voucherProvider.loadVoucher();
+                                  }
+                                },
+                                child: Text('Gift', style: TextStyle(color: Colors.blue.shade600, fontWeight: FontWeight.bold),))
                           ],
                         )
                       ],
