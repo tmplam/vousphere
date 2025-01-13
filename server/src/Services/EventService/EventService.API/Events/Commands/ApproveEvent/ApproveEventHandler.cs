@@ -55,14 +55,19 @@ public class ApproveEventHandler(
             .StartAt(existingEvent.StartTime)
             .Build();
 
+        var tasks = Task.CompletedTask;
         if (await scheduler.CheckExists(startJobKey))
         {
-            await scheduler.AddJob(startJob, replace: true);
-            await scheduler.RescheduleJob(startTriggerKey, startTrigger);
+            tasks = Task.WhenAll(
+                tasks, 
+                scheduler.AddJob(startJob, replace: true),
+                scheduler.RescheduleJob(startTriggerKey, startTrigger));
         }
         else
         {
-            await scheduler.ScheduleJob(startJob, startTrigger);
+            tasks = Task.WhenAll(
+                tasks,
+                scheduler.ScheduleJob(startJob, startTrigger));
         }
 
 
@@ -87,12 +92,18 @@ public class ApproveEventHandler(
 
         if (await scheduler.CheckExists(endJobKey))
         {
-            await scheduler.AddJob(endJob, replace: true);
-            await scheduler.RescheduleJob(endTriggerKey, endTrigger);
+            tasks = Task.WhenAll(
+                tasks,
+                scheduler.AddJob(endJob, replace: true),
+                scheduler.RescheduleJob(endTriggerKey, endTrigger)
+            );
         }
         else
         {
-            await scheduler.ScheduleJob(endJob, endTrigger);
+            tasks = Task.WhenAll(
+                tasks,
+                scheduler.ScheduleJob(endJob, endTrigger)
+            );
         }
 
         // Send notification to the brand
@@ -105,9 +116,8 @@ public class ApproveEventHandler(
 
 
         await Task.WhenAll(
+            tasks,
             _session.SaveChangesAsync(),
-            scheduler.ScheduleJob(startJob, startTrigger),
-            scheduler.ScheduleJob(endJob, endTrigger),
             _publishEndpoint.Publish(eventApprovedEvent, cancellationToken)
         );
 

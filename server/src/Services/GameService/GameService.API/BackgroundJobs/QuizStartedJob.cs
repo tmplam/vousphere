@@ -52,7 +52,7 @@ public class QuizStartedJob(
 
         var trigger = TriggerBuilder.Create()
             .WithIdentity($"send-quiz-question-trigger-{quizId}-{0}", "quiz-questions")
-            .StartAt(DateBuilder.FutureDate(18, IntervalUnit.Second))
+            .StartAt(DateBuilder.FutureDate(15, IntervalUnit.Second))
             .Build();
 
         await context.Scheduler.ScheduleJob(job, trigger);
