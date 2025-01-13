@@ -12,4 +12,5 @@ public enum NotificationType
     GameUpdated = 7,
     VoucherReceived = 8,
     ItemPieceReceived = 9,
+    PlayroundsGifted = 10,
 }

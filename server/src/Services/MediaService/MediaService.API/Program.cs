@@ -1,5 +1,6 @@
 using BuildingBlocks.Messaging.MassTransit;
 using MediaService.API.BackgroundJobs;
+using MediaService.API.Data;
 using Quartz;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -71,6 +72,11 @@ builder.Services
 builder.Services.AddAuthorization(ConfigurePolicies.AddAllPolicies);
 
 builder.Services.AddExceptionHandler<GlobalExceptionhandler>();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<InitialData>();
+}
 
 
 
