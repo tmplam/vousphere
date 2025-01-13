@@ -493,9 +493,9 @@ class EventDetailPage extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QuizGame()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QuizGame(event: event)));
                 },
               ),
               const SizedBox(height: 16),

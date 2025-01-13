@@ -18,6 +18,7 @@ class ApiConstants {
   static const String getPopularBrand = '/user-service/api/brands/popular';
 
   static const String getNearbyBrand = '/user-service/api/brands/near-by';
+  static const String getVouchers = '/voucher-service/api/vouchers';
 
   // Siglr
   static String baseUrlSiglr = "ws://192.168.1.105:6000";

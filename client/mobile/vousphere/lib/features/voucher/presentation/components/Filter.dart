@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/FilterCategory.dart';
+import 'package:vousphere/features/voucher/provider/VoucherProvider.dart';
 
 class VoucherFilter extends StatefulWidget {
   const VoucherFilter({super.key});
@@ -9,8 +11,6 @@ class VoucherFilter extends StatefulWidget {
 }
 
 class _VoucherFilterState extends State<VoucherFilter> {
-  int selectedIndex = 0;
-
   static final categories = [
     FilterCategory('All', const Icon(Icons.dataset, color: Colors.white,)),
     FilterCategory('Food', const Icon(Icons.fastfood_outlined, color: Colors.white)),
@@ -21,7 +21,7 @@ class _VoucherFilterState extends State<VoucherFilter> {
     FilterCategory('Car', const Icon(Icons.car_repair_outlined, color: Colors.white)),
   ];
   
-  Widget _buildItem(int index, FilterCategory item) {
+  Widget _buildItem(int index, FilterCategory item, VoucherProvider voucherProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ChoiceChip(
@@ -35,11 +35,9 @@ class _VoucherFilterState extends State<VoucherFilter> {
             ],
           ),
         ),
-        selected: index == selectedIndex,
+        selected: item.name == voucherProvider.category,
         onSelected: (bool selected) {
-          setState(() {
-            selectedIndex = index;
-          });
+          voucherProvider.handleFilter(item.name);
         },
         selectedColor: FilterCategory.colors[index],
         backgroundColor: FilterCategory.colors[index].withOpacity(0.4),
@@ -59,13 +57,16 @@ class _VoucherFilterState extends State<VoucherFilter> {
   
   @override
   Widget build(BuildContext context) {
+
+    VoucherProvider voucherProvider = Provider.of<VoucherProvider>(context, listen: true);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ...categories.asMap().entries.map((entry,) {
-            return _buildItem(entry.key, entry.value);
+            return _buildItem(entry.key, entry.value, voucherProvider);
           }),
           const SizedBox(width: 5,)
         ]
