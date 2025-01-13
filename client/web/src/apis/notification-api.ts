@@ -1,14 +1,25 @@
 import axios, { AxiosResponse } from "axios";
 import { BASE_API } from "./constants";
-
+import { SuccessResponse } from "@/schema/http.schema";
+import { Notification, NotificationListType } from "@/schema/notification.shema";
+import { PaginationType } from "@/schema/types/common";
 /* Khiem workspace - Call notification apis */
 
-export async function demoCallARequest(id: string): Promise<AxiosResponse<any>> {
+export async function getNotificationList(
+    currentPage: number = 1,
+    perPage: number = 10
+): Promise<NotificationListType> {
     try {
-        const result = await axios.get(`${BASE_API}/notification-service/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+        const params = new URLSearchParams({
+            page: currentPage.toString(),
+            perPage: perPage.toString(),
         });
-        return result;
+        const result = (
+            await axios.get(`${BASE_API}/notification-service/api/notifications?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            })
+        ).data as SuccessResponse<NotificationListType>;
+        return result.data;
     } catch (error: any) {
         return error;
     }
