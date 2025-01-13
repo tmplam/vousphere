@@ -130,6 +130,7 @@ public class CreateEventHandler(
             {
                 GameId = g.GameId,
                 PopUpItemsEnabled = g.PopUpItemsEnabled,
+                StartTime = g.StartTime,
                 QuizzCollectionId = g.QuizzCollectionId,
             }).ToList(),
             Item = command.Item == null ?
