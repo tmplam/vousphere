@@ -36,16 +36,11 @@ class Event {
       description: json['description'] ?? '',
       image: json['image'] ?? '',
       status: json['status'] ?? '',
-      startTime:
-          DateTime.parse(json['startTime'] ?? DateTime.now().toIso8601String())
-              .toLocal(),
-      endTime:
-          DateTime.parse(json['endTime'] ?? DateTime.now().toIso8601String())
-              .toLocal(),
+      startTime: DateTime.parse(json['startTime'] ?? DateTime.now().toIso8601String()).toLocal(),
+      endTime: DateTime.parse(json['endTime'] ?? DateTime.now().toIso8601String()).toLocal(),
       brand: Brand.fromJson(json['brand'] ?? {}),
       voucherTypes: List<Map<String, dynamic>>.from(
-          json['voucherTypes']?.map((item) => item as Map<String, dynamic>) ??
-              []),
+          json['voucherTypes']?.map((item) => item as Map<String, dynamic>) ?? []),
       totalVouchers: json['totalVouchers'] ?? 0,
       totalPublishedVouchers: json['totalPublishedVouchers'] ?? 0,
       games: List<Map<String, dynamic>>.from(
