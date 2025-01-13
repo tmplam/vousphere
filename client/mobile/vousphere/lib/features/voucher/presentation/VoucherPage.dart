@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/features/voucher/presentation/components/Filter.dart';
 import 'package:vousphere/features/voucher/presentation/components/SearchBox.dart';
 import 'package:vousphere/features/voucher/presentation/components/VoucherList.dart';
+import 'package:vousphere/features/voucher/provider/VoucherProvider.dart';
 
 class VoucherPage extends StatefulWidget {
   const VoucherPage({super.key});
@@ -13,18 +15,21 @@ class VoucherPage extends StatefulWidget {
 class _VoucherPageState extends State<VoucherPage> {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        children: [
-          SizedBox(height: 10,),
-          SearchBox(),
-          SizedBox(height: 10,),
-          VoucherFilter(),
-          SizedBox(height: 10,),
-          Expanded(child: VoucherList())
-        ],
-      ),
+    return ChangeNotifierProvider(
+        create: (context) => VoucherProvider(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            children: [
+              const SizedBox(height: 10,),
+              SearchBox(),
+              const SizedBox(height: 10,),
+              const VoucherFilter(),
+              const SizedBox(height: 10,),
+              const Expanded(child: VoucherList())
+            ],
+          ),
+        ),
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/Voucher.dart';
 import 'package:vousphere/features/voucher/presentation/components/VoucherItem.dart';
+import 'package:vousphere/features/voucher/provider/VoucherProvider.dart';
 
 class VoucherList extends StatefulWidget {
   const VoucherList({super.key});
@@ -11,21 +14,42 @@ class VoucherList extends StatefulWidget {
 
 class _VoucherListState extends State<VoucherList> {
 
-  List<Voucher> vouchers = [
-    Voucher('', '', 'Voucher xin xo con bo cuoi', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQMBsfYZ74qO3YUXuZHKx9A5tpdQJyhuPECw&s', DateTime.now()),
-    Voucher('', '', 'Voucher xin xo con bo cuoi', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQMBsfYZ74qO3YUXuZHKx9A5tpdQJyhuPECw&s', DateTime.now()),
-    Voucher('', '', 'Voucher xin xo con bo cuoi', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQMBsfYZ74qO3YUXuZHKx9A5tpdQJyhuPECw&s', DateTime.now()),
-    Voucher('', '', 'Voucher xin xo con bo cuoi', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQMBsfYZ74qO3YUXuZHKx9A5tpdQJyhuPECw&s', DateTime.now()),
-    Voucher('', '', 'Voucher xin xo con bo cuoi', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQMBsfYZ74qO3YUXuZHKx9A5tpdQJyhuPECw&s', DateTime.now()),
-  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initData();
+    });
+  }
+
+  Future<void> initData() async {
+    VoucherProvider provider =
+    Provider.of<VoucherProvider>(context, listen: false);
+    provider.setLoading(true);
+    try {
+      await provider.loadVoucher();
+      provider.setLoading(false);
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Failed to load voucher');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    VoucherProvider voucherProvider = Provider.of<VoucherProvider>(context, listen: true);
+
+    if(voucherProvider.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: vouchers.length,
+        itemCount: voucherProvider.vouchers.length,
         itemBuilder: (context, index) {
-          return VoucherItem(voucher: vouchers[index],);
+          return VoucherItem(voucher: voucherProvider.vouchers[index],);
         }
     );
   }
