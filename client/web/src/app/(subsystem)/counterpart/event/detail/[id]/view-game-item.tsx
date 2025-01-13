@@ -4,7 +4,7 @@ import { getAllGamesAndQuizzes } from "@/apis/game-api";
 import ViewGameModal from "@/app/(subsystem)/counterpart/event/detail/[id]/view-game-modal";
 import { GameItemSkeleton } from "@/app/(subsystem)/counterpart/skeletons";
 import { Badge } from "@/components/ui/badge";
-import { defaultGameImage } from "@/lib/utils";
+import { defaultGameImage, printDateTime } from "@/lib/utils";
 import { GameQuizItemType } from "@/schema/event.schema";
 import { GameAndQuizListType, GameType, QuizType } from "@/schema/game.schema";
 import { Info } from "lucide-react";
@@ -35,7 +35,15 @@ export function RenderGameItemList({ itemList }: { itemList: GameQuizItemType[] 
                 if (item.quizzCollectionId) {
                     quiz = gameAndQuizList.quizzes?.find((q) => q.id === item.quizzCollectionId) || null;
                 }
-                return <GameItem key={index} game={game} allowTrading={item.popUpItemsEnabled} quiz={quiz} />;
+                return (
+                    <GameItem
+                        key={index}
+                        game={game}
+                        allowTrading={item.popUpItemsEnabled}
+                        startTime={item.startTime}
+                        quiz={quiz}
+                    />
+                );
             })}
         </>
     );
@@ -44,10 +52,12 @@ export function RenderGameItemList({ itemList }: { itemList: GameQuizItemType[] 
 export default function GameItem({
     game,
     allowTrading = false,
+    startTime,
     quiz,
 }: {
     game: GameType;
     allowTrading: boolean;
+    startTime?: string;
     quiz?: QuizType | null;
 }) {
     return (
@@ -67,16 +77,23 @@ export default function GameItem({
                     className="text-xs line-clamp-2 min-h-[2.2rem]"
                     dangerouslySetInnerHTML={{ __html: game.description }}
                 ></span>
-                <span className="text-xs">
-                    <b className="mr-2">Allow trading:</b>
-                    {allowTrading ? (
-                        <span className="text-gradient border border-gray-200 px-1 py-[.05rem] rounded-sm text-xs font-semibold">
-                            Yes
+                <div className="flex gap-x-5 flex-wrap">
+                    <span className="text-xs">
+                        <b className="mr-2">Allow trading:</b>
+                        {allowTrading ? (
+                            <span className="text-gradient border border-gray-200 px-1 py-[.05rem] rounded-sm text-xs font-semibold">
+                                Yes
+                            </span>
+                        ) : (
+                            <span className="bg-red-500 text-white px-1 py-[.05rem] rounded-sm text-xs">No</span>
+                        )}
+                    </span>
+                    {quiz && (
+                        <span className="text-xs">
+                            <b className="mr-1">Start time:</b> {printDateTime(startTime ? new Date(startTime) : null)}
                         </span>
-                    ) : (
-                        <span className="bg-red-500 text-white px-1 py-[.05rem] rounded-sm text-xs">No</span>
                     )}
-                </span>
+                </div>
                 {quiz && (
                     <span className="text-xs font-semibold">
                         Quiz: <span className="text-gradient">{quiz.name}</span>
