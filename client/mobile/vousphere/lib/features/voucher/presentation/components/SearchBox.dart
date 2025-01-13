@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vousphere/features/voucher/provider/VoucherProvider.dart';
 
 class SearchBox extends StatelessWidget {
-  const SearchBox({super.key});
+  SearchBox({super.key});
+  final FocusNode searchFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+
+    VoucherProvider voucherProvider = Provider.of<VoucherProvider>(context, listen: true);
+
     return Row(
       children: [
         const SizedBox(width: 5,),
         Expanded(
           child: TextField(
+            focusNode: searchFocusNode,
+            onSubmitted: (value) {
+              voucherProvider.handleSearch(value);
+            },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
               filled: true,

@@ -147,7 +147,7 @@ class PopularBrandItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      counterpart.brand?['address'] ?? 'HCMC, Vietnam',
+                      counterpart.brand?.address ?? 'HCMC, Vietnam',
                     ),
                   ],
                 ),

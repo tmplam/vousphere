@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vousphere/features/auth/presentation/dialog/SettingIPDialog.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key});
@@ -8,14 +9,19 @@ class AppLogo extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: ClipOval(
-            child: Image.asset(
-              'assets/icons/flutter.png',
-              width: 30,
-              height: 30,
-              fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            showDialog(context: context, builder: (context) => SettingIpDialog());
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/icons/flutter.png',
+                width: 30,
+                height: 30,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

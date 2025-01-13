@@ -1,7 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:vousphere/data/models/Brand.dart';
+import 'package:vousphere/core/constants/ApiConstants.dart';
+import 'package:vousphere/data/api/ApiService.dart';
+import 'package:vousphere/data/models/Counterpart.dart';
+import 'package:vousphere/features/location/component/BrandCard.dart';
+import 'package:vousphere/features/location/component/BrandDetails.dart';
 import 'package:vousphere/service/DirectionService.dart';
 import 'package:vousphere/service/LocationService.dart';
 
@@ -16,31 +22,33 @@ class _LocationPageState extends State<LocationPage> {
   final MapController _mapController = MapController();
   final LocationService _locationService = LocationService();
   final DirectionsService _directionsService = DirectionsService();
+  final ApiService apiService = ApiService();
 
-  Brand? selectedBrand;
+  Counterpart? selectedBrand;
   List<LatLng>? routePoints;
   LatLng? currentLocation;
   bool isLoadingLocation = true;
   bool isLoadingRoute = false;
 
-  final List<Brand> nearbyBrands = [
-    Brand(
-      brandId: '1',
-      name: 'Starbucks Coffee',
-      latitude: 10.884755405794309,
-      longitude: 106.78849039008193,
-      address: '123 Main Street',
-      domain: 'starbucks.com',
-    ),
-    Brand(
-      brandId: '2',
-      name: 'McDonald\'s',
-      latitude: 10.886119890621906,
-      longitude: 106.78369217942999,
-      address: '456 Nguyen Hue Boulevard',
-      domain: 'mcdonalds.com',
-    ),
+  final List<Counterpart> nearbyBrands = [
+    // Brand(
+    //   brandId: '1',
+    //   name: 'Starbucks Coffee',
+    //   latitude: 10.884755405794309,
+    //   longitude: 106.78849039008193,
+    //   address: '123 Main Street',
+    //   domain: 'starbucks.com',
+    // ),
+    // Brand(
+    //   brandId: '2',
+    //   name: 'McDonald\'s',
+    //   latitude: 10.886119890621906,
+    //   longitude: 106.78369217942999,
+    //   address: '456 Nguyen Hue Boulevard',
+    //   domain: 'mcdonalds.com',
+    // ),
   ];
+  List<Counterpart> filteredNearbyBrands = [];
 
   @override
   void initState() {
@@ -49,7 +57,10 @@ class _LocationPageState extends State<LocationPage> {
   }
 
   Future<void> _initializeLocation() async {
-    setState(() => isLoadingLocation = true);
+
+    setState(() {
+      isLoadingLocation = true;
+    });
 
     try {
       final location = await _locationService.getCurrentLocation();
@@ -58,6 +69,7 @@ class _LocationPageState extends State<LocationPage> {
           currentLocation = location;
           _mapController.move(location, 15);
         });
+        await initNearByBrands();
 
         _locationService.getLocationStream().listen((newLocation) {
           setState(() => currentLocation = newLocation);
@@ -68,14 +80,55 @@ class _LocationPageState extends State<LocationPage> {
     } catch (e) {
       _showError('Error getting location');
     } finally {
-      setState(() => isLoadingLocation = false);
+      setState(() {
+        isLoadingLocation = false;
+      });
+    }
+  }
+
+  Future<void> initNearByBrands() async {
+    try {
+      final response = await apiService.dio.get(
+          ApiConstants.getNearbyBrand,
+          queryParameters: {
+            "latitude" : currentLocation?.latitude,
+            "longitude": currentLocation?.longitude,
+            "radius": 10,
+            "page": 1,
+            "perPage": 50,
+          },
+      );
+      if(response.statusCode == 200) {
+        setState(() {
+          nearbyBrands.clear();
+          nearbyBrands.addAll(
+              List<Counterpart>.from(
+                  response.data["data"]["data"].map((item) => Counterpart.fromJson(item))
+              )
+          );
+          filteredNearbyBrands = nearbyBrands;
+        });
+      }
+    }
+    catch (e) {
+      if(e is DioException) {
+        if (e.response != null) {
+          print("Status code: ${e.response?.statusCode}");
+          print("Response data: ${e.response?.data}");
+          _showError('Failed to load nearby brands');
+        } else {
+          print("Error message: ${e.message}");
+        }
+      }
+      else {
+        print("Something went wrong");
+        print(e);
+      }
     }
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    Fluttertoast.showToast(msg: message);
   }
 
   @override
@@ -120,9 +173,9 @@ class _LocationPageState extends State<LocationPage> {
             ],
           ),
           _buildSearchBar(),
-          if (isLoadingLocation)
-            const Center(child: CircularProgressIndicator()),
-          _buildHorizontalBrandList(),
+          isLoadingLocation ?
+            const Center(child: CircularProgressIndicator()) :
+            _buildHorizontalBrandList(),
           if (isLoadingRoute) _buildLoadingRouteIndicator(),
         ],
       ),
@@ -139,108 +192,11 @@ class _LocationPageState extends State<LocationPage> {
         margin: const EdgeInsets.symmetric(horizontal: 8),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: nearbyBrands.length,
+          itemCount: filteredNearbyBrands.length,
           itemBuilder: (context, index) {
-            final brand = nearbyBrands[index];
-            return _buildBrandCard(brand);
+            final brand = filteredNearbyBrands[index];
+            return BrandCard(brand: brand, selectedBrand: selectedBrand, getDirection: _getDirections, onBrandCardTap: _onBrandCardTap, showBrandDetail: _showBrandDetails,);
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBrandCard(Brand brand) {
-    final isSelected = selectedBrand?.brandId == brand.brandId;
-    return Container(
-      width: 300,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Card(
-        elevation: isSelected ? 8 : 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: isSelected
-              ? BorderSide(color: Colors.blue.shade300, width: 2)
-              : BorderSide.none,
-        ),
-        child: InkWell(
-          onTap: () => _onBrandCardTap(brand),
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.store,
-                        size: 30,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            brand.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            brand.address,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _showBrandDetails(brand),
-                        icon: const Icon(Icons.info_outline, size: 18),
-                        label: const Text('Details'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _getDirections(brand),
-                        icon: const Icon(Icons.directions, size: 18),
-                        label: const Text('Route'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -280,9 +236,9 @@ class _LocationPageState extends State<LocationPage> {
 
     markers.addAll(
       nearbyBrands
-          .where((brand) => brand.latitude != null && brand.longitude != null)
+          .where((brand) => brand.brand?.latitude != null && brand.brand?.longitude != null)
           .map((brand) => Marker(
-                point: LatLng(brand.latitude!, brand.longitude!),
+                point: LatLng(brand.brand!.latitude!, brand.brand!.longitude!),
                 width: 24,
                 height: 40,
                 child: GestureDetector(
@@ -295,12 +251,12 @@ class _LocationPageState extends State<LocationPage> {
     return markers;
   }
 
-  Widget _buildBrandMarker(Brand brand) {
+  Widget _buildBrandMarker(Counterpart brand) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color:
-            selectedBrand?.brandId == brand.brandId ? Colors.blue : Colors.red,
+            selectedBrand?.id == brand.id ? Colors.blue : Colors.red,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
@@ -351,6 +307,21 @@ class _LocationPageState extends State<LocationPage> {
                       vertical: 12,
                     ),
                   ),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      setState(() {
+                        filteredNearbyBrands = nearbyBrands;
+                      });
+                    }
+                  },
+                  onSubmitted: (keyword) {
+                    setState(() {
+                      filteredNearbyBrands = nearbyBrands.where((brand) {
+                        return brand.name.toLowerCase().contains(keyword.toLowerCase());
+                      }).toList();
+                      selectedBrand = null;
+                    });
+                  },
                 ),
               ),
               IconButton(
@@ -397,23 +368,23 @@ class _LocationPageState extends State<LocationPage> {
     );
   }
 
-  void _onBrandCardTap(Brand brand) {
+  void _onBrandCardTap(Counterpart brand) {
     setState(() {
       selectedBrand = brand;
       _mapController.move(
-        LatLng(brand.latitude!, brand.longitude!),
+        LatLng(brand.brand!.latitude!, brand.brand!.longitude!),
         _mapController.zoom,
       );
     });
   }
 
-  void _onBrandMarkerTap(Brand brand) {
+  void _onBrandMarkerTap(Counterpart brand) {
     setState(() {
       selectedBrand = brand;
       routePoints = null;
     });
     _mapController.move(
-      LatLng(brand.latitude!, brand.longitude!),
+      LatLng(brand.brand!.latitude!, brand.brand!.longitude!),
       _mapController.zoom,
     );
   }
@@ -424,7 +395,7 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-  Future<void> _getDirections(Brand brand) async {
+  void _getDirections(Counterpart brand) async {
     if (currentLocation == null) return;
 
     setState(() {
@@ -434,7 +405,7 @@ class _LocationPageState extends State<LocationPage> {
     try {
       final route = await _directionsService.getRouteBetweenPoints(
         currentLocation!,
-        LatLng(brand.latitude!, brand.longitude!),
+        LatLng(brand.brand!.latitude!, brand.brand!.longitude!),
       );
 
       setState(() {
@@ -455,114 +426,13 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-  void _showBrandDetails(Brand brand) {
+  void _showBrandDetails(Counterpart brand) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 160,
-                      color: Colors.grey[200],
-                      child: Center(
-                        child: Icon(
-                          Icons.store,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            brand.name,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildDetailRow(Icons.location_on, brand.address),
-                          const SizedBox(height: 12),
-                          _buildDetailRow(Icons.language, brand.domain),
-                          if (currentLocation != null) ...[
-                            const SizedBox(height: 12),
-                            _buildDetailRow(
-                              Icons.directions,
-                              '${const Distance().as(
-                                    LengthUnit.Kilometer,
-                                    currentLocation!,
-                                    LatLng(brand.latitude!, brand.longitude!),
-                                  ).toStringAsFixed(1)} km away',
-                            ),
-                          ],
-                          const SizedBox(height: 24),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _getDirections(brand);
-                            },
-                            icon: const Icon(Icons.directions),
-                            label: const Text('Get Directions'),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(double.infinity, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      builder: (context) => BrandDetails(brand: brand, currentLocation: currentLocation, getDirection: _getDirections)
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[800],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
