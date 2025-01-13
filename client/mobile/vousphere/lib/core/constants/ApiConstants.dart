@@ -1,6 +1,6 @@
 class ApiConstants {
   // static const String baseUrl = "http://localhost:6000";
-  static const String baseUrl = "http://192.168.1.103:6000";
+  static const String baseUrl = "http://192.168.1.105:6000";
   static const String login = "/user-service/api/users/sign-in";
   static const String register = "/user-service/api/users/sign-up";
   static const String getProfile = "/user-service/api/users/profile";
@@ -17,6 +17,5 @@ class ApiConstants {
   static const String getPopularBrand = '/user-service/api/brands/popular';
 
   // Siglr
-  static const String baseUrlSiglr = "ws://192.168.1.103:6000";
-  
+  static const String baseUrlSiglr = "ws://192.168.1.105:6000";
 }

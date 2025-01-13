@@ -40,6 +40,8 @@ dependencies:
   share_plus: ^7.0.0
   web_socket_channel: ^2.4.0
   io: ^1.0.0
+  flutter_tts: ^3.3.0
+  lottie: ^2.3.2
 
 dev_dependencies:
   flutter_test:
