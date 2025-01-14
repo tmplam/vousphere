@@ -28,6 +28,25 @@ public class GetWeekEventStatisticsHandler(
             })
             .ToList();
 
+        // add the missing days
+        var currentDate = startOfWeek;
+        var endDate = endOfWeek;
+
+        while (currentDate < endDate)
+        {
+            if (!groupedEvents.Any(e => e.Date == currentDate))
+            {
+                groupedEvents.Add(new DayEventStatusDto
+                {
+                    Date = currentDate,
+                    NumberOfPendings = 0,
+                    NumberOfHappenings = 0,
+                    NumberOfEndeds = 0
+                });
+            }
+            currentDate = currentDate.AddDays(1);
+        }
+
         return new GetWeekEventStatisticsResult(groupedEvents);
     }
 
