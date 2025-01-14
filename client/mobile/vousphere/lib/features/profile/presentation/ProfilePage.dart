@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/User.dart';
+import 'package:vousphere/features/favorite-event/presentation/FavoriteEventPage.dart';
 import 'package:vousphere/features/profile-edit/presentation/ProfileEditPage.dart';
 import 'package:vousphere/features/profile/presentation/dialogs/AddPlayTurnDialog.dart';
 import 'package:vousphere/features/profile/presentation/dialogs/LogoutDialog.dart';
 import 'package:vousphere/features/puzzle/PuzzleCollection.dart';
-import 'package:vousphere/features/puzzle/provider/PuzzleProvider.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -143,14 +143,6 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.grey,
             ),
             ListTile(
-                onTap: () {},
-                leading: Icon(Icons.airplane_ticket_outlined,
-                    color: Colors.blue.shade700),
-                title: const Text('My Vouchers'),
-                splashColor: Colors.blue.shade50,
-                selectedColor: Colors.blue.shade50,
-                hoverColor: Colors.blue.shade50),
-            ListTile(
               onTap: () {
                 showModalBottomSheet(
                   context: context,
@@ -158,8 +150,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   builder: (context) => const AddPlayTurnDialog(),
                 );
               },
-              leading: Icon(Icons.add, color: Colors.blue.shade700),
-              title: const Text('Add Play Turn'),
+              leading: Icon(Icons.videogame_asset_outlined, color: Colors.blue.shade700),
+              title: const Text('Play Turn'),
             ),
             ListTile(
               onTap: () {
@@ -180,10 +172,16 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text('History'),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => const FavoriteEventPage(),
+                    ));
+              },
               leading: Icon(Icons.favorite_border_outlined,
                   color: Colors.blue.shade700),
-              title: const Text('Your favorite'),
+              title: const Text('My favorite'),
             ),
             ListTile(
               onTap: () {},

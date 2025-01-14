@@ -34,18 +34,18 @@ class _GiftPlayTurnPageState extends State<GiftPlayTurnPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
-              child: const Row(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(width: 4,),
-                  Text('Recipient Email '),
-                  Text('*', style: TextStyle(color: Colors.red),)
-                ],
+              const SizedBox(height: 20),
+              Container(
+                  margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
+                  child: const Row(
+                    children: [
+                        Icon(Icons.person),
+                        SizedBox(width: 4,),
+                        Text('Recipient Email '),
+                        Text('*', style: TextStyle(color: Colors.red),)
+                    ],
+                  ),
               ),
-            ),
             // TextField for Name
             CustomTextField(controller: emailController, hinText: "Enter recipient's email", focusNode: emailFocusNode,),
             const SizedBox(height: 20,),
@@ -53,42 +53,42 @@ class _GiftPlayTurnPageState extends State<GiftPlayTurnPage> {
               FilledButton(
                   onPressed: () async {
                     if(isLoading) {
-                      return;
+                        return;
                     }
                     String email = emailController.text;
                     emailFocusNode.unfocus();
                     setState(() {
-                      isLoading = true;
+                        isLoading = true;
                     });
                     try {
-                      final response = await apiService.dio.get(
-                          '/user-service/api/users/players',
-                          queryParameters: {
-                            "keyword": email,
-                          },
-                          options: Options(
-                              extra: {
-                                "requireToken": true,
-                              }
-                          )
-                      );
+                        final response = await apiService.dio.get(
+                            '/user-service/api/users/players',
+                            queryParameters: {
+                              "keyword": email,
+                            },
+                            options: Options(
+                                extra: {
+                                  "requireToken": true,
+                                }
+                            )
+                        );
 
-                      if(response.statusCode == 200) {
-                        setState(() {
-                          user = User.fromJson(response.data['data'][0]);
-                        });
+                        if(response.statusCode == 200) {
+                          setState(() {
+                            user = User.fromJson(response.data['data'][0]);
+                          });
+                        }
+
+                      }
+                      catch(err) {
+                          print('Error when search user');
+                          Fluttertoast.showToast(msg: 'Failed to find the recipient');
+                          print(err);
                       }
 
-                    }
-                    catch(err) {
-                      print('Error when search user');
-                      Fluttertoast.showToast(msg: 'Failed to find the recipient');
-                      print(err);
-                    }
-
-                    setState(() {
-                      isLoading = false;
-                    });
+                      setState(() {
+                        isLoading = false;
+                      });
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -114,12 +114,12 @@ class _GiftPlayTurnPageState extends State<GiftPlayTurnPage> {
                         height: 28,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            'assets/avatars/avatar0.png',
-                            width: 28,
-                            height: 28,
-                            fit: BoxFit.cover,
-                          );
+                            return Image.asset(
+                              'assets/avatars/avatar0.png',
+                              width: 28,
+                              height: 28,
+                              fit: BoxFit.cover,
+                            );
                         },
                       ),
                     ),
@@ -132,45 +132,45 @@ class _GiftPlayTurnPageState extends State<GiftPlayTurnPage> {
                 const SizedBox(height: 20,),
                 FilledButton(
                     onPressed: () async {
-                      if(isLoading) {
-                        return;
-                      }
+                        if(isLoading) {
+                          return;
+                        }
 
-                      setState(() {
-                        isLoading = true;
-                      });
-                      try {
-                        final response = await apiService.dio.post(
-                            '/user-service/api/users/gift-playrounds',
-                            data: {
-                                "recipientId": user!.id,
-                                "numberOfRounds": 1
-                            },
-                            options: Options(
-                                extra: {
-                                  "requireToken": true,
-                                }
-                            )
-                        );
+                        setState(() {
+                          isLoading = true;
+                        });
+                        try {
+                          final response = await apiService.dio.post(
+                              '/user-service/api/users/gift-playrounds',
+                              data: {
+                                  "recipientId": user!.id,
+                                  "numberOfRounds": 1
+                              },
+                              options: Options(
+                                  extra: {
+                                    "requireToken": true,
+                                  }
+                              )
+                          );
 
-                        Navigator.of(context).pop(true);
-                      }
-                      catch(err) {
-                        print('Error when gift voucher');
-                        Fluttertoast.showToast(msg: 'Failed to send this voucher to the recipient');
-                        print(err);
-                      }
+                          Navigator.of(context).pop(true);
+                        }
+                        catch(err) {
+                          print('Error when gift voucher');
+                          Fluttertoast.showToast(msg: 'Failed to send this voucher to the recipient');
+                          print(err);
+                        }
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        isLoading ? const SizedBox(
-                          width: 10,
-                          height: 10,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
-                        ) : const SizedBox.shrink(),
-                        const SizedBox(width: 4,),
-                        const Text('Confirm'),
+                          isLoading ? const SizedBox(
+                            width: 10,
+                            height: 10,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
+                          ) : const SizedBox.shrink(),
+                          const SizedBox(width: 4,),
+                          const Text('Confirm'),
                       ],
                     )
                 ),

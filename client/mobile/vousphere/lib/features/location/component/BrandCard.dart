@@ -51,18 +51,18 @@ class BrandCard extends StatelessWidget {
                   children: [
                     ClipOval(
                       child: Image.network(
-                        brand.image ?? '',
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            randomBrandImage(),
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                          );
-                        },
+                          brand.image ?? '',
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                                randomBrandImage(),
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                            );
+                          },
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -70,21 +70,21 @@ class BrandCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            brand.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            Text(
+                                brand.name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            brand.brand?.address ?? '',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 13,
+                            const SizedBox(height: 4),
+                            Text(
+                                brand.brand?.address ?? '',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 13,
+                                ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -95,25 +95,25 @@ class BrandCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () => showBrandDetail(brand),
-                        icon: const Icon(Icons.info_outline, size: 18),
-                        label: const Text('Details'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
+                          onPressed: () => showBrandDetail(brand),
+                          icon: const Icon(Icons.info_outline, size: 18),
+                          label: const Text('Details'),
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () => getDirection(brand),
-                        icon: const Icon(Icons.directions, size: 18),
-                        label: const Text('Route'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
+                          onPressed: () => getDirection(brand),
+                          icon: const Icon(Icons.directions, size: 18),
+                          label: const Text('Route'),
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                          ),
                       ),
                     ),
                   ],
