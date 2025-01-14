@@ -25,6 +25,24 @@ internal sealed class GetWeekRegisterStatisticsHandler(
             })
             .ToList();
 
+        // add the missing days
+        var currentDate = startOfWeek;
+        var endDate = endOfWeek;
+
+        while (currentDate < endDate)
+        {
+            if (!groupedRegistrations.Any(e => e.Date == currentDate))
+            {
+                groupedRegistrations.Add(new DayUserRegisterDto
+                {
+                    Date = currentDate,
+                    NumberOfBrands = 0,
+                    NumberOfPlayers = 0
+                });
+            }
+            currentDate = currentDate.AddDays(1);
+        }
+
         return new GetWeekRegisterStatisticsResult(groupedRegistrations);
     }
 
