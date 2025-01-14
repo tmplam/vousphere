@@ -470,34 +470,40 @@ class EventDetailPage extends StatelessWidget {
                       ),
                 ),
               ),
-              _buildGameOption(
-                context: context,
-                icon: Icons.sports_esports,
-                iconColor: Colors.blue,
-                title: 'Shaking Game',
-                subtitle: 'Test your device shaking skills',
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ShakeGame(event: event)),
-                  );
-                },
-              ),
-              _buildGameOption(
-                context: context,
-                icon: Icons.quiz,
-                iconColor: Colors.green,
-                title: 'Quiz Game',
-                subtitle: 'Challenge your knowledge',
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
+              // Only show Shaking Game if it exists in the event's games
+              if (event.games.any((game) => game['gameId'] == 'shaking-game'))
+                _buildGameOption(
+                  context: context,
+                  icon: Icons.sports_esports,
+                  iconColor: Colors.blue,
+                  title: 'Shaking Game',
+                  subtitle: 'Test your device shaking skills',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => QuizGame(event: event)));
-                },
-              ),
+                          builder: (context) => ShakeGame(event: event)),
+                    );
+                  },
+                ),
+              
+              if (event.games.any((game) => game['gameId'] == 'quiz-game'))
+                _buildGameOption(
+                  context: context,
+                  icon: Icons.quiz,
+                  iconColor: Colors.green,
+                  title: 'Quiz Game',
+                  subtitle: 'Challenge your knowledge',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QuizGame(event: event)),
+                    );
+                  },
+                ),
               const SizedBox(height: 16),
             ],
           ),

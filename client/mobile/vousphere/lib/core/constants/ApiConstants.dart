@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiConstants {
-  static String baseUrl = "http://192.168.1.105:6000";
+  static String baseUrl = "http://192.168.1.102:6000";
   static const String login = "/user-service/api/users/sign-in";
   static const String register = "/user-service/api/users/sign-up";
   static const String getProfile = "/user-service/api/users/profile";
@@ -21,11 +21,11 @@ class ApiConstants {
   static const String getVouchers = '/voucher-service/api/vouchers';
 
   // Siglr
-  static String baseUrlSiglr = "ws://192.168.1.105:6000";
+  static String baseUrlSiglr = "ws://192.168.1.102:6000";
 
   static Future<void> loadBaseUrl() async {
     const storage = FlutterSecureStorage();
-    baseUrl = await storage.read(key: "baseUrl") ?? "http://192.168.1.105:6000";
+    baseUrl = await storage.read(key: "baseUrl") ?? "http://192.168.1.102:6000";
     baseUrlSiglr = baseUrl.replaceFirst('http', 'ws');
   }
 }

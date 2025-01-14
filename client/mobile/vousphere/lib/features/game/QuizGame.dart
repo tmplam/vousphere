@@ -10,6 +10,7 @@ import 'package:vousphere/data/models/Game/QuizInfo.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 class QuizGame extends StatefulWidget {
   final Event event;
@@ -443,17 +444,113 @@ class _QuizGameState extends State<QuizGame> with TickerProviderStateMixin {
   }
 
   Widget _buildConnectingScreen() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: Colors.white),
-          SizedBox(height: 16),
-          Text(
-            'Connecting to game server...',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+    final now = DateTime.now();
+    final gameStartTime =
+        DateTime.parse(widget.event.games.first['startTime']).toLocal();
+    final timeDifference = gameStartTime.difference(now);
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF000067), Color(0xFF3B3B98)],
+        ),
+      ),
+      child: Center(
+        child: Card(
+          elevation: 8,
+          color: Colors.white.withOpacity(0.1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (timeDifference.inMinutes > 10) ...[
+                  const Icon(
+                    Icons.schedule,
+                    size: 48,
+                    color: Colors.white70,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Game Starts In',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    DateFormat('EEEE, MMM d • h:mm a').format(gameStartTime),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.info_outline,
+                          color: Colors.white70,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Room opens 10 minutes before start',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else ...[
+                  SizedBox(
+                    width: 56,
+                    height: 56,
+                    child: CircularProgressIndicator(
+                      color: Colors.blue.shade300,
+                      strokeWidth: 4,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  const Text(
+                    'Connecting to Server',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Please wait while we set things up...',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
