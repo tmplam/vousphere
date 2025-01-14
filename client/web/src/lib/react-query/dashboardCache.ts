@@ -6,6 +6,7 @@ import {
     getEventParticipantStatus,
     getNewRegisteredUsers,
     getPlayTurnStatistics,
+    getWeeklyVoucherIssues,
 } from "@/apis/admin-dashboard-api";
 
 export function useCachedAdminDataStatistic() {
@@ -46,6 +47,17 @@ export function useCachedPlayTurnStatistic(time: string) {
         queryKey: ["play-turn-statistic", time],
         queryFn: () => {
             return getPlayTurnStatistics(time);
+        },
+        throwOnError: true,
+        ...commonOptions,
+    });
+}
+
+export function useCachedWeeklyVoucherIssureStatistic(time: string) {
+    return useQuery({
+        queryKey: ["weekly-voucher-issured-statistic", time],
+        queryFn: () => {
+            return getWeeklyVoucherIssues(time);
         },
         throwOnError: true,
         ...commonOptions,

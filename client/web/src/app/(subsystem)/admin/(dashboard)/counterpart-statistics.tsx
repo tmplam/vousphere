@@ -20,15 +20,15 @@ import { Input } from "@/components/ui/input";
 import { formatDate } from "@/lib/utils";
 
 const chartConfig = {
-    incoming: {
+    numberOfPendings: {
         label: "Incoming events",
         color: "hsl(var(--chart-2))",
     },
-    happening: {
+    numberOfHappenings: {
         label: "Happening events",
         color: "hsl(var(--chart-1))",
     },
-    ended: {
+    numberOfEndeds: {
         label: "Ended events",
         color: "hsl(var(--chart-4))",
     },

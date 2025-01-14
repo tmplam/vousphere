@@ -3,6 +3,7 @@ import { EventStatusStatistics } from "@/app/(subsystem)/admin/(dashboard)/count
 import { GameVouchersStatistics } from "@/app/(subsystem)/admin/(dashboard)/game-statistics";
 import OverviewStatistics from "@/app/(subsystem)/admin/(dashboard)/overview-statistics";
 import { NewUserStatistics } from "@/app/(subsystem)/admin/(dashboard)/user-statistics";
+import { WeeklyIssuedVouchers } from "@/app/(subsystem)/admin/(dashboard)/week-voucher-issue";
 
 export default function DashboardPage() {
     return (
@@ -17,12 +18,15 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
                 <h3 className="text-2xl text-gradient font-semibold">Game and Event Statistics</h3>
                 <div className="flex">
                     <EventStatusStatistics />
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="flex">
+                    <WeeklyIssuedVouchers />
+                </div>
+                <div className="w-full lg:w-[70%] mx-auto pt-3">
                     <GameVouchersStatistics />
                     {/* <BasicLineChart /> */}
                 </div>

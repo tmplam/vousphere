@@ -19,15 +19,15 @@ import { Input } from "@/components/ui/input";
 import { useCachedCounterpartVoucherStatistic } from "@/lib/react-query/counterpartDashboardCache";
 
 const chartConfig = {
-    incoming: {
+    numberOfPendings: {
         label: "Incoming events",
         color: "hsl(var(--chart-2))",
     },
-    happening: {
+    numberOfHappenings: {
         label: "Happening events",
         color: "hsl(var(--chart-1))",
     },
-    ended: {
+    numberOfEndeds: {
         label: "Ended events",
         color: "hsl(var(--chart-4))",
     },

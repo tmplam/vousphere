@@ -68,7 +68,7 @@ export const getNewRegisteredUsers = async (
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            console.log(result.data);
+            // console.log(result.data);
             const data = result.data.data.map((item: any) => ({
                 date: formatDate(new Date(item.date)),
                 counterpart: item.numberOfBrands,
@@ -103,6 +103,28 @@ export const getEventParticipantStatus = async (time: string): Promise<any> => {
     }
 };
 
+export const getWeeklyVoucherIssues = async (time: string): Promise<any> => {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) return [];
+        try {
+            const result = await axios.get(
+                `${BASE_API}/voucher-service/api/vouchers/week-vouchers-issued?currentDate=${time}`,
+                {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+                }
+            );
+            console.log(result.data);
+            return result.data.data;
+        } catch (error: any) {
+            return error;
+        }
+    } catch (error: any) {
+        // throw error;
+        return [];
+    }
+};
+
 export const getPlayTurnStatistics = async (
     time: string
 ): Promise<{ gameName: string; releasedVouchers: number; fill: string }[]> => {
@@ -127,20 +149,6 @@ export const getPlayTurnStatistics = async (
         } catch (error: any) {
             return error;
         }
-        // const playTurnTodayData = [
-        //     { game: "quiz", plays: 4, fill: "hsl(var(--chart-1))" },
-        //     { game: "shake", plays: 32, fill: "hsl(var(--chart-4))" },
-        // ];
-
-        // const playTurnThisWeekData = [
-        //     { game: "quiz", plays: 75, fill: "hsl(var(--chart-1))" },
-        //     { game: "shake", plays: 100, fill: "hsl(var(--chart-4))" },
-        // ];
-
-        // const playTurnThisMonthData = [
-        //     { game: "quiz", plays: 275, fill: "hsl(var(--chart-1))" },
-        //     { game: "shake", plays: 500, fill: "hsl(var(--chart-4))" },
-        // ];
     } catch (error: any) {
         // throw error;
         return [];

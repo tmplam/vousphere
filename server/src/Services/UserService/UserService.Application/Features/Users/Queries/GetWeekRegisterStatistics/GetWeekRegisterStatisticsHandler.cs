@@ -12,7 +12,7 @@ internal sealed class GetWeekRegisterStatisticsHandler(
         var endOfWeek = startOfWeek.AddDays(7);
 
         var userRegistrations = await _userRepository.GetUsersAsync(
-            u => u.RegisteredAt >= startOfWeek && u.RegisteredAt < endOfWeek
+            u => u.RegisteredAt.Date >= startOfWeek && u.RegisteredAt.Date < endOfWeek
         );
 
         var groupedRegistrations = userRegistrations.Data
