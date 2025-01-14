@@ -21,6 +21,6 @@ public class GetBrandTotalVouchersIssuedInWeekEndpoint : ICarterModule
 
             return Results.Ok(ApiResult.Success(result.WeekVouchersIssued));
         })
-            .RequireAuthorization(AuthPolicy.Admin);
+            .RequireAuthorization(AuthPolicy.Brand);
     }
 }
