@@ -1,111 +1,125 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+"use client";
 
-const chartData = [
-    { date: "2024-04-01", desktop: 222, mobile: 150 },
-    { date: "2024-04-02", desktop: 97, mobile: 180 },
-    { date: "2024-04-03", desktop: 167, mobile: 120 },
-    { date: "2024-04-04", desktop: 242, mobile: 260 },
-    { date: "2024-04-05", desktop: 373, mobile: 290 },
-    { date: "2024-04-06", desktop: 301, mobile: 340 },
-    { date: "2024-04-07", desktop: 245, mobile: 180 },
-    { date: "2024-04-08", desktop: 409, mobile: 320 },
-    { date: "2024-04-09", desktop: 59, mobile: 110 },
-    { date: "2024-04-10", desktop: 261, mobile: 190 },
-    { date: "2024-04-11", desktop: 327, mobile: 350 },
-];
+import { useMemo, useState } from "react";
+import { TrendingUp } from "lucide-react";
+import { Label, Pie, PieChart } from "recharts";
+
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PlayTurnSkeleton } from "@/app/(subsystem)/admin/skeletons";
+import { useCachedBrandVoucherStatistic } from "@/lib/react-query/counterpartDashboardCache";
+
 const chartConfig = {
-    views: {
-        label: "Page Views",
+    plays: {
+        label: "Plays",
     },
-    desktop: {
-        label: "Desktop",
+    quiz: {
+        label: "Realtime Quiz ",
         color: "hsl(var(--chart-1))",
     },
-    mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-2))",
+    shake: {
+        label: "Shake and Win",
+        color: "hsl(var(--chart-4))",
     },
 } satisfies ChartConfig;
-export function MobileDesktop() {
-    const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("desktop");
-    const total = React.useMemo(
-        () => ({
-            desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-            mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-        }),
-        []
-    );
+
+export function BrandGameVouchersStatistics() {
+    const [time, setTime] = useState("today");
+    const { data: playTurnData, isLoading, isError, isPaused } = useCachedBrandVoucherStatistic();
+    if (isError) return <div>Error</div>;
+    if (isLoading || isPaused || !playTurnData) return <PlayTurnSkeleton />;
+    console.log(playTurnData);
+    // const totalVouchers = playTurnData.reduce((total, item) => total + item.releasedVouchers, 0);
     return (
-        <Card>
-            <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                    <CardTitle>Bar Chart - Interactive</CardTitle>
-                    <CardDescription>Showing total visitors for the last 3 months</CardDescription>
+        <Card className="flex flex-col border-gray-50">
+            <CardHeader className="items-center p-0 pt-1 flex flex-row justify-between">
+                <div className=" px-5 flex-[1]">
+                    <CardTitle className="text-md">Game vouchers</CardTitle>
+                    <CardDescription className="text-xs">Total vouchers were released of each game</CardDescription>
                 </div>
-                <div className="flex">
-                    {["desktop", "mobile"].map((key) => {
-                        const chart = key as keyof typeof chartConfig;
-                        return (
-                            <button
-                                key={chart}
-                                data-active={activeChart === chart}
-                                className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-                                onClick={() => setActiveChart(chart)}
-                            >
-                                <span className="text-xs text-muted-foreground">{chartConfig[chart].label}</span>
-                                <span className="text-lg font-bold leading-none sm:text-3xl">
-                                    {total[key as keyof typeof total].toLocaleString()}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
+                {/* <Select onValueChange={(value) => setTime(value)}>
+                    <SelectTrigger className="w-[120px] scale-90 border-gray-300">
+                        <SelectValue placeholder="Today" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="today" defaultChecked>
+                            Today
+                        </SelectItem>
+                        <SelectItem value="week">This week</SelectItem>
+                        <SelectItem value="month">This month</SelectItem>
+                    </SelectContent>
+                </Select> */}
             </CardHeader>
-            <CardContent className="px-2 sm:p-6">
-                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-                    <BarChart
-                        accessibilityLayer
-                        data={chartData}
-                        margin={{
-                            left: 12,
-                            right: 12,
-                        }}
-                    >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="date"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            minTickGap={32}
-                            tickFormatter={(value) => {
-                                const date = new Date(value);
-                                return date.toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                });
+            <CardContent className="flex-1 p-0">
+                <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[23rem]">
+                    <PieChart>
+                        {/* <ChartLegend
+                            content={<ChartLegendContent nameKey="gameName" />}
+                            className="p-0 -translate-y-3 flex-wrap gap-2 [&>*]:basis-1/3 [&>*]:justify-center"
+                        /> */}
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
+                        <Pie
+                            data={playTurnData}
+                            dataKey="totalReleasedVouchers"
+                            nameKey="gameName"
+                            innerRadius={60}
+                            strokeWidth={8}
+                            labelLine={false}
+                            label={({ payload, ...props }) => {
+                                return (
+                                    <text
+                                        cx={props.cx}
+                                        cy={props.cy}
+                                        x={props.x}
+                                        y={props.y}
+                                        textAnchor={props.textAnchor}
+                                        dominantBaseline={props.dominantBaseline}
+                                        fill="hsla(var(--foreground))"
+                                    >
+                                        {payload.gameName}
+                                    </text>
+                                );
                             }}
-                        />
-                        <ChartTooltip
-                            content={
-                                <ChartTooltipContent
-                                    className="w-[150px]"
-                                    nameKey="views"
-                                    labelFormatter={(value) => {
-                                        return new Date(value).toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                            year: "numeric",
-                                        });
-                                    }}
-                                />
-                            }
-                        />
-                        <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
-                    </BarChart>
+                        >
+                            <Label
+                                content={({ viewBox }) => {
+                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                        return (
+                                            <text
+                                                x={viewBox.cx}
+                                                y={viewBox.cy}
+                                                textAnchor="middle"
+                                                dominantBaseline="middle"
+                                            >
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={viewBox.cy}
+                                                    className="fill-foreground text-5xl font-semibold"
+                                                >
+                                                    {10}
+                                                </tspan>
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={(viewBox.cy || 0) + 24}
+                                                    className="fill-muted-foreground text-[1rem]"
+                                                >
+                                                    Vouchers
+                                                </tspan>
+                                            </text>
+                                        );
+                                    }
+                                }}
+                            />
+                        </Pie>
+                    </PieChart>
                 </ChartContainer>
             </CardContent>
         </Card>

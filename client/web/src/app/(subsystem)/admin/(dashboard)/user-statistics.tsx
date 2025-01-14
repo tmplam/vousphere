@@ -36,6 +36,7 @@ export function NewUserStatistics() {
     const { data: newUsersData, isLoading, isError, isPaused } = useCachedNewUsersStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !newUsersData) return <NewUserChartBarSkeleton />;
+    const sortedUserData = newUsersData.sort((a, b) => (a.date > b.date ? 1 : -1));
     return (
         <Card>
             <CardHeader className="pt-1 px-5 flex flex-row justify-between flex-nowrap">
@@ -62,7 +63,7 @@ export function NewUserStatistics() {
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
-                    <BarChart accessibilityLayer data={newUsersData}>
+                    <BarChart accessibilityLayer data={sortedUserData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="date"

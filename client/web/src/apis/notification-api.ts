@@ -21,6 +21,6 @@ export async function getNotificationList(
         ).data as SuccessResponse<NotificationListType>;
         return result.data;
     } catch (error: any) {
-        return error;
+        return {} as NotificationListType;
     }
 }
