@@ -16,28 +16,28 @@ export const getStatistics = async (): Promise<any> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken) return null;
-        // const [totalUser, totalOrder, totalProduct] = await Promise.all([
-        //     axios.get(`${BASE_API}/admin/get-total-user`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        //     axios.get(`${BASE_API}/admin/get-total-order`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        //     axios.get(`${BASE_API}/admin/get-total-product`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        // ]);
-        // const successResponse = result.data as SuccessResponse<any>[];
+        const [totalBrands, totalPlayers, totalEvents] = await Promise.all([
+            axios.get(`${BASE_API}/user-service/api/brands/total-brands`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+            axios.get(`${BASE_API}/user-service/api/players/total-players`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+            axios.get(`${BASE_API}/event-service/api/events/total-events`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+        ]);
+        console.log(totalBrands, totalPlayers, totalEvents);
         return {
             data: [
                 {
-                    data: "12100",
+                    data: totalBrands.data.data.totalBrands,
                 },
                 {
-                    data: "12100",
+                    data: totalPlayers.data.data.totalPlayers,
                 },
                 {
-                    data: "12100",
+                    data: totalEvents.data.data.totalEvents,
                 },
             ],
         };
@@ -46,7 +46,6 @@ export const getStatistics = async (): Promise<any> => {
         return null;
     }
 };
-
 
 export const getNewRegisteredUsers = async (
     time: string

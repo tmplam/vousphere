@@ -16,6 +16,7 @@ import { ROLE_ADMIN, ROLE_COUNTERPART } from "@/components/shared/authenticatedR
 import Loading from "@/app/loading";
 import CustomShadcnPagination from "@/components/shared/custom-pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function CounterpartNotificationPage() {
     const searchParams = useSearchParams();
@@ -50,12 +51,13 @@ export default function CounterpartNotificationPage() {
                     {notificationPagination!.data.length == 0 && <p>No notification</p>}
                     {notificationPagination!.data.length > 0 &&
                         notificationPagination!.data.map((notification, index) => (
-                            <div
+                            <Link
                                 key={index}
-                                className={`flex gap-4 p-3 border border-gray-200 rounded-lg transition-colors cursor-pointer
+                                href={`/counterpart/event`}
+                                className={`flex gap-4 p-3 border border-gray-200 rounded-lg transition-colors
                                 ${!notification.isSeen ? "bg-slate-200 dark:bg-slate-800" : "bg-white dark:bg-black"}`}
                             >
-                                <div className="flex items-center justify-center w-8 md:w-12 bg-slate-50 dark:bg-slate-800 rounded-sm">
+                                <div className="flex items-center justify-center w-8 md:w-12  dark:bg-slate-800 rounded-sm">
                                     <BellRing className="w-12 h-8 md:h-10 rounded-md object-cover m-auto" />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -82,7 +84,7 @@ export default function CounterpartNotificationPage() {
                                         <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
                                     </div>
                                 )}
-                            </div>
+                            </Link>
                         ))}
                 </div>
                 <div className="flex items-center justify-center mt-3">

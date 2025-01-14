@@ -219,7 +219,7 @@ export default function UserManagement() {
                                                     {user.status != "Blocked" ? "Suspend account" : "Activate account"}
                                                 </DialogTitle>
                                                 <DialogDescription>
-                                                    {user.status
+                                                    {user.status != "Blocked"
                                                         ? "Are you sure you want to suspend this user?"
                                                         : "Are you sure you want to activate this user?"}
                                                 </DialogDescription>

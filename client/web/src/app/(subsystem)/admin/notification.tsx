@@ -11,8 +11,8 @@ import { useEffect, useState } from "react";
 
 export default function AdminNotification({ children }: { children: React.ReactNode }) {
     // Define state, actions here
-    const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
-    const [notifications, setNotifications] = useState<Notification[]>(storedNotifications);
+    // const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
     const first3NewestNotifications: Notification[] = notifications.slice(0, 3);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export default function AdminNotification({ children }: { children: React.ReactN
             setNotifications(result.data);
         };
         getNotifications();
-    },[]);
+    }, []);
     // console.log(notifications);
     return (
         <div className="p-0">
@@ -46,10 +46,12 @@ export default function AdminNotification({ children }: { children: React.ReactN
                             first3NewestNotifications.map((notification, index) => (
                                 <Link
                                     key={index}
-                                    href="#"
+                                    href={
+                                        notification.message.startsWith("New brand") ? `/admin/users` : `/admin/event`
+                                    }
                                     className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-2 px-3 cursor-pointer"
                                 >
-                                    <div className="flex items-center justify-center w-8 md:w-12 bg-slate-50 dark:bg-slate-800 rounded-sm">
+                                    <div className="flex items-center justify-center w-8 md:w-12  dark:bg-slate-800 rounded-sm">
                                         <BellRing className="w-12 h-8 md:h-10 rounded-md object-cover m-auto" />
                                     </div>
                                     <div className="content flex-1">

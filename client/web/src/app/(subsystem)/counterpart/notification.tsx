@@ -4,12 +4,14 @@ import { Notification } from "@/schema/notification.shema";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { useEffect, useState } from "react";
 import { getNotificationList } from "@/apis/notification-api";
+import { BellRing } from "lucide-react";
+import { printDateTime } from "@/lib/utils";
 /* Khiem workspace - notification icon on top right of the header for Counterpart*/
 
 export default function CounterpartNotification({ children }: { children: React.ReactNode }) {
     // Define state, actions here
-    const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
-    const [notifications, setNotifications] = useState<Notification[]>(storedNotifications);
+    // const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
     useEffect(() => {
         const getNotifications = async () => {
             const result = await getNotificationList();
@@ -42,22 +44,18 @@ export default function CounterpartNotification({ children }: { children: React.
                             first3NewestNotifications.map((notification, index) => (
                                 <Link
                                     key={index}
-                                    href="#"
+                                    href="/counterpart/event"
                                     className="flex gap-2 hover:bg-gray-200 dark:hover:bg-slate-700 py-2 px-3 cursor-pointer"
                                 >
-                                    <div className="flex items-center justify-center w-8 md:w-12">
-                                        <img
-                                            src={
-                                                "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                                            }
-                                            alt={notification.title}
-                                            className="w-full h-8 md:h-12 rounded-md object-cover m-auto"
-                                        />
+                                    <div className="flex items-center justify-center w-8 md:w-12 dark:bg-slate-800 rounded-sm">
+                                        <BellRing className="w-12 h-8 md:h-10 rounded-md object-cover m-auto" />
                                     </div>
                                     <div className="content flex-1">
                                         <div className="flex justify-between items-center">
                                             <h1 className="line-clamp-1 text-sm">{notification.title}</h1>
-                                            <span className="text-[.75rem]">{notification.createdAt}</span>
+                                            <span className="text-[.75rem]">
+                                                {printDateTime(new Date(notification.createdAt))}
+                                            </span>
                                         </div>
                                         <p className="line-clamp-2 text-xs text-justify">{notification.message}</p>
                                     </div>

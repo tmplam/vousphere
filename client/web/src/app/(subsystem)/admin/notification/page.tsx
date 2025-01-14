@@ -16,6 +16,7 @@ import { ROLE_ADMIN } from "@/components/shared/authenticatedRoutes";
 import Loading from "@/app/loading";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import CustomShadcnPagination from "@/components/shared/custom-pagination";
+import Link from "next/link";
 export default function AdminNotificationPage() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -49,12 +50,13 @@ export default function AdminNotificationPage() {
                 <div className="rounded-lg border border-gray-300 overflow-hidden p-2 space-y-2">
                     {notificationPagination!.data.length > 0 &&
                         notificationPagination!.data.map((notification, index) => (
-                            <div
+                            <Link
                                 key={index}
+                                href={notification.message.startsWith("New brand") ? `/admin/users` : `/admin/event`}
                                 className={`flex gap-4 p-3 border border-gray-200 rounded-lg transition-colors cursor-pointer
                                 ${!notification.isSeen ? "bg-slate-200 dark:bg-slate-800" : "bg-white dark:bg-black"}`}
                             >
-                                <div className="flex items-center justify-center w-8 md:w-12 bg-slate-50 dark:bg-slate-800 rounded-sm">
+                                <div className="flex items-center justify-center w-8 md:w-12  dark:bg-slate-800 rounded-sm">
                                     <BellRing className="w-12 h-8 md:h-10 rounded-md object-cover m-auto" />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -81,7 +83,7 @@ export default function AdminNotificationPage() {
                                         <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
                                     </div>
                                 )}
-                            </div>
+                            </Link>
                         ))}
                 </div>
                 <div className="flex items-center justify-center mt-3">

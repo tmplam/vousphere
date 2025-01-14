@@ -23,7 +23,7 @@ export function SubscriptionForm() {
     const [loading, setLoading] = useState(false);
     const { data: userAuth, isLoading, isFetching, refetch } = useCachedUserInfo();
     if (isLoading || isFetching) return <MySubscriptionSkeleton />;
-    if (userAuth?.brand) {
+    if (userAuth?.brand && userAuth!.brand.address != "" && userAuth!.brand.domain != "") {
         return (
             <>
                 <div className="p-3 shadow-md border border-gray-100 rounded-md dark:bg-slate-800 bg-white w-full">
