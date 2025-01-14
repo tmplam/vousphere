@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.Xml;
-
-namespace EventService.API.Events.Queries.GetBrandWeekEventStatistics;
+﻿namespace EventService.API.Events.Queries.GetBrandWeekEventStatistics;
 
 public record GetBrandWeekEventStatisticsQuery(DateTimeOffset CurrentDate) : IQuery<GetBrandWeekEventStatisticsResult>;
 public record GetBrandWeekEventStatisticsResult(List<DayEventStatusDto> WeekEventStatus);
@@ -19,36 +17,23 @@ public class GetBrandWeekEventStatisticsHandler(
         var endOfWeek = startOfWeek.AddDays(7);
 
         var events = await _session.Query<Event>()
-            .Where(x => x.BrandId == brandId && x.StartTime >= startOfWeek && x.EndTime < endOfWeek)
+            .Where(x => x.BrandId == brandId && x.Status != EventStatus.Created && x.Status != EventStatus.Rejected)
             .ToListAsync(cancellationToken);
 
-        var groupedEvents = events
-            .GroupBy(e => e.StartTime.Date)
-            .Select(g => new DayEventStatusDto
-            {
-                Date = g.Key,
-                NumberOfPendings = g.Count(e => e.Status == EventStatus.Pending),
-                NumberOfHappenings = g.Count(e => e.Status == EventStatus.Happening),
-                NumberOfEndeds = g.Count(e => e.Status == EventStatus.Ended)
-            })
-            .ToList();
+        var groupedEvents = new List<DayEventStatusDto>();
 
-        // add the missing days
         var currentDate = startOfWeek;
         var endDate = endOfWeek;
 
         while (currentDate < endDate)
         {
-            if (!groupedEvents.Any(e => e.Date == currentDate))
+            groupedEvents.Add(new DayEventStatusDto
             {
-                groupedEvents.Add(new DayEventStatusDto
-                {
-                    Date = currentDate,
-                    NumberOfPendings = 0,
-                    NumberOfHappenings = 0,
-                    NumberOfEndeds = 0
-                });
-            }
+                Date = currentDate,
+                NumberOfPendings = events.Where(x => x.StartTime > currentDate).Count(),
+                NumberOfHappenings = events.Where(x => x.EndTime > currentDate && x.StartTime <= currentDate).Count(),
+                NumberOfEndeds = events.Where(x => x.EndTime <= currentDate).Count(),
+            });
             currentDate = currentDate.AddDays(1);
         }
 
