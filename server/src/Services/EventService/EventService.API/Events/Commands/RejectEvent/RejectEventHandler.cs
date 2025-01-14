@@ -41,16 +41,17 @@ public class RejectEventHandler(
         _session.Update(existingEvent);
 
         // Send notification to the brand
-        var eventApprovedEvent = new EventApprovedIntegrationEvent
+        var eventRejecteddEvent = new EventRejectedIntegrationEvent
         {
             EventId = existingEvent.Id,
             BrandId = existingEvent.BrandId,
             EventName = existingEvent.Name,
+            Comment = existingEvent.Comment
         };
 
         await Task.WhenAll(
             _session.SaveChangesAsync(),
-            _publishEndpoint.Publish(eventApprovedEvent));
+            _publishEndpoint.Publish(eventRejecteddEvent));
 
         return new RejectEventResult();
     }
