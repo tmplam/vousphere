@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vousphere/data/models/PuzzleItem.dart';
 import 'package:vousphere/features/puzzle/EmailShareDialog.dart';
+import 'package:vousphere/features/puzzle/provider/PuzzleProvider.dart';
 
 class PuzzleDetail extends StatefulWidget {
   final PuzzleItem puzzle;
@@ -143,6 +145,7 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
               },
             ),
           ),
+          _buildExchangeButton(), // Add this line
         ],
       ),
     );
@@ -194,21 +197,101 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
   }
 
   void _handleShareProcess(BuildContext context) {
+    final selectedPiecesData = selectedPieces
+        .map((index) =>
+            widget.puzzle.pieces.firstWhere((p) => p.pieceIndex == index))
+        .toList();
+
     showDialog(
       context: context,
       builder: (BuildContext context) => EmailShareDialog(
         selectedCount: selectedPieces.length,
+        selectedPieces: selectedPiecesData,
+        puzzleId: widget.puzzle.id,
       ),
-    ).then((email) {
+    ).then((email) async {
+      // Make this async
       if (email != null) {
+        // Update local state
         setState(() {
           sharedPieces.addAll(selectedPieces);
           selectedPieces.clear();
         });
 
+        // Refresh puzzles data
+        await Provider.of<PuzzleProvider>(context, listen: false).loadPuzzles();
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Shared with $email'),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.all(10),
+            ),
+          );
+        }
+      }
+    });
+  }
+
+  // Exchange
+  Widget _buildExchangeButton() {
+    // Check if all pieces are unlocked
+    final bool canExchange =
+        widget.puzzle.unlockedPieces.length == widget.puzzle.totalPieces;
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        onPressed: canExchange ? () => _handleExchange(context) : null,
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          backgroundColor: canExchange ? Colors.blue : Colors.grey,
+        ),
+        child: Text(
+          'Exchange Voucher',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: canExchange
+                ? Colors.black
+                : const Color.fromARGB(255, 177, 176, 176),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleExchange(BuildContext context) async {
+    try {
+      final provider = Provider.of<PuzzleProvider>(context, listen: false);
+      final success = await provider.exchangeVoucher(widget.puzzle.id);
+
+      if (!mounted) return;
+
+      if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Shared with $email'),
+            content: const Text('Voucher exchanged successfully!'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            margin: const EdgeInsets.all(10),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                const Text('Failed to exchange voucher. Please try again.'),
+            backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -217,6 +300,19 @@ class _PuzzleDetailState extends State<PuzzleDetail> {
           ),
         );
       }
-    });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('An error occurred. Please try again later.'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: const EdgeInsets.all(10),
+        ),
+      );
+    }
   }
 }

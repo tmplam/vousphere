@@ -37,7 +37,10 @@ export default function CustomShadcnPagination({
                 <PaginationContent>
                     <PaginationItem>
                         {currentPage > 1 ? (
-                            <PaginationPrevious onClick={() => onPageChange(currentPage - 1)} />
+                            <PaginationPrevious
+                                className="cursor-pointer"
+                                onClick={() => onPageChange(currentPage - 1)}
+                            />
                         ) : (
                             <PaginationPrevious className="disabled" />
                         )}

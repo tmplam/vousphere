@@ -1,32 +1,29 @@
+import { BASE_API } from "@/apis/constants";
+import axios from "axios";
+
 export const getCounterpartStatistics = async (): Promise<any> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken) return null;
-        // const [totalUser, totalOrder, totalProduct] = await Promise.all([
-        //     axios.get(`${BASE_API}/admin/get-total-user`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        //     axios.get(`${BASE_API}/admin/get-total-order`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        //     axios.get(`${BASE_API}/admin/get-total-product`, {
-        //         headers: { Authorization: `Bearer ${accessToken}` },
-        //     }),
-        // ]);
-        // const successResponse = result.data as SuccessResponse<any>[];
+        const [totalEvents, totalUsedVouchers] = await Promise.all([
+            axios.get(`${BASE_API}/event-service/api/events/brand/total-events`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+            axios.get(`${BASE_API}/voucher-service/api/vouchers/brand/total-redeemed`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+        ]);
+        console.log(totalEvents, totalUsedVouchers);
         return {
             data: [
                 {
-                    data: "12100",
-                    trending: "1230",
+                    data: totalEvents.data.data.totalEvents,
                 },
                 {
-                    data: "12100",
-                    trending: "1230",
+                    data: totalUsedVouchers.data.data.totalRedeemedVouchers,
                 },
                 {
-                    data: "12100",
-                    trending: "1230",
+                    data: totalEvents.data.data.totalReleasedVouchers,
                 },
             ],
         };

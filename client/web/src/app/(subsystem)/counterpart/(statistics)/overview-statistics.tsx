@@ -30,30 +30,30 @@ const OverviewStatistics = () => {
             <>
                 <div className="flex justify-between items-center p-1 pl-0">
                     <h3 className="text-2xl text-gradient font-semibold">Overview Statistics</h3>
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" className="border-gray-200">
                                 Sort by:
                                 <ChevronDown className="ml-2 h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <StatisticDataCardSkeleton items={{ icon: PartyPopper }} />
                     <StatisticDataCardSkeleton items={{ icon: UserPlus2 }} />
                     <StatisticDataCardSkeleton items={{ icon: TicketPercent }} />
-                    <StatisticDataCardSkeleton items={{ icon: Earth }} />
+                    {/* <StatisticDataCardSkeleton items={{ icon: Earth }} /> */}
                 </div>
             </>
         );
-    const [revenue, orders, users] = data.data;
+    const [totalEvents, totalUsedVouchers, totalVouchers] = data.data;
     return (
         <>
             <div className="flex justify-between items-center p-1 pl-0">
                 <h3 className="text-2xl text-gradient font-semibold">Overview Statistics</h3>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm" className="border-gray-200">
                             Sort by:
@@ -66,23 +66,28 @@ const OverviewStatistics = () => {
                         <DropdownMenuItem>This month</DropdownMenuItem>
                         <DropdownMenuItem>This year</DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <DataCard
                     title="Released Vouchers"
-                    data={revenue.data}
-                    trending={revenue.trending}
+                    data={totalEvents.data}
+                    trending={totalEvents.data}
                     icon={{ icon: PartyPopper }}
                 />
                 <DataCard
                     title="Used Vouchers"
-                    data={orders.data}
-                    trending={orders.trending}
-                    icon={{ icon: UserPlus2 }}
+                    data={totalUsedVouchers.data}
+                    trending={totalUsedVouchers.data}
+                    icon={{ icon: TicketPercent }}
                 />
-                <DataCard title="Total Events" data={users.data} trending={users.trending} icon={{ icon: UserPlus2 }} />
-                <DataCard title="Total Incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} />
+                <DataCard
+                    title="Total Events"
+                    data={totalVouchers.data}
+                    trending={totalVouchers.data}
+                    icon={{ icon: TicketPercent }}
+                />
+                {/* <DataCard title="Total Incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} /> */}
             </div>
         </>
     );
