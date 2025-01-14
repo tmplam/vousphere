@@ -26,7 +26,7 @@ class InviteFriendItem extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(width: 20,),
+          const SizedBox(width: 30,),
           Image.asset('assets/icons/giftbox.png', width: 120, height: 120, fit: BoxFit.cover,),
         ],
       ),

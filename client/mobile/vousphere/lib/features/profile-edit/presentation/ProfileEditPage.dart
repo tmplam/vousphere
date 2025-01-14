@@ -223,162 +223,164 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
         padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                ClipOval(
-                  child: Image.network(
-                    user.image ?? '',
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/avatars/avatar0.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      );
-                    },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  ClipOval(
+                    child: Image.network(
+                      user.image ?? '',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/avatars/avatar0.png',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 20,),
-                FilledButton(
-                    onPressed: updateAvatar,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        isUpdateAvatar ? const SizedBox(
-                          width: 10,
-                          height: 10,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
-                        ) : const SizedBox.shrink(),
-                        const SizedBox(width: 4,),
-                        const Icon(Icons.upload),
-                        const SizedBox(width: 4,),
-                        const Text('Upload Image'),
-                      ],
-                    )
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
-              child: const Row(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(width: 4,),
-                  Text('Name '),
-                  Text('*', style: TextStyle(color: Colors.red),)
+                  const SizedBox(width: 20,),
+                  FilledButton(
+                      onPressed: updateAvatar,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          isUpdateAvatar ? const SizedBox(
+                            width: 10,
+                            height: 10,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
+                          ) : const SizedBox.shrink(),
+                          const SizedBox(width: 4,),
+                          const Icon(Icons.upload),
+                          const SizedBox(width: 4,),
+                          const Text('Upload Image'),
+                        ],
+                      )
+                  )
                 ],
               ),
-            ),
-            // TextField for Name
-            CustomTextField(controller: nameController, hinText: 'Full name', focusNode: nameFocusNode,),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
-              child: const Row(
-                children: [
-                  Icon(Icons.phone),
-                  SizedBox(width: 4,),
-                  Text('Phone '),
-                ],
-              ),
-            ),
-            // TextField for Name
-            CustomTextField(controller: phoneNumberController, hinText: '+84', focusNode: phoneNumberFocusNode,),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
-              child: const Row(
-                children: [
-                  Icon(Icons.date_range),
-                  SizedBox(width: 4,),
-                  Text('Date of birth '),
-                ],
-              ),
-            ),
-            // TextField for Name
-            DateInput(nameFocusNode, phoneNumberFocusNode, dobController),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
-              child: const Row(
-                children: [
-                  Icon(Icons.male),
-                  Icon(Icons.female),
-                  SizedBox(width: 4,),
-                  Text('Gender '),
-                ],
-              ),
-            ),
-            // TextField for Name
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
+              const SizedBox(height: 10),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
+                child: const Row(
                   children: [
-                    Radio<String>(
-                      value: "Male",
-                      groupValue: selectedGender,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text("Male"),
+                    Icon(Icons.person),
+                    SizedBox(width: 4,),
+                    Text('Name '),
+                    Text('*', style: TextStyle(color: Colors.red),)
                   ],
                 ),
-                Row(
+              ),
+              // TextField for Name
+              CustomTextField(controller: nameController, hinText: 'Full name', focusNode: nameFocusNode,),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
+                child: const Row(
                   children: [
-                    Radio<String>(
-                      value: "Female",
-                      groupValue: selectedGender,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text("Female"),
+                    Icon(Icons.phone),
+                    SizedBox(width: 4,),
+                    Text('Phone '),
                   ],
                 ),
-                Row(
+              ),
+              // TextField for Name
+              CustomTextField(controller: phoneNumberController, hinText: '+84', focusNode: phoneNumberFocusNode,),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
+                child: const Row(
                   children: [
-                    Radio<String>(
-                      value: "Unknown",
-                      groupValue: selectedGender,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text("Unknown"),
+                    Icon(Icons.date_range),
+                    SizedBox(width: 4,),
+                    Text('Date of birth '),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 20,),
-            FilledButton(
-                onPressed: updateProfile,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              ),
+              // TextField for Name
+              DateInput(nameFocusNode, phoneNumberFocusNode, dobController),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 6),
+                child: const Row(
                   children: [
-                    isLoading ? const SizedBox(
-                      width: 10,
-                      height: 10,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
-                    ) : const SizedBox.shrink(),
-                    const SizedBox(width: 4,),
-                    const Text('Save'),
+                    Icon(Icons.male),
+                    Icon(Icons.female),
+                    SizedBox(width: 4,),
+                    Text('Gender '),
                   ],
-                )
-            ),
-          ],
+                ),
+              ),
+              // TextField for Name
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Radio<String>(
+                        value: "Male",
+                        groupValue: selectedGender,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedGender = value!;
+                          });
+                        },
+                      ),
+                      const Text("Male"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Radio<String>(
+                        value: "Female",
+                        groupValue: selectedGender,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedGender = value!;
+                          });
+                        },
+                      ),
+                      const Text("Female"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Radio<String>(
+                        value: "Unknown",
+                        groupValue: selectedGender,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedGender = value!;
+                          });
+                        },
+                      ),
+                      const Text("Unknown"),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              FilledButton(
+                  onPressed: updateProfile,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      isLoading ? const SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white,),
+                      ) : const SizedBox.shrink(),
+                      const SizedBox(width: 4,),
+                      const Text('Save'),
+                    ],
+                  )
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -305,7 +305,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 40),
                         const AppLogo(),
                         const SizedBox(height: 15),
                         SignInWithGoogleButton(),
