@@ -32,7 +32,7 @@ public class GetBrandTotalVouchersIssuedInWeekHandler(
             groupedVouchers.Add(new DayVoucherIssuedDto
             {
                 Date = currentDate,
-                IssuedVouchers = await events.Where(x => x.IssuedAt.Date == currentDate.Date).CountAsync(),
+                IssuedVouchers = (await events.ToListAsync()).Where(x => x.IssuedAt.Date == currentDate.Date).Count(),
             });
             currentDate = currentDate.AddDays(1);
         }
