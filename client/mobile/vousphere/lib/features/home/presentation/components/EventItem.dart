@@ -188,8 +188,12 @@ class EventItem extends StatelessWidget {
                       color: Colors.blue.shade700,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      event.brand.address ?? 'HCMC, Vietnam',
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        event.brand.address ?? 'HCMC, Vietnam',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
