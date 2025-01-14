@@ -32,7 +32,7 @@ public class GetBrandWeekEventStatisticsHandler(
                 Date = currentDate,
                 NumberOfPendings = events.Where(x => x.StartTime > currentDate).Count(),
                 NumberOfHappenings = events.Where(x => x.EndTime > currentDate && x.StartTime <= currentDate).Count(),
-                NumberOfEndeds = events.Where(x => x.EndTime <= currentDate).Count(),
+                NumberOfEndeds = events.Where(x => x.EndTime == currentDate).Count(),
             });
             currentDate = currentDate.AddDays(1);
         }
