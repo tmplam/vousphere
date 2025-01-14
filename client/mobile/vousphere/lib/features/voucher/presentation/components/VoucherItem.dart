@@ -106,7 +106,7 @@ class _VoucherItemState extends State<VoucherItem> {
                           'Voucher of ${event?.name}',
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                          maxLines: 1,
                         ),
                         const SizedBox(height: 4,),
                         Row(

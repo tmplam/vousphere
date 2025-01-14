@@ -25,7 +25,7 @@ class _GiftPlayTurnPageState extends State<GiftPlayTurnPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gift Voucher', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),),
+        title: Text('Gift Play Turn', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

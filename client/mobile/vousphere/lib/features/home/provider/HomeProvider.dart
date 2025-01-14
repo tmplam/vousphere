@@ -13,6 +13,7 @@ class HomeProvider with ChangeNotifier {
     isLoading = value;
     notifyListeners();
   }
+
   void clearListKnowledge() {
     events.clear();
     notifyListeners();
@@ -20,32 +21,31 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> loadEvent() async {
     try {
-      final response = await apiService.dio.get(
-          ApiConstants.getEvents,
+      final response = await apiService.dio.get(ApiConstants.getEvents,
           queryParameters: {
             "page": 1,
-            "perPage": 10,
+            "perPage": 20,
             "keyword": '',
           },
-          options: Options(
-              extra: {
-                "requireToken": true,
-              }
-          )
-      );
-      if(response.statusCode == 200) {
-        events.addAll(
-            List<Event>.from(
-                response.data["data"]["data"].map((item) => Event.fromJson(item))
-            )
-        );
+          options: Options(extra: {
+            "requireToken": true,
+          }));
+      if (response.statusCode == 200) {
+        events.addAll(List<Event>.from(
+            response.data["data"]["data"].map((item) => Event.fromJson(item))));
         notifyListeners();
       }
-    }
-    catch(e) {
+    } catch (e) {
       print("Error when load events");
       print(e);
     }
+  }
 
+  String category = 'All';
+
+  void handleFilter(String value) {
+    print('filter event: $value');
+    category = value;
+    notifyListeners();
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
+import 'package:vousphere/features/home/provider/HomeProvider.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class EventItem extends StatelessWidget {
@@ -14,6 +15,18 @@ class EventItem extends StatelessWidget {
   Widget build(BuildContext context) {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: true);
+    HomeProvider homeProvider =
+        Provider.of<HomeProvider>(context, listen: true);
+
+    bool isDisplay = true;
+
+    if (homeProvider.category.toLowerCase() != 'all') {
+      if (event.brand.domain.toLowerCase() !=
+          homeProvider.category.toLowerCase()) {
+        isDisplay = false;
+      }
+    }
+    if (!isDisplay) return const SizedBox.shrink();
 
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
@@ -48,9 +61,11 @@ class EventItem extends StatelessWidget {
                         width: 240,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                          return Image.asset(
+                            'assets/brands/brand3.jpg',
                             fit: BoxFit.cover,
+                            height: 120,
+                            width: 240,
                           );
                         },
                       ),
@@ -143,7 +158,7 @@ class EventItem extends StatelessWidget {
                 Row(
                   children: [
                     const SizedBox(
-                      width: 40, 
+                      width: 40,
                       child: Stack(
                         children: [
                           CircleAvatar(
@@ -151,20 +166,6 @@ class EventItem extends StatelessWidget {
                             backgroundImage:
                                 AssetImage('assets/icons/voucher-icon.png'),
                           ),
-                          // Positioned(
-                          //   left: 25,
-                          //   child: CircleAvatar(
-                          //     radius: 16,
-                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                          //   ),
-                          // ),
-                          // Positioned(
-                          //   left: 50,
-                          //   child: CircleAvatar(
-                          //     radius: 16,
-                          //     backgroundImage: NetworkImage('https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png'),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

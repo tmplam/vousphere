@@ -46,8 +46,8 @@ class EventItem extends StatelessWidget {
                       event.image,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl13KjAzVkCUVnOpE25hpI7lbNNzF3DXwukQ&s',
+                        return Image.asset(
+                            'assets/brands/brand3.jpg',
                             fit: BoxFit.cover,
                         );
                       },

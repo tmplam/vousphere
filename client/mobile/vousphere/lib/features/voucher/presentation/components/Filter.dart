@@ -16,8 +16,8 @@ class _VoucherFilterState extends State<VoucherFilter> {
     FilterCategory('Food', const Icon(Icons.fastfood_outlined, color: Colors.white)),
     FilterCategory('Drink', const Icon(Icons.local_drink_outlined, color: Colors.white)),
     FilterCategory('Restaurant', const Icon(Icons.local_restaurant_outlined, color: Colors.white)),
-    FilterCategory('Shopping', const Icon(Icons.shopping_bag_outlined, color: Colors.white)),
-    FilterCategory('Music', const Icon(Icons.music_note_outlined, color: Colors.white)),
+    FilterCategory('Clothing', const Icon(Icons.shopping_bag_outlined, color: Colors.white)),
+    FilterCategory('Shopping', const Icon(Icons.shopping_cart_outlined, color: Colors.white)),
     FilterCategory('Car', const Icon(Icons.car_repair_outlined, color: Colors.white)),
   ];
   
@@ -35,16 +35,16 @@ class _VoucherFilterState extends State<VoucherFilter> {
             ],
           ),
         ),
-        selected: item.name == voucherProvider.category,
+        selected: item.name.toLowerCase() == voucherProvider.category.toLowerCase(),
         onSelected: (bool selected) {
-          voucherProvider.handleFilter(item.name);
+            voucherProvider.handleFilter(item.name);
         },
         selectedColor: FilterCategory.colors[index],
         backgroundColor: FilterCategory.colors[index].withOpacity(0.4),
         labelStyle: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 16
+          fontSize: 16,
         ),
         shape: const StadiumBorder(
           side: BorderSide.none,
@@ -65,10 +65,10 @@ class _VoucherFilterState extends State<VoucherFilter> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...categories.asMap().entries.map((entry,) {
-            return _buildItem(entry.key, entry.value, voucherProvider);
-          }),
-          const SizedBox(width: 5,)
+            ...categories.asMap().entries.map((entry,) {
+                return _buildItem(entry.key, entry.value, voucherProvider);
+            }),
+            const SizedBox(width: 5,),
         ]
       ),
     );

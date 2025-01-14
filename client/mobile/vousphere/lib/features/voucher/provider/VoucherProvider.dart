@@ -89,7 +89,7 @@ class VoucherProvider with ChangeNotifier {
 
   String keyword = '';
 
-  String category = 'all';
+  String category = 'All';
 
   void handleSearch(String value) {
       print('voucher search: $value');
