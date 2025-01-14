@@ -1,4 +1,5 @@
 import { BASE_API } from "@/apis/constants";
+import { addTime, formatDate } from "@/lib/utils";
 import axios, { AxiosResponse } from "axios";
 
 export async function demoCallARequest(id: string): Promise<AxiosResponse<any>> {
@@ -27,7 +28,7 @@ export const getStatistics = async (): Promise<any> => {
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
         ]);
-        console.log(totalBrands, totalPlayers, totalEvents);
+        // console.log(totalBrands, totalPlayers, totalEvents);
         return {
             data: [
                 {
@@ -49,20 +50,35 @@ export const getStatistics = async (): Promise<any> => {
 
 export const getNewRegisteredUsers = async (
     time: string
-): Promise<{ date: string; counterpart: number; customer: number }[]> => {
+): Promise<{ date: string; counterpart: number; player: number }[]> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken) return [];
-        const chartData = [
-            { date: "2024-06-24", counterpart: 13, customer: 18 },
-            { date: "2024-06-25", counterpart: 1, customer: 10 },
-            { date: "2024-06-26", counterpart: 4, customer: 21 },
-            { date: "2024-06-27", counterpart: 2, customer: 1 },
-            { date: "2024-06-28", counterpart: 9, customer: 10 },
-            { date: "2024-06-29", counterpart: 13, customer: 12 },
-            { date: "2024-06-30", counterpart: 6, customer: 32 },
-        ];
-        return time == "week" ? chartData : [];
+        const now = new Date();
+        if (time == "thisweek") {
+        } else if (time == "lastweek") {
+            now.setDate(new Date().getDate() - 7);
+        } else if (time == "last2weeks") {
+            now.setDate(new Date().getDate() - 14);
+        }
+        try {
+            const result = await axios.get(
+                `${BASE_API}/user-service/api/users/week-register-statistics?currentDate=${now.toJSON()}`,
+                {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+                }
+            );
+            console.log(result.data);
+            const data = result.data.data.map((item: any) => ({
+                date: formatDate(new Date(item.date)),
+                counterpart: item.numberOfBrands,
+                player: item.numberOfPlayers,
+            }));
+            console.log(data);
+            return data;
+        } catch (error: any) {
+            return [];
+        }
     } catch (error: any) {
         // throw error;
         return [];
@@ -72,48 +88,59 @@ export const getNewRegisteredUsers = async (
 export const getEventParticipantStatus = async (time: string): Promise<any> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) return null;
-        const chartData = [
-            { date: "2024-06-24", happening: 2, ended: 2 },
-            { date: "2024-06-25", happening: 10, ended: 1 },
-            { date: "2024-06-26", happening: 4, ended: 1 },
-            { date: "2024-06-27", happening: 8, ended: 0 },
-            { date: "2024-06-28", happening: 1, ended: 2 },
-            { date: "2024-06-29", happening: 0, ended: 0 },
-            { date: "2024-06-30", happening: 4, ended: 10 },
-        ];
-        const chartTodayData = [
-            { date: "2024-06-24", happening: 2, ended: 2 },
-            { date: "2024-06-25", happening: 10, ended: 1 },
-            { date: "2024-06-26", happening: 4, ended: 1 },
-        ];
-        return time == "last3days" ? chartTodayData : chartData;
+        if (!accessToken) return [];
+        try {
+            const result = await axios.get(`${BASE_API}/event-service/api/events/week-status?currentDate=${time}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            });
+            return result.data.data;
+        } catch (error: any) {
+            return error;
+        }
     } catch (error: any) {
         // throw error;
-        return null;
+        return [];
     }
 };
 
-export const getPlayTurnStatistics = async (time: string): Promise<{ game: string; plays: number; fill: string }[]> => {
+export const getPlayTurnStatistics = async (
+    time: string
+): Promise<{ gameName: string; releasedVouchers: number; fill: string }[]> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken) return [];
-        const playTurnTodayData = [
-            { game: "quiz", plays: 4, fill: "hsl(var(--chart-1))" },
-            { game: "shake", plays: 32, fill: "hsl(var(--chart-4))" },
-        ];
+        try {
+            const result = await axios.get(`${BASE_API}/voucher-service/api/vouchers/game-statistics`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            });
+            const resultList = result.data;
+            let vourcherList: { gameName: string; releasedVouchers: number; fill: string }[] = [];
+            for (let i = 0; i < resultList.data.length; i++) {
+                const fill = `hsl(var(--chart-${i + 1}))`;
+                const game = await axios.get(`${BASE_API}/game-service/api/games/${resultList.data[i].gameId}`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                const gameName = game.data.data.name;
+                vourcherList.push({ gameName, releasedVouchers: resultList.data[i].totalReleasedVouchers, fill });
+            }
+            return vourcherList;
+        } catch (error: any) {
+            return error;
+        }
+        // const playTurnTodayData = [
+        //     { game: "quiz", plays: 4, fill: "hsl(var(--chart-1))" },
+        //     { game: "shake", plays: 32, fill: "hsl(var(--chart-4))" },
+        // ];
 
-        const playTurnThisWeekData = [
-            { game: "quiz", plays: 75, fill: "hsl(var(--chart-1))" },
-            { game: "shake", plays: 100, fill: "hsl(var(--chart-4))" },
-        ];
+        // const playTurnThisWeekData = [
+        //     { game: "quiz", plays: 75, fill: "hsl(var(--chart-1))" },
+        //     { game: "shake", plays: 100, fill: "hsl(var(--chart-4))" },
+        // ];
 
-        const playTurnThisMonthData = [
-            { game: "quiz", plays: 275, fill: "hsl(var(--chart-1))" },
-            { game: "shake", plays: 500, fill: "hsl(var(--chart-4))" },
-        ];
-        if (time == "today") return playTurnTodayData;
-        return time == "week" ? playTurnThisWeekData : playTurnThisMonthData;
+        // const playTurnThisMonthData = [
+        //     { game: "quiz", plays: 275, fill: "hsl(var(--chart-1))" },
+        //     { game: "shake", plays: 500, fill: "hsl(var(--chart-4))" },
+        // ];
     } catch (error: any) {
         // throw error;
         return [];

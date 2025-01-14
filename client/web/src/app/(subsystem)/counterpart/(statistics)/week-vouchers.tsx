@@ -14,10 +14,9 @@ import {
 } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-import { useCachedEventStatusStatistic } from "@/lib/react-query/dashboardCache";
 import { EventStatusSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import { Input } from "@/components/ui/input";
-import { formatDate } from "@/lib/utils";
+import { useCachedCounterpartVoucherStatistic } from "@/lib/react-query/counterpartDashboardCache";
 
 const chartConfig = {
     incoming: {
@@ -34,12 +33,13 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function EventStatusStatistics() {
+export function CounterpartEventStatusStatistics() {
     // const [eventData, setEventData] = useState(chartTodayData);
     const [time, setTime] = useState(new Date().toJSON());
-    const { data: eventData, isLoading, isError, isPaused } = useCachedEventStatusStatistic(time);
+    const { data: eventData, isLoading, isError, isPaused } = useCachedCounterpartVoucherStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !eventData) return <EventStatusSkeleton />;
+    console.log(eventData);
     return (
         <Card className="w-full mb-3 border-gray-50">
             <CardHeader className="pt-1 px-5 flex flex-row justify-between flex-nowrap">

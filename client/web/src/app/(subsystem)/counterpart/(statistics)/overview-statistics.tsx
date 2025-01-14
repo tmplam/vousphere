@@ -68,23 +68,23 @@ const OverviewStatistics = () => {
                     </DropdownMenuContent>
                 </DropdownMenu> */}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <DataCard
-                    title="Released Vouchers"
+                    title="Total Events"
                     data={totalEvents.data}
                     trending={totalEvents.data}
                     icon={{ icon: PartyPopper }}
                 />
                 <DataCard
-                    title="Used Vouchers"
-                    data={totalUsedVouchers.data}
-                    trending={totalUsedVouchers.data}
+                    title="Total Vouchers"
+                    data={totalVouchers.data}
+                    trending={totalVouchers.data}
                     icon={{ icon: TicketPercent }}
                 />
                 <DataCard
-                    title="Total Events"
-                    data={totalVouchers.data}
-                    trending={totalVouchers.data}
+                    title="Total Redeemed Vouchers"
+                    data={totalUsedVouchers.data}
+                    trending={totalUsedVouchers.data}
                     icon={{ icon: TicketPercent }}
                 />
                 {/* <DataCard title="Total Incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} /> */}

@@ -1,7 +1,6 @@
 "use client";
 import { EventStatusStatistics } from "@/app/(subsystem)/admin/(dashboard)/counterpart-statistics";
-import { PlayTurnStatistics } from "@/app/(subsystem)/admin/(dashboard)/game-statistics";
-import BasicLineChart from "@/app/(subsystem)/admin/(dashboard)/line-chart";
+import { GameVouchersStatistics } from "@/app/(subsystem)/admin/(dashboard)/game-statistics";
 import OverviewStatistics from "@/app/(subsystem)/admin/(dashboard)/overview-statistics";
 import { NewUserStatistics } from "@/app/(subsystem)/admin/(dashboard)/user-statistics";
 
@@ -12,7 +11,7 @@ export default function DashboardPage() {
 
             <div className="pt-4">
                 <h3 className="text-2xl text-gradient font-semibold">User Statistics</h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="py-2">
                     <NewUserStatistics />
                     {/* <BasicLineChart /> */}
                 </div>
@@ -24,7 +23,7 @@ export default function DashboardPage() {
                     <EventStatusStatistics />
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <PlayTurnStatistics />
+                    <GameVouchersStatistics />
                     {/* <BasicLineChart /> */}
                 </div>
             </div>
