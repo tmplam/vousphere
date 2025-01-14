@@ -17,7 +17,8 @@ export default function CounterpartNotification({ children }: { children: React.
             const result = await getNotificationList();
             setNotifications(result.data);
         };
-        getNotifications();
+        setInterval(() => getNotifications(), 1000);
+        // getNotifications();
     }, []);
     const first3NewestNotifications: Notification[] =
         notifications.length > 3 ? notifications.slice(0, 3) : notifications;

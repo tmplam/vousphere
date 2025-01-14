@@ -8,9 +8,16 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { useCachedQuizListQuery } from "@/lib/react-query/eventCache";
 import { Gamepad2 } from "lucide-react";
 import Link from "next/link";
+import CustomShadcnPagination from "@/components/shared/custom-pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function QuizQuestionsEventPage() {
-    const { data: quizAndQuestionList, isLoading, isError, isPaused } = useCachedQuizListQuery();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+    const currentPageNullable = searchParams.get("page");
+    const currentPage = currentPageNullable ? parseInt(currentPageNullable) : 1;
+    const { data: quizAndQuestionList, isLoading, isError, isPaused } = useCachedQuizListQuery(currentPage, 6);
     if (isError || quizAndQuestionList === null) return <ErrorPage />;
     if (isLoading || isPaused || !quizAndQuestionList)
         return (
@@ -19,7 +26,13 @@ export default function QuizQuestionsEventPage() {
                 <GameListSkeleton total={2} />
             </>
         );
-    console.log(quizAndQuestionList.data);
+    const handlePageChange = (pageNumber: number) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("page", pageNumber.toString());
+        const newUrl = `${pathname}?${params.toString()}`;
+        replace(newUrl);
+    };
+    console.log(quizAndQuestionList);
     return (
         <>
             <div className="flex items-center justify-between mb-6">
@@ -72,6 +85,13 @@ export default function QuizQuestionsEventPage() {
                         </CardFooter>
                     </Card>
                 ))}
+            </div>
+            <div className="flex items-center justify-center pt-6 pb-10">
+                <CustomShadcnPagination
+                    currentPage={currentPage}
+                    totalPages={quizAndQuestionList!.totalPage}
+                    onPageChange={handlePageChange}
+                />
             </div>{" "}
         </>
     );

@@ -32,3 +32,24 @@ export const getCounterpartStatistics = async (): Promise<any> => {
         return null;
     }
 };
+
+export const getCounterpartVoucherStatistics = async (time: string): Promise<any> => {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) return [];
+        try {
+            const result = await axios.get(
+                `${BASE_API}/event-service/api/events/brand/week-status?currentDate=${time}`,
+                {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+                }
+            );
+            return result.data.data;
+        } catch (error: any) {
+            return error;
+        }
+    } catch (error: any) {
+        // throw error;
+        return [];
+    }
+};

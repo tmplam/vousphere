@@ -33,11 +33,11 @@ export function useCachedMyEventDetailQuery(id: string) {
     });
 }
 
-export function useCachedQuizListQuery() {
+export function useCachedQuizListQuery(page: number = 1, perPage: number = 10) {
     return useQuery({
-        queryKey: ["my-quizzes"],
+        queryKey: ["my-quizzes", page, perPage],
         queryFn: () => {
-            return getAllQuizzes();
+            return getAllQuizzes(page, perPage);
         },
         throwOnError: true,
         ...commonOptions,

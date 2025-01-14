@@ -20,7 +20,8 @@ export default function AdminNotification({ children }: { children: React.ReactN
             const result = await getNotificationList();
             setNotifications(result.data);
         };
-        getNotifications();
+        // getNotifications();
+        setInterval(() => getNotifications(), 1000);
     }, []);
     // console.log(notifications);
     return (

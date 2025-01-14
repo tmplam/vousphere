@@ -12,7 +12,7 @@ import {
     UpdateQuizRequestDTO,
 } from "@/schema/game.schema";
 import { SuccessResponse } from "@/schema/http.schema";
-import { PaginationType } from "@/schema/types/common";
+import { PaginationV2Type } from "@/schema/types/common";
 import axios, { AxiosResponse } from "axios";
 
 export async function getAllGames(): Promise<GameType[] | null> {
@@ -44,9 +44,9 @@ export async function getGameById(id: string): Promise<GameType> {
 
 export async function getAllQuizzes(
     page: number = 1,
-    perPage: number = 100,
+    perPage: number = 10,
     includeQuestions: boolean = false
-): Promise<PaginationType<QuizQuestionType> | null> {
+): Promise<PaginationV2Type<QuizQuestionType> | null> {
     try {
         const params = new URLSearchParams();
         params.append("page", page.toString());
@@ -56,7 +56,7 @@ export async function getAllQuizzes(
             await axios.get(`${BASE_API}/game-service/api/quizzes?${params.toString()}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
             })
-        ).data as SuccessResponse<PaginationType<QuizQuestionType>>;
+        ).data as SuccessResponse<PaginationV2Type<QuizQuestionType>>;
         return result.data;
     } catch (error: any) {
         return null;

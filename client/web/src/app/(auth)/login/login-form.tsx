@@ -33,7 +33,6 @@ export function LoginForm() {
         setLoading(true);
         try {
             const result = await callLoginRequest(values);
-            console.log(result);
             if (result.statusCode == 200 && result.isSuccess) {
                 localStorage.setItem("accessToken", result.data.accessToken);
                 toast({

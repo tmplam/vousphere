@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vousphere/core/utils/DateUtils.dart';
 import 'package:vousphere/data/models/Event.dart';
 import 'package:vousphere/features/event-detail/presentation/EventDetailPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
@@ -75,8 +76,8 @@ class EventItem extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Mar',
-                              style: TextStyle(
+                              DateTimeUtils.getMonthMMM(event.startTime),
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,
                               ),
@@ -188,8 +189,12 @@ class EventItem extends StatelessWidget {
                       color: Colors.blue.shade700,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      event.brand.address ?? 'HCMC, Vietnam',
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        event.brand.address ?? 'HCMC, Vietnam',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
