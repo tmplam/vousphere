@@ -43,7 +43,7 @@ internal sealed class GetWeekRegisterStatisticsHandler(
             currentDate = currentDate.AddDays(1);
         }
 
-        return new GetWeekRegisterStatisticsResult(groupedRegistrations);
+        return new GetWeekRegisterStatisticsResult(groupedRegistrations.OrderBy(dto => dto.Date).ToList());
     }
 
     private DateTimeOffset StartOfWeek(DateTimeOffset dt, DayOfWeek startOfWeek)

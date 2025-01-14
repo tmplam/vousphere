@@ -47,7 +47,7 @@ public class GetWeekEventStatisticsHandler(
             currentDate = currentDate.AddDays(1);
         }
 
-        return new GetWeekEventStatisticsResult(groupedEvents);
+        return new GetWeekEventStatisticsResult(groupedEvents.OrderBy(dto => dto.Date).ToList());
     }
 
     private DateTimeOffset StartOfWeek(DateTimeOffset dt, DayOfWeek startOfWeek)
