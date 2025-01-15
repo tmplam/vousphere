@@ -24,7 +24,7 @@ export function CounterpartWeeklyIssuedVouchers() {
     const { data: eventData, isLoading, isError, isPaused } = useCachedCounterpartWeeklyVoucherIssureStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !eventData) return <EventStatusSkeleton />;
-    console.log(eventData);
+    // console.log(eventData);
     const chartData = eventData.map((item: any) => ({
         date: formatDate(new Date(item.date)),
         issuedVouchers: item.issuedVouchers,
@@ -33,7 +33,7 @@ export function CounterpartWeeklyIssuedVouchers() {
         <Card className="w-full">
             <CardHeader className="pt-1 px-5 flex flex-row justify-between flex-nowrap">
                 <div className="space-y-2 pt-2">
-                    <CardTitle>Weekly issured vouchers</CardTitle>
+                    <CardTitle>Weekly issued vouchers</CardTitle>
                     <CardDescription>Showing how many vouchers have been issued weekly</CardDescription>
                 </div>
                 <div className="w-36">

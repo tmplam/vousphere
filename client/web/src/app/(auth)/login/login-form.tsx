@@ -24,8 +24,8 @@ export function LoginForm() {
     const loginForm = useForm<LoginRequestDTO>({
         resolver: zodResolver(LoginRequestSchema),
         defaultValues: {
-            email: "admin@gmail.com",
-            password: "admin123@",
+            email: "",
+            password: "",
         },
     });
     async function onSubmit(values: LoginRequestDTO) {

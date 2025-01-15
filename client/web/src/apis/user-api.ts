@@ -18,7 +18,7 @@ export const callRegisterRequest = async (
 ): Promise<RegisterResponseDTO | ErrorResponse> => {
     try {
         const result = (await axios.post(`${BASE_API}/user-service/api/users/sign-up`, payload)).data;
-        console.log(result);
+        // console.log(result);
         return result as RegisterResponseDTO;
     } catch (error: any) {
         return error.response.data as ErrorResponse;
@@ -28,7 +28,7 @@ export const callRegisterRequest = async (
 export const callLoginRequest = async (values: LoginRequestDTO): Promise<LoginResponseDTO | ErrorResponse> => {
     try {
         const result = (await axios.post(`${BASE_API}/user-service/api/users/sign-in`, values)).data;
-        console.log(result);
+        // console.log(result);
         return result as LoginResponseDTO;
     } catch (error: any) {
         return error.response.data as ErrorResponse;
@@ -38,7 +38,7 @@ export const callLoginRequest = async (values: LoginRequestDTO): Promise<LoginRe
 export const callSendOTPRequest = async (values: SendOTPRequestDTO): Promise<SentOTPResponseDTO | ErrorResponse> => {
     try {
         const result = (await axios.patch(`${BASE_API}/user-service/api/users/verify-email`, values)).data;
-        console.log(result);
+        // console.log(result);
         return result as SentOTPResponseDTO;
     } catch (error: any) {
         return error.response.data as ErrorResponse;
@@ -50,7 +50,7 @@ export const callReSendOTPRequest = async (
 ): Promise<ReSentOTPResponseDTO | ErrorResponse> => {
     try {
         const result = await axios.post(`${BASE_API}/user-service/api/users/resend-otp`, values);
-        console.log(result);
+        // console.log(result);
         return { data: result.data, statusCode: result.status } as ReSentOTPResponseDTO;
     } catch (error: any) {
         return error.response.data as ErrorResponse;

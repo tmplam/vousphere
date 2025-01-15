@@ -26,7 +26,7 @@ export default function DashboardPage() {
                 <div className="flex">
                     <WeeklyIssuedVouchers />
                 </div>
-                <div className="w-full lg:w-[70%] mx-auto pt-3">
+                <div className="w-full  mx-auto pt-3">
                     <GameVouchersStatistics />
                     {/* <BasicLineChart /> */}
                 </div>

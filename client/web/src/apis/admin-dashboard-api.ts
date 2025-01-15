@@ -74,7 +74,7 @@ export const getNewRegisteredUsers = async (
                 counterpart: item.numberOfBrands,
                 player: item.numberOfPlayers,
             }));
-            console.log(data);
+            // console.log(data);
             return data;
         } catch (error: any) {
             return [];
@@ -114,7 +114,7 @@ export const getWeeklyVoucherIssues = async (time: string): Promise<any> => {
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            console.log(result.data);
+            // console.log(result.data);
             return result.data.data;
         } catch (error: any) {
             return error;

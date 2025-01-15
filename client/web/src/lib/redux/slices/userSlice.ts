@@ -34,7 +34,7 @@ const userSlice: Slice<any> = createSlice({
             // localStorage.setItem(persistedStateName, JSON.stringify(state));
         },
         updateUserId(state, action) {
-            console.log(action.payload);
+            // console.log(action.payload);
             state.id = action.payload.id;
         },
     },

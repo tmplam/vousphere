@@ -54,7 +54,7 @@ export default function UpdateQuizForm() {
         try {
             const result = await callUpdateQuizRequest(values);
             if (result.statusCode == 200 && result.isSuccess) {
-                console.log(result.data);
+                // console.log(result.data);
                 toast({
                     description: result.message,
                     duration: 3000,

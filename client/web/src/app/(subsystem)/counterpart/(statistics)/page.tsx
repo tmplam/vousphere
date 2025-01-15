@@ -16,7 +16,7 @@ export default function DashboardPage() {
                 <div className="py-2">
                     <CounterpartWeeklyIssuedVouchers />
                 </div>
-                <div className="w-full lg:w-[70%] mx-auto pt-3">
+                <div className="w-full mx-auto pt-3">
                     <BrandGameVouchersStatistics />
                 </div>
             </div>

@@ -32,7 +32,7 @@ export default function QuizQuestionsEventPage() {
         const newUrl = `${pathname}?${params.toString()}`;
         replace(newUrl);
     };
-    console.log(quizAndQuestionList);
+    // console.log(quizAndQuestionList);
     return (
         <>
             <div className="flex items-center justify-between mb-6">

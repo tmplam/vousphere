@@ -30,7 +30,7 @@ export default function InputOTPForm({ email }: { email: string }) {
         try {
             const result = await callSendOTPRequest(values);
             if (result.statusCode == 200 && result.isSuccess) {
-                console.log(result);
+                // console.log(result);
                 localStorage.removeItem("emailRegistered");
                 toast({
                     description: result.message,
@@ -38,14 +38,14 @@ export default function InputOTPForm({ email }: { email: string }) {
                     className: "bg-lime-500 text-white",
                 });
                 localStorage.setItem("accessToken", result.data.accessToken);
-                console.log(result.data);
+                // console.log(result.data);
                 if (result.data.role.toLowerCase() == "admin") {
                     router.push("/admin");
                 } else if (result.data.role.toLowerCase() == "brand") {
                     router.push("/counterpart");
                 }
             } else {
-                console.log(result);
+                // console.log(result);
                 toast({
                     description: result.message,
                     variant: "destructive",

@@ -22,9 +22,9 @@ export function RegisterForm() {
     const registerForm = useForm<RegisterRequestDTO>({
         resolver: zodResolver(RegisterRequestSchema),
         defaultValues: {
-            name: "Software Engineer",
-            email: "damhonghung123@gmail.com",
-            password: "12345678",
+            name: "",
+            email: "",
+            password: "",
             isBrand: false,
         },
     });

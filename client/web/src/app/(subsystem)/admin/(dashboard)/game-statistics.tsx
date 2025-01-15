@@ -36,7 +36,7 @@ export function GameVouchersStatistics() {
     const { data: playTurnData, isLoading, isError, isPaused } = useCachedPlayTurnStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !playTurnData) return <PlayTurnSkeleton />;
-    console.log(playTurnData);
+    // console.log(playTurnData);
     const totalVouchers = playTurnData.reduce((total, item) => total + item.releasedVouchers, 0);
     return (
         <Card className="flex flex-col border-gray-50">

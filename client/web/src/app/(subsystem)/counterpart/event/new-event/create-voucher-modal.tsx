@@ -75,7 +75,7 @@ function VoucherAmountForm({
         if (loading) return;
         setLoading(true);
         try {
-            console.log(values);
+            // console.log(values);
             onAddingVouchers({ ...values });
             toast({
                 description: "Add voucher successfully",
