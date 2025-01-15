@@ -15,7 +15,6 @@ export default function VoucherItem({ item }: { item: VoucherEventItemType }) {
                 <p className="font-semibold text-md">
                     Discount <span className="dynamic-text text-lg">{item.discount}%</span>
                 </p>
-                {/* <span className="text-xs line-clamp-2 min-h-[1.8rem]">{item.}</span> */}
                 <span className="text-sm">
                     Quantity: <b>{item.total}</b>
                 </span>

@@ -222,7 +222,6 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
                 duration: 2000,
                 className: "bg-lime-500 text-white",
             });
-            // window.location.reload();
             back(true);
         } else {
             toast({

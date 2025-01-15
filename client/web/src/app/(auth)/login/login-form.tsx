@@ -83,7 +83,6 @@ export function LoginForm() {
                                     className="!mt-0 border-gray-300 dark:border-white"
                                 />
                             </FormControl>
-                            {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}

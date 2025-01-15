@@ -54,7 +54,6 @@ export type GameType = {
     image: string;
     imageId: string;
     type: string;
-    // allowTrading: boolean;
     description: string;
 };
 

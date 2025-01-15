@@ -17,21 +17,9 @@ const sidebarStyle = {
 } as CSSProperties;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    // const defaultOpen = sessionStorage.get("sidebar:state")?.value === "true";
 
     return (
         <div className="my-section bg-gradient-to-r from-sky-50 to-fuchsia-50 dark:from-gray-950 dark:to-gray-950">
-            {/* <main className="w-full custom-bg-dashboard">
-            <div className="px-3 sm:px-8 flex justify-between items-center py-2 mb-3 border-b bg-white dark:bg-slate-800 dark:border-b-gray-50">
-                <div className="flex items-center gap-5">
-                    <Notification>
-                        <Bell size={22} />
-                    </Notification>
-                    <DarkModeToggle />
-                </div>
-            </div>
-            <Footer />
-        </main> */}
             {children}
             <div className="snowflakes" aria-hidden="true">
                 <div className="snowflake !text-violet-200">❅</div>

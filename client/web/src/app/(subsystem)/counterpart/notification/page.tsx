@@ -65,14 +65,6 @@ export default function CounterpartNotificationPage() {
                                         <div>
                                             <h2 className="text-sm font-semibold">{notification.title}</h2>
                                             <p className="mt-1 text-sm ">{notification.message}</p>
-                                            {/* {notification. && (
-                                                <p className="mt-1 text-sm">
-                                                    <b>Reason:</b>
-                                                    <span className="text-red-500 dark:text-red-400 pl-1">
-                                                        {notification.message}
-                                                    </span>
-                                                </p>
-                                            )} */}
                                         </div>
                                         <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
                                             {printDateTime(new Date(notification.createdAt))}

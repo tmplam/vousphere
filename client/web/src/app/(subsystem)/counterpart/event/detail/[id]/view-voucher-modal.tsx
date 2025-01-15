@@ -51,14 +51,6 @@ export default function ViewVoucherModal({
                                         </Badge>
                                     )}
                                 </div>
-                                {/* <div className="text-md sm:text-xl lg:text-xl font-thin">
-                                    <b className="font-semibold w-[9rem] inline-block">Description:</b>
-                                    <span>{item.voucher!.description}</span>
-                                </div>
-                                <div className="text-md sm:text-xl lg:text-xl font-thin">
-                                    <b className="font-semibold w-[9rem] inline-block">Amount:</b>
-                                    <span>{item.amount}</span>
-                                </div> */}
                             </div>
                         </div>
                     </div>

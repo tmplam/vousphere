@@ -19,7 +19,6 @@ const sidebarStyle = {
 } as CSSProperties;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    // const defaultOpen = sessionStorage.get("sidebar:state")?.value === "true";
     return (
         <SidebarProvider style={sidebarStyle}>
             <AdminSidebar side="left" variant="floating" collapsible="offcanvas" />
