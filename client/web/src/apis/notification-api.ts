@@ -9,6 +9,7 @@ export async function getNotificationList(
     currentPage: number = 1,
     perPage: number = 10
 ): Promise<NotificationListType> {
+    if (!localStorage.getItem("accessToken")) return {} as NotificationListType;
     try {
         const params = new URLSearchParams({
             page: currentPage.toString(),

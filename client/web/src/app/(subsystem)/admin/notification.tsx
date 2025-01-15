@@ -17,8 +17,12 @@ export default function AdminNotification({ children }: { children: React.ReactN
 
     useEffect(() => {
         const getNotifications = async () => {
-            const result = await getNotificationList();
-            setNotifications(result.data);
+            try {
+                const result = await getNotificationList();
+                setNotifications(result.data);
+            } catch (error) {
+                console.log("");
+            }
         };
         // getNotifications();
         setInterval(() => getNotifications(), 1000);

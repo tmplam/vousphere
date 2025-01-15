@@ -36,8 +36,8 @@ export function BrandGameVouchersStatistics() {
     const { data: playTurnData, isLoading, isError, isPaused } = useCachedBrandVoucherStatistic();
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !playTurnData) return <PlayTurnSkeleton />;
-    console.log(playTurnData);
-    // const totalVouchers = playTurnData.reduce((total, item) => total + item.releasedVouchers, 0);
+    // console.log(playTurnData);
+    const totalVouchers = playTurnData.reduce((total: any, item: any) => total + item.releasedVouchers, 0);
     return (
         <Card className="flex flex-col border-gray-50">
             <CardHeader className="items-center p-0 pt-1 flex flex-row justify-between">
@@ -68,7 +68,7 @@ export function BrandGameVouchersStatistics() {
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
                         <Pie
                             data={playTurnData}
-                            dataKey="totalReleasedVouchers"
+                            dataKey="releasedVouchers"
                             nameKey="gameName"
                             innerRadius={60}
                             strokeWidth={8}
@@ -104,7 +104,7 @@ export function BrandGameVouchersStatistics() {
                                                     y={viewBox.cy}
                                                     className="fill-foreground text-5xl font-semibold"
                                                 >
-                                                    {10}
+                                                    {totalVouchers}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}

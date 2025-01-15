@@ -33,7 +33,7 @@ export function UpdateUserForm({ user, back }: { user: UserType; back: () => voi
         if (loading) return;
         setLoading(true);
         try {
-            console.log({ ...values, image: image });
+            // console.log({ ...values, image: image });
             await new Promise((resolve) => setTimeout(resolve, 1000));
             toast({
                 description: "Login successfully",

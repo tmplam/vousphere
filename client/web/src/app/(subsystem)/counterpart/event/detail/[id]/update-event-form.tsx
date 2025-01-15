@@ -74,7 +74,7 @@ const UpdateEventForm = ({ event, back }: { event: EventGameType; back: (refetch
             const result = await getAllGamesAndQuizzes();
             setGameAndQuizList(result);
             const savedGamesAndQuizzes = event.games.map((gameQuiz) => {
-                console.log(gameQuiz);
+                // console.log(gameQuiz);
                 const game = result?.games?.find((g) => g.id === gameQuiz.gameId)!;
                 const quiz = result?.quizzes?.find((q) => q.id === gameQuiz.quizzCollectionId) || null;
                 let startTimeQ = gameQuiz.startTime
@@ -672,7 +672,7 @@ function GameQuizItem({
     onRemove: (item: number) => void;
     index: number;
 }) {
-    console.log(item);
+    // console.log(item);
     return (
         <div className="flex items-center bg-white dark:bg-black rounded-lg border border-gray-200">
             <div className="p-2 basis-[5rem] h-[5rem]">

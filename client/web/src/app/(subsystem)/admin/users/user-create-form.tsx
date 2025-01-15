@@ -33,7 +33,7 @@ export function CreateUserForm() {
         setLoading(true);
         try {
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            console.log({ ...values, image: image });
+            // console.log({ ...values, image: image });
             toast({
                 description: "Login successfully",
                 duration: 2000,

@@ -14,8 +14,12 @@ export default function CounterpartNotification({ children }: { children: React.
     const [notifications, setNotifications] = useState<Notification[]>([]);
     useEffect(() => {
         const getNotifications = async () => {
-            const result = await getNotificationList();
-            setNotifications(result.data);
+            try {
+                const result = await getNotificationList();
+                setNotifications(result.data);
+            } catch (error) {
+                console.log("");
+            }
         };
         setInterval(() => getNotifications(), 1000);
         // getNotifications();

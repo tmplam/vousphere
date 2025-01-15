@@ -1,1 +1,1 @@
-NEXT_PUBLIC_BASE_URL=the backend url in production
+NEXT_PUBLIC_BASE_URL=http://localhost:6000

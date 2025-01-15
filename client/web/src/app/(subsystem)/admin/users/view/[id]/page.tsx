@@ -30,7 +30,7 @@ export default function UserDetails() {
         });
         return <ErrorPage />;
     }
-    console.log(user);
+    // console.log(user);
     return (
         <>
             {update ? (

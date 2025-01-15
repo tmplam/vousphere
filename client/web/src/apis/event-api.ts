@@ -49,7 +49,7 @@ export async function callCreateEventRequest(values: any): Promise<AxiosResponse
 
 export async function callUpdateEventRequest(id: string, values: any): Promise<AxiosResponse<any>> {
     try {
-        console.log(values);
+        // console.log(values);
         const result = await axios.put(`${BASE_API}/event-service/api/events/${id}`, values, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         });

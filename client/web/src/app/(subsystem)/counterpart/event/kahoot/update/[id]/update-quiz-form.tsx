@@ -90,7 +90,7 @@ export default function UpdateQuizQuestionForm({
                 };
             }),
         };
-        console.log(payload);
+        // console.log(payload);
         const result = await callUpdateQuizQuestionRequest(quizId, quizQuestionId, payload);
         if (result.status == 200) {
             toast({

@@ -600,7 +600,7 @@ function GameQuizItem({
     onRemove: (item: number) => void;
     index: number;
 }) {
-    console.log(item);
+    // console.log(item);
     return (
         <div className="flex items-center bg-white dark:bg-black rounded-lg border border-gray-200">
             <div className="p-2 basis-[5rem] h-[5rem]">

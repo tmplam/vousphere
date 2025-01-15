@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SubscriptionRequestDTO, SubscriptionRequestSchema } from "@/schema/event.schema";
@@ -21,6 +21,16 @@ import { useCachedUserInfo } from "@/lib/react-query/userCache";
 
 export function SubscriptionForm() {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const createSubscriptionForm = useForm<SubscriptionRequestDTO>({
+        resolver: zodResolver(SubscriptionRequestSchema),
+        defaultValues: {
+            name: "",
+            address: "",
+            phoneNumber: "",
+            domain: "food",
+        },
+    });
     const { data: userAuth, isLoading, isFetching, refetch } = useCachedUserInfo();
     if (isLoading || isFetching) return <MySubscriptionSkeleton />;
     if (userAuth?.brand && userAuth!.brand.address != "" && userAuth!.brand.domain != "") {
@@ -39,17 +49,7 @@ export function SubscriptionForm() {
             </>
         );
     }
-    const { toast } = useToast();
-    const router = useRouter();
-    const createSubscriptionForm = useForm<SubscriptionRequestDTO>({
-        resolver: zodResolver(SubscriptionRequestSchema),
-        defaultValues: {
-            name: "",
-            address: "",
-            phoneNumber: "",
-            domain: "food",
-        },
-    });
+
     async function onSubmit(values: SubscriptionRequestDTO) {
         if (loading) return;
         setLoading(true);

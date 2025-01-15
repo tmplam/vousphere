@@ -39,7 +39,7 @@ export function CounterpartEventStatusStatistics() {
     const { data: eventData, isLoading, isError, isPaused } = useCachedCounterpartVoucherStatistic(time);
     if (isError) return <div>Error</div>;
     if (isLoading || isPaused || !eventData) return <EventStatusSkeleton />;
-    console.log(eventData);
+    // console.log(eventData);
     return (
         <Card className="w-full mb-3 border-gray-50">
             <CardHeader className="pt-1 px-5 flex flex-row justify-between flex-nowrap">

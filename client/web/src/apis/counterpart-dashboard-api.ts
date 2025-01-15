@@ -72,6 +72,7 @@ export const getBrandVoucherStatistic = async (): Promise<any> => {
                 const gameName = game.data.data.name;
                 vourcherList.push({ gameName, releasedVouchers: resultList.data[i].totalReleasedVouchers, fill });
             }
+            // console.log(vourcherList);
             return vourcherList;
         } catch (error: any) {
             return error;
@@ -93,7 +94,7 @@ export const getBrandWeeklyVoucherIssues = async (time: string): Promise<any> =>
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            console.log(result.data);
+            // console.log(result.data);
             return result.data.data;
         } catch (error: any) {
             return error;
