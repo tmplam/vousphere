@@ -1,6 +1,6 @@
 # Next.js Project
 
-This is a **Next.js** project built with modern tools and libraries to create a fast, scalable, and maintainable application for Admin and Counterpart website of Vousphere
+This is a **Next.js** project built with modern tools and libraries to create a fast, scalable, and maintainable application for the Admin and Counterpart website of Vousphere.
 
 ## Table of Contents
 
