@@ -25,10 +25,6 @@ export const RegisterRequestSchema = z
             .max(30, {
                 message: "Password must not exceed 30 characters",
             }),
-        // .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/, {
-        //     message:
-        //         "Password must contain one first uppercase letter, at least one number and one special character",
-        // })
         isBrand: z.boolean().default(false),
     })
     .strict();
@@ -60,10 +56,6 @@ export const LoginRequestSchema = z
             .max(30, {
                 message: "Password must not exceed 30 characters",
             }),
-        // .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/, {
-        //     message:
-        //         "Password must contain one first uppercase letter, at least one number and one special character",
-        // }),
     })
     .strict();
 

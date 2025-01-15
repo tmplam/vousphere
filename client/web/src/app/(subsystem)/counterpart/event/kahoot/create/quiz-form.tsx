@@ -75,7 +75,6 @@ export default function QuizForm() {
                                                 className="!mt-0 border-gray-200 bg-white dark:bg-black"
                                             />
                                         </FormControl>
-                                        {/* <FormDescription>* This is the field requiring you to fill.</FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )}

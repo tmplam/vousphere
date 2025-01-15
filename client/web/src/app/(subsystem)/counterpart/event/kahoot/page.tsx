@@ -68,10 +68,6 @@ export default function QuizQuestionsEventPage() {
                         </CardHeader>
 
                         <CardContent className="space-y-1 p-4">
-                            {/* <div className="text-sm flex items-center gap-3">
-                                <span className="font-semibold">Game type:</span>
-                                <span className={`${getBadge()} capitalize`}>{quizQues.type}</span>
-                            </div> */}
                             <div className="text-sm h-12">
                                 <span className="font-semibold">Guide:</span>{" "}
                                 <span className=" line-clamp-2">{quizQues.description}</span>

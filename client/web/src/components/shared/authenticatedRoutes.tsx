@@ -12,13 +12,6 @@ export const hasRole = (role: string | null | undefined, specificRole: string) =
     return role.toLowerCase() === specificRole.toLowerCase();
 };
 
-// export const includeRole = (roles: RoleType[] | null | undefined, specificRole: string) => {
-//     console.log(roles);
-//     console.log(specificRole);
-//     if (!roles) return false;
-//     return roles.some((role) => role.name?.toLowerCase() === specificRole.toLowerCase());
-// };
-
 export const ROLE_ADMIN = "admin";
 export const ROLE_COUNTERPART = "brand";
 export const ROLE_PLAYER = "player";

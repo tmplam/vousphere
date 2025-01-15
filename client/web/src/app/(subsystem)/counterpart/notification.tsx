@@ -10,7 +10,6 @@ import { printDateTime } from "@/lib/utils";
 
 export default function CounterpartNotification({ children }: { children: React.ReactNode }) {
     // Define state, actions here
-    // const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     useEffect(() => {
         const getNotifications = async () => {
@@ -21,8 +20,8 @@ export default function CounterpartNotification({ children }: { children: React.
                 console.log("");
             }
         };
+        // get notifications
         setInterval(() => getNotifications(), 1000);
-        // getNotifications();
     }, []);
     const first3NewestNotifications: Notification[] =
         notifications.length > 3 ? notifications.slice(0, 3) : notifications;

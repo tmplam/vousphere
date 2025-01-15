@@ -13,7 +13,7 @@ const ImageGrid = ({ imageUrl, items }: { imageUrl: string; items: number }) => 
                 display: "grid",
                 gridTemplateColumns: `repeat(${sqrt}, 1fr)`,
                 gap: "5px",
-                width: "300px", // Đặt kích thước cụ thể hoặc tuỳ chỉnh theo nhu cầu
+                width: "300px", // Set size
                 height: "300px",
                 overflow: "hidden",
                 border: "1px solid violet",

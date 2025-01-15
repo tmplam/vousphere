@@ -45,26 +45,10 @@ export function BrandGameVouchersStatistics() {
                     <CardTitle className="text-md">Game vouchers</CardTitle>
                     <CardDescription className="text-xs">Total vouchers were released of each game</CardDescription>
                 </div>
-                {/* <Select onValueChange={(value) => setTime(value)}>
-                    <SelectTrigger className="w-[120px] scale-90 border-gray-300">
-                        <SelectValue placeholder="Today" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="today" defaultChecked>
-                            Today
-                        </SelectItem>
-                        <SelectItem value="week">This week</SelectItem>
-                        <SelectItem value="month">This month</SelectItem>
-                    </SelectContent>
-                </Select> */}
             </CardHeader>
             <CardContent className="flex-1 p-0">
                 <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[23rem]">
                     <PieChart>
-                        {/* <ChartLegend
-                            content={<ChartLegendContent nameKey="gameName" />}
-                            className="p-0 -translate-y-3 flex-wrap gap-2 [&>*]:basis-1/3 [&>*]:justify-center"
-                        /> */}
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel hideIndicator />} />
                         <Pie
                             data={playTurnData}
