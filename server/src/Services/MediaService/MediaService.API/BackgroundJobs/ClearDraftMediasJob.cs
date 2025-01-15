@@ -8,11 +8,13 @@ public class ClearDraftMediasJob(
 {
     public async Task Execute(IJobExecutionContext context)
     {
-        var draftMedias = await _session.Query<Media>()
-            .Where(x =>
-                x.Status == MediaStatus.Draft &&
-                (DateTimeOffset.UtcNow - x.UploadedAt).TotalHours > 1)
+        var draftMediasQuery = await _session.Query<Media>()
+            .Where(x => x.Status == MediaStatus.Draft)
             .ToListAsync();
+
+        var draftMedias = draftMediasQuery
+            .ToList()
+            .Where(m => (DateTimeOffset.UtcNow - m.UploadedAt).TotalHours > 1);
 
         var tasks = Task.CompletedTask;
         foreach (var media in draftMedias)
