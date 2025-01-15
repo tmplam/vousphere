@@ -44,14 +44,6 @@ export default function GameCard() {
                                 <span className="font-semibold">Game type:</span>
                                 <span className={`${getBadge()} capitalize`}>{game.type}</span>
                             </div>
-                            {/* <div className="text-sm flex items-center gap-3">
-                                <span className="font-semibold">Allow trading: </span>
-                                {game.allowTrading ? (
-                                    <Badge className="bg-green-500 text-white">Allow</Badge>
-                                ) : (
-                                    <Badge className="bg-red-500 text-white">Not allow</Badge>
-                                )}
-                            </div> */}
                             <div className="text-sm h-12">
                                 <span className="font-semibold">Guide:</span>{" "}
                                 <p dangerouslySetInnerHTML={{ __html: game.description }} className=" line-clamp-2"></p>

@@ -30,21 +30,12 @@ const OverviewStatistics = () => {
             <>
                 <div className="flex justify-between items-center p-1 pl-0">
                     <h3 className="text-2xl text-gradient font-semibold">Overview Statistics</h3>
-                    {/* <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="border-gray-200">
-                                Sort by:
-                                <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                    </DropdownMenu> */}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <StatisticDataCardSkeleton items={{ icon: PartyPopper }} />
                     <StatisticDataCardSkeleton items={{ icon: UserPlus2 }} />
                     <StatisticDataCardSkeleton items={{ icon: TicketPercent }} />
-                    {/* <StatisticDataCardSkeleton items={{ icon: Earth }} /> */}
                 </div>
             </>
         );
@@ -53,20 +44,6 @@ const OverviewStatistics = () => {
         <>
             <div className="flex justify-between items-center p-1 pl-0">
                 <h3 className="text-2xl text-gradient font-semibold">Overview Statistics</h3>
-                {/* <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" className="border-gray-200">
-                            Sort by:
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
-                        <DropdownMenuItem>Today</DropdownMenuItem>
-                        <DropdownMenuItem>This week</DropdownMenuItem>
-                        <DropdownMenuItem>This month</DropdownMenuItem>
-                        <DropdownMenuItem>This year</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu> */}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <DataCard
@@ -87,7 +64,6 @@ const OverviewStatistics = () => {
                     trending={totalEvents.data}
                     icon={{ icon: UserPlus2 }}
                 />
-                {/* <DataCard title="Total incomes" data={users.data} trending={users.trending} icon={{ icon: Earth }} /> */}
             </div>
         </>
     );

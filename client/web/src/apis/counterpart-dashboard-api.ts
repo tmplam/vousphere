@@ -13,7 +13,7 @@ export const getCounterpartStatistics = async (): Promise<any> => {
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
         ]);
-        // console.log(totalEvents, totalUsedVouchers);
+
         return {
             data: [
                 {
@@ -28,7 +28,6 @@ export const getCounterpartStatistics = async (): Promise<any> => {
             ],
         };
     } catch (error: any) {
-        // throw error;
         return null;
     }
 };
@@ -49,7 +48,6 @@ export const getCounterpartVoucherStatistics = async (time: string): Promise<any
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };
@@ -72,13 +70,11 @@ export const getBrandVoucherStatistic = async (): Promise<any> => {
                 const gameName = game.data.data.name;
                 vourcherList.push({ gameName, releasedVouchers: resultList.data[i].totalReleasedVouchers, fill });
             }
-            // console.log(vourcherList);
             return vourcherList;
         } catch (error: any) {
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };
@@ -94,13 +90,11 @@ export const getBrandWeeklyVoucherIssues = async (time: string): Promise<any> =>
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            // console.log(result.data);
             return result.data.data;
         } catch (error: any) {
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };

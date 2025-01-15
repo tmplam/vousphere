@@ -558,11 +558,6 @@ function VoucherItem({
         <div className="flex items-center bg-white dark:bg-black rounded-lg border border-gray-200">
             <div className="p-2 basis-[3.5rem] h-[3.5rem]">
                 <img
-                    // src={
-                    //     item.voucher.image
-                    //         ? URL.createObjectURL(item.voucher.image)
-                    //         : defaultVoucherImage
-                    // }
                     src={defaultVoucherImage}
                     alt="Voucher image"
                     className="w-full h-full object-cover border"
@@ -572,7 +567,6 @@ function VoucherItem({
                 <p className="font-semibold text-md">
                     Discount <span className="dynamic-text">{item.discount}%</span>
                 </p>
-                {/* <span className="text-xs line-clamp-2 min-h-[1.8rem]">{item.voucher.description}</span> */}
                 <span className="text-sm">Quantity: {item.total}</span>
             </div>
             <div className="flex items-center gap-4 px-3">

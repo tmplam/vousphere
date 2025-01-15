@@ -26,7 +26,6 @@ export function NavUser() {
     const router = useRouter();
     const userAuth = useAppSelector((state) => state.userState).user as UserType;
     useLayoutEffect(() => {
-        // console.log(userAuth);
         if (!userAuth) router.push("/login");
     }, [userAuth]);
     const handleLogout = () => {
@@ -85,10 +84,6 @@ export function NavUser() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            {/* <DropdownMenuItem className="cursor-pointer">
-                                <BadgeCheck />
-                                Account
-                            </DropdownMenuItem> */}
                             <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/notification")}>
                                 <Bell />
                                 Notifications

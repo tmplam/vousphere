@@ -35,7 +35,6 @@ export async function getGameById(id: string): Promise<GameType> {
                 headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
             })
         ).data as SuccessResponse<GameType>;
-        // console.log(result);
         return result.data;
     } catch (error: any) {
         return error.response.data;
@@ -70,7 +69,6 @@ export async function getQuizById(id: string): Promise<QuizQuestionType | null> 
                 headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
             })
         ).data as SuccessResponse<QuizQuestionType>;
-        // console.log(result);
         return result.data;
     } catch (error: any) {
         return error.response.data;
@@ -84,7 +82,6 @@ export async function getQuizQuestionById(id: string): Promise<QuizQuestionType 
                 headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
             })
         ).data as SuccessResponse<QuizQuestionType>;
-        // console.log(result);
         return result.data;
     } catch (error: any) {
         return error.response.data;

@@ -14,20 +14,7 @@ export const CreateVoucherRequestSchema = z.object({
         .max(100, {
             message: "Value must not exceed 100",
         }),
-    // description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
-    // expiryDate: z.string({
-    //     required_error: "Expiry date is required",
-    // }),
 });
-// .superRefine(({ expiryDate }, ctx) => {
-//     if (new Date(expiryDate) < new Date()) {
-//         ctx.addIssue({
-//             code: "custom",
-//             message: "Expiry date must be in the future",
-//             path: ["expiryDate"],
-//         });
-//     }
-// });
 export type VoucherRequest = z.infer<typeof CreateVoucherRequestSchema>;
 export type VoucherAmount = VoucherRequest;
 
@@ -36,7 +23,6 @@ export type CreateVoucherRequestDTO = VoucherRequest & {
 };
 
 export const UpdateVoucherRequestSchema = z.object({
-    // image: z.any().default(null),
     discount: z.coerce
         .number()
         .min(1, {
@@ -45,23 +31,10 @@ export const UpdateVoucherRequestSchema = z.object({
         .max(100, {
             message: "Value must not exceed 100",
         }),
-    // description: z.string().regex(/^\w+\s\w+/, { message: "Description is too short" }),
-    // expiryDate: z.string({
-    //     required_error: "Expiry date is required",
-    // }),
     total: z.coerce
         .number({ required_error: "The amount of vouchers is required" })
         .min(1, { message: "The amount of vouchers must be at least 1" }),
 });
-// .superRefine(({ expiryDate }, ctx) => {
-//     if (new Date(expiryDate) < new Date()) {
-//         ctx.addIssue({
-//             code: "custom",
-//             message: "Expiry date must be in the future",
-//             path: ["expiryDate"],
-//         });
-//     }
-// });
 export type UpdateVoucherRequestDTO = z.infer<typeof UpdateVoucherRequestSchema>;
 
 export type VoucherType = z.infer<typeof CreateVoucherRequestSchema> & {

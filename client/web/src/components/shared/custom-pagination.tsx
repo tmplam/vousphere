@@ -27,7 +27,6 @@ export default function CustomShadcnPagination({
         const inputValue = currentInputRef.current?.value;
         if (!inputValue) return;
         if (parseInt(inputValue) > 0 && parseInt(inputValue) <= maxPage) {
-            // router.push(`${path}${parseInt(inputValue)}`);
             onPageChange(parseInt(inputValue));
         }
     };

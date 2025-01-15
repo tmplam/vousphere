@@ -77,9 +77,6 @@ function VoucherAmountForm({
         defaultValues: {
             discount: item.discount!,
             total: item.total!,
-            // description: item.voucher.description!,
-            // expiryDate: item.voucher.expiryDate!,
-            // image: "",
         },
     });
     async function onSubmit(values: UpdateVoucherRequestDTO) {
@@ -91,10 +88,6 @@ function VoucherAmountForm({
                 duration: 2000,
                 className: "bg-lime-500 text-white",
             });
-            // const { amount: voucherAmount, ...voucherValue } = values;
-            // voucherValue.image = image;
-            // const updatedVocherAmount = { amount: voucherAmount, voucher: voucherValue };
-            // console.log(updatedVocherAmount);
             onUpdateVouchers({ ...values }, index);
             setOpen(false);
         } catch (error: any) {
@@ -137,35 +130,10 @@ function VoucherAmountForm({
                                 </svg>
                                 Upload file
                             </div>
-                            {/* <input
-                                type="file"
-                                id="uploadVoucherFile"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    setImage(e.target.files ? e.target.files[0] : null);
-                                }}
-                                value=""
-                            /> */}
                             <p className="text-xs text-center font-medium text-gray-400">
                                 Only PNG, JPG and JPEG are allowed.
                             </p>
                         </label>
-                        {/* {image && (
-                            <div className="relative mt-2 w-[360px] mx-auto border rounded-sm p-1">
-                                <img
-                                    src={URL.createObjectURL(image)}
-                                    alt="your image"
-                                    className="mt-2 w-full max-h-56 mx-auto object-cover"
-                                />
-                                <button
-                                    className="absolute top-1 right-1 rounded-full p-1"
-                                    onClick={() => setImage(null)}
-                                >
-                                    <CircleX strokeWidth={3} color="red" className="hover:stroke-lime-500" />
-                                </button>
-                            </div>
-                        )} */}
                     </div>
                     <div className="space-y-2">
                         <div className="flex flex-wrap justify-center gap-x-10 gap-y-2">
@@ -192,43 +160,6 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                            {/* <FormField
-                                control={updateVoucherForm.control}
-                                name="expiryDate"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Expiry date</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="datetime-local"
-                                                {...field}
-                                                value={field.value}
-                                                className="!mt-0 w-auto border-gray-300"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            /> */}
-
-                            {/* <FormField
-                            control={updateVoucherForm.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Voucher description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            rows={4}
-                                            placeholder="Enter description for your voucher"
-                                            {...field}
-                                            className="!mt-0 border-gray-300"
-                                        />
-                                    </FormControl> 
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        /> */}
 
                             <FormField
                                 control={updateVoucherForm.control}

@@ -65,10 +65,7 @@ function VoucherAmountForm({
         defaultValues: {
             total: 1,
             discount: 5,
-            // description: "demo demo demo",
-            // expiryDate: "2024-12-27T20:00",
-            // amount: 1,
-            // image: "null",
+
         },
     });
     async function onSubmit(values: CreateVoucherRequestDTO) {
@@ -82,11 +79,7 @@ function VoucherAmountForm({
                 duration: 2000,
                 className: "bg-lime-500 text-white",
             });
-            // const { amount: voucherAmount, ...voucherValue } = values;
-            // voucherValue.image = image;
-            // onAddingVouchers({ amount: voucherAmount, voucher: voucherValue });
             createVoucherForm.reset();
-            // setImage(null);
             setOpen(false);
         } catch (error: any) {
             handleErrorApi({
@@ -183,25 +176,6 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                            {/* <FormField
-                                control={createVoucherForm.control}
-                                name="expiryDate"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Expiry date</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="datetime-local"
-                                                {...field}
-                                                value={field.value}
-                                                className="!mt-0 w-auto border-gray-300"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div> */}
 
                             <FormField
                                 control={createVoucherForm.control}
@@ -222,28 +196,6 @@ function VoucherAmountForm({
                                     </FormItem>
                                 )}
                             />
-                            {/* <FormField
-                            control={createVoucherForm.control}
-                            name="amount"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Role</FormLabel>
-                                    <Select onValueChange={field.onChange} {...field}>
-                                        <FormControl>
-                                            <SelectTrigger className="w-full !mt-0">
-                                                <SelectValue placeholder="Select a role" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="1">Admin</SelectItem>
-                                            <SelectItem value="2">Counterpart</SelectItem>
-                                            <SelectItem value="3">Player</SelectItem>
-                                        </SelectContent>
-                                    </Select> 
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        /> */}
                         </div>
                     </div>
                 </div>

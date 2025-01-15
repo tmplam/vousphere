@@ -80,7 +80,6 @@ export function RegisterForm() {
                                         {...field}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>This is your public display name.</FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -99,7 +98,6 @@ export function RegisterForm() {
                                         {...field}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>This is your public display name.</FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -117,7 +115,6 @@ export function RegisterForm() {
                                         {...field}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>This is your public display name.</FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -144,7 +141,6 @@ export function RegisterForm() {
                                         </label>
                                     </div>
                                 </FormControl>
-                                {/* <FormDescription>This is your public display name.</FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
