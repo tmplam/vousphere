@@ -1,13 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:vousphere/data/api/ApiService.dart';
 import 'package:vousphere/features/profile/presentation/GiftPlayTurnPage.dart';
 import 'package:vousphere/features/voucher/presentation/GiftVoucherPage.dart';
 import 'package:vousphere/shared/providers/UserProvider.dart';
 
 class AddPlayTurnDialog extends StatelessWidget {
-  const AddPlayTurnDialog({super.key});
+  AddPlayTurnDialog({super.key});
+
+  ApiService apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,9 @@ class AddPlayTurnDialog extends StatelessWidget {
   }
 
   Future<void> _shareOnFacebook(BuildContext context) async {
+
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+
     try {
       final result = await Share.shareWithResult(
         'Check out this awesome app! 🎉 Play with me on [Vousphere]! 🕹️\nhttps://vousphere.com',
@@ -68,6 +75,24 @@ class AddPlayTurnDialog extends StatelessWidget {
 
       if (context.mounted) {
         if (result.status == ShareResultStatus.success) {
+          try {
+            await apiService.dio.post('/user-service/api/users/increase-playrounds',
+              data: {
+                "numberOfPlayrounds": 1
+              },
+              options: Options(
+                extra: {
+                  "requireToken": true,
+                }
+              )
+            );
+
+            print('chay dc cho nay');
+          }
+          catch(e) {
+            print(e);
+          }
+          await userProvider.getUser();
           _showShareResultDialog(
             context,
             true,
@@ -89,6 +114,8 @@ class AddPlayTurnDialog extends StatelessWidget {
           'Could not open sharing options. Please try again.',
         );
       }
+
+      print(e);
     }
   }
 

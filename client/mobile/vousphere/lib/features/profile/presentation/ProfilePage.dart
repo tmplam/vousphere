@@ -138,6 +138,25 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                Icon(
+                  Icons.videogame_asset,
+                  color: Colors.black.withOpacity(0.6),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  '${user.player?['numberOfPlays']?.toString() ?? ''} Turns',
+                  style: const TextStyle(color: Colors.black54, fontSize: 16),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             const Divider(
               color: Colors.grey,
@@ -147,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 showModalBottomSheet(
                   context: context,
                   backgroundColor: Colors.transparent,
-                  builder: (context) => const AddPlayTurnDialog(),
+                  builder: (context) => AddPlayTurnDialog(),
                 );
               },
               leading: Icon(Icons.videogame_asset_outlined, color: Colors.blue.shade700),
