@@ -24,13 +24,5 @@ export const adminNavMain = [
         url: "/admin/games",
         icon: Gamepad2,
         isActive: true,
-        // items: [
-        //     {
-        //         title: "Collections",
-        //         url: "/admin/games",
-        //         icon: Shapes,
-        //         isActive: true,
-        //     },
-        // ],
     },
 ];

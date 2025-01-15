@@ -10,8 +10,6 @@ import { useEffect, useState } from "react";
 /* Khiem workspace - notification icon on top right of the header for Admin*/
 
 export default function AdminNotification({ children }: { children: React.ReactNode }) {
-    // Define state, actions here
-    // const { storedNotifications } = useAppSelector((state) => state.notificationState.value);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const first3NewestNotifications: Notification[] = notifications.slice(0, 3);
 
@@ -24,10 +22,9 @@ export default function AdminNotification({ children }: { children: React.ReactN
                 console.log("");
             }
         };
-        // getNotifications();
+        // Fetch Notifications
         setInterval(() => getNotifications(), 1000);
     }, []);
-    // console.log(notifications);
     return (
         <div className="p-0">
             <Popover>

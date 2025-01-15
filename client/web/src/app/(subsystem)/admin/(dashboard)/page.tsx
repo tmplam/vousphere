@@ -14,7 +14,6 @@ export default function DashboardPage() {
                 <h3 className="text-2xl text-gradient font-semibold">User Statistics</h3>
                 <div className="py-2">
                     <NewUserStatistics />
-                    {/* <BasicLineChart /> */}
                 </div>
             </div>
 
@@ -28,7 +27,6 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full  mx-auto pt-3">
                     <GameVouchersStatistics />
-                    {/* <BasicLineChart /> */}
                 </div>
             </div>
         </div>

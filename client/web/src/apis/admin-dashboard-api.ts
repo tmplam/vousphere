@@ -28,7 +28,6 @@ export const getStatistics = async (): Promise<any> => {
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
         ]);
-        // console.log(totalBrands, totalPlayers, totalEvents);
         return {
             data: [
                 {
@@ -43,7 +42,6 @@ export const getStatistics = async (): Promise<any> => {
             ],
         };
     } catch (error: any) {
-        // throw error;
         return null;
     }
 };
@@ -68,7 +66,7 @@ export const getNewRegisteredUsers = async (
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            // console.log(result.data);
+
             const data = result.data.data.map((item: any) => ({
                 date: formatDate(new Date(item.date)),
                 counterpart: item.numberOfBrands,
@@ -98,7 +96,6 @@ export const getEventParticipantStatus = async (time: string): Promise<any> => {
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };
@@ -114,13 +111,11 @@ export const getWeeklyVoucherIssues = async (time: string): Promise<any> => {
                     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
                 }
             );
-            // console.log(result.data);
             return result.data.data;
         } catch (error: any) {
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };
@@ -150,7 +145,6 @@ export const getPlayTurnStatistics = async (
             return error;
         }
     } catch (error: any) {
-        // throw error;
         return [];
     }
 };

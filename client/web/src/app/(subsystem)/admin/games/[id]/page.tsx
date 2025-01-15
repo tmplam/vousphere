@@ -70,19 +70,6 @@ export default function Game() {
                                             <b className="mr-2">Game type: </b>
                                             <span className={getBadge()}>{game.type}</span>
                                         </p>
-
-                                        {/* <div className="flex items-center">
-                                            <b>Allow trading: </b>
-                                            <Badge
-                                                className={`${
-                                                    game.allowTrading
-                                                        ? "bg-lime-600 text-white"
-                                                        : "bg-red-600 text-white"
-                                                } ml-2`}
-                                            >
-                                                {game.allowTrading ? "Allow" : "Not allow"}
-                                            </Badge>
-                                        </div> */}
                                         <div className="">
                                             <b>Guide: </b>
                                             <div className="mt-2 border-l-4 border-gray-300 pl-4">

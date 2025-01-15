@@ -18,9 +18,6 @@ import { NewUserChartBarSkeleton } from "@/app/(subsystem)/admin/skeletons";
 import { useState } from "react";
 
 const chartConfig = {
-    // views: {
-    //     label: "Participants",
-    // },
     counterpart: {
         label: "Counterpart",
         color: "hsl(var(--chart-1))",

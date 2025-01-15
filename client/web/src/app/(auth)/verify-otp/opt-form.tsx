@@ -45,7 +45,6 @@ export default function InputOTPForm({ email }: { email: string }) {
                     router.push("/counterpart");
                 }
             } else {
-                // console.log(result);
                 toast({
                     description: result.message,
                     variant: "destructive",
