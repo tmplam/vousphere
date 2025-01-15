@@ -35,7 +35,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function EventStatusStatistics() {
-    // const [eventData, setEventData] = useState(chartTodayData);
     const [time, setTime] = useState(new Date().toJSON());
     const { data: eventData, isLoading, isError, isPaused } = useCachedEventStatusStatistic(time);
     if (isError) return <div>Error</div>;
