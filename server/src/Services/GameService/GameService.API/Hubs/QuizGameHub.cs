@@ -1,9 +1,13 @@
-﻿using BuildingBlocks.Shared.Constants;
+﻿using BuildingBlocks.Messaging.IntegrationEvents;
+using BuildingBlocks.Shared.Constants;
+using GameService.API.Entities;
 using GameService.API.Services;
 using GameService.API.Utilities;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
+using System.Reflection;
 using System.Text.Json;
 
 namespace GameService.API.Hubs;
@@ -13,7 +17,8 @@ namespace GameService.API.Hubs;
 public class QuizGameHub(
     ILogger<QuizGameHub> _logger,
     IEventGameService _eventGameService,
-    IDistributedCache _cache) : Hub<IQuizGameClient>
+    IDistributedCache _cache,
+    IPublishEndpoint _publishEndpoint) : Hub<IQuizGameClient>
 {
     public override async Task OnConnectedAsync()
     {
@@ -57,6 +62,16 @@ public class QuizGameHub(
             await Groups.AddToGroupAsync(Context.ConnectionId, eventId.ToString());
 
             await Clients.Group(eventId.ToString()).ReceiveNewPlayerJoined(Context.UserIdentifier!, Context.User!.Identity?.Name!);
+
+            var userPlayedGameEvent = new UserPlayedGameIntegrationEvent
+            {
+                UserId = Guid.Parse(Context.UserIdentifier!),
+                GameId = GameIdentifiers.QuizGameId,
+                EventId = eventId,
+                PlayedAt = DateTimeOffset.UtcNow
+            };
+
+            await _publishEndpoint.Publish(userPlayedGameEvent);
 
             await base.OnConnectedAsync();
         }
